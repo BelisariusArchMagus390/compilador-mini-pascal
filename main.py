@@ -57,6 +57,7 @@ var
 
 begin
   i := 10;
+  i := 11;
   c := "A";
   b := true;
   d := false;

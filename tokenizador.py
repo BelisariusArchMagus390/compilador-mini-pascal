@@ -9,7 +9,6 @@ class Tokenizador:
         self.id = r"^[a-zA-Z]([a-zA-Z]|[0-9])*$"
         self.digito_inteiro = r"^[0-9]+$"
         self.string_constante = r'^"+[a-zA-Z]([a-zA-Z]|[0-9])*"+$'
-
         self.palavras_reservadas = [
             "while",
             "div",
