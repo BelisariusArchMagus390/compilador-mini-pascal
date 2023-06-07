@@ -1,7 +1,7 @@
 import os
 from parser_model import Parse
 
-erro = False    
+erro = False
 
 # Menu de exibição de opções
 print("1 - Arquivo (apenas arquivos de texto)")
@@ -10,40 +10,42 @@ print("3 - Cancelar")
 opcao = input("\nOpção: ")
 
 match opcao:
-    # Opção 1: Escolher um arquivo de texto onde possa estar o código para ser 
+    # Opção 1: Escolher um arquivo de texto onde possa estar o código para ser
     # feito sua análise léxica
-    case '1':
+    case "1":
         # Para executar em Windows
         caminho = os.path.dirname(os.path.abspath(__file__))
-        
+
         # Para executar em Linux
-        #caminho = os.getcwd()
-        nome_arquivo = input("Digite o nome do arquivo (o arquivo precisa estar na pasta raiz): ")
+        # caminho = os.getcwd()
+        nome_arquivo = input(
+            "Digite o nome do arquivo (o arquivo precisa estar na pasta raiz): "
+        )
 
         # Para executar em Windows
         caminho_nome = os.path.join(caminho, nome_arquivo)
 
         # Para executar em Linux
-        #caminho_nome = caminho+"/"+nome_arquivo
+        # caminho_nome = caminho+"/"+nome_arquivo
 
-        if nome_arquivo.endswith('.txt'):
+        if nome_arquivo.endswith(".txt"):
             try:
                 with open(caminho_nome) as arquivo:
                     codigo = arquivo.readlines()
-                    codigo = ' '.join(codigo)
-                    codigo = codigo+' '
+                    codigo = " ".join(codigo)
+                    codigo = codigo + " "
             except FileNotFoundError:
-                err_msg = "O arquivo "+ nome_arquivo + " não existe."
+                err_msg = "O arquivo " + nome_arquivo + " não existe."
                 print(err_msg)
                 erro = True
         else:
-            err_msg = "O arquivo "+ nome_arquivo + " não é do tipo texto."
+            err_msg = "O arquivo " + nome_arquivo + " não é do tipo texto."
             print(err_msg)
             erro = True
 
-  # Opção 2: É feito a análise léxica de um exemplo pré-feito
-    case '2':
-        codigo = '''program Exemplo;
+    # Opção 2: É feito a análise léxica de um exemplo pré-feito
+    case "2":
+        codigo = """program Exemplo;
 
 var
   i: integer;
@@ -80,18 +82,18 @@ begin
       write("LOL1")
     else
       write("LOL2")
-end.'''          
+end."""
         print("\nCÓDIGO PRÉ-FEITO: \n")
         print(codigo)
     # Opção 3: Interrompe o programa
-    case '3':
+    case "3":
         erro = True
     case _:
-        print('Opção indisponível!')
+        print("Opção indisponível!")
         erro = True
 
 if erro == False:
     p = Parse(codigo, "parse")
     p.parse()
 else:
-    print('Cancelando...')
+    print("Cancelando...")

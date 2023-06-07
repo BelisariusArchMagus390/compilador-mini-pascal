@@ -4,8 +4,9 @@ from error_message_model import ErrorMessage
 
 # Gramática da linguagem
 
+
 class Parse:
-    def __init__(self, codigo, c = "parse"):
+    def __init__(self, codigo, c="parse"):
         self.c = c
         self.codigo = codigo
         self.tk = Tokenizador(self.codigo)
@@ -16,7 +17,6 @@ class Parse:
 
         self.token_atual = self.tok[0]
         self.index = 0
-
 
     def imprimi_passo_parse(self, passo_parse):
         if self.c == "debug":
@@ -29,9 +29,13 @@ class Parse:
             self.index += 1
             self.token_atual = self.tok[self.index]
 
-
     def erro_mensagem(self, erro):
-        e = ErrorMessage(erro, self.matriz_tokens[self.index][2], self.matriz_tokens[self.index][3], self.matriz_tokens[self.index][0])
+        e = ErrorMessage(
+            erro,
+            self.matriz_tokens[self.index][2],
+            self.matriz_tokens[self.index][3],
+            self.matriz_tokens[self.index][0],
+        )
         e.erro_mensagem_model()
 
     # d = Default, b = Boolean
@@ -44,7 +48,6 @@ class Parse:
                 return True
         else:
             self.erro_mensagem(erro)
-
 
     def program(self):
         self.imprimi_passo_parse("program: ")
@@ -62,14 +65,12 @@ class Parse:
         if self.token_atual == "$":
             return
 
-
     def block(self):
         self.imprimi_passo_parse("block: ")
 
         self.variable_declaration_part()
-            
-        self.statement_part()
 
+        self.statement_part()
 
     def relational_operator(self):
         self.imprimi_passo_parse("relational_operator: ")
@@ -77,7 +78,6 @@ class Parse:
         operadores = ["=", "<>", "<", "<=", ">=", ">", "or", "and"]
         if self.encontra_token(operadores, 0, "b"):
             return True
-        
 
     def adding_operator_or_sign(self):
         self.imprimi_passo_parse("adding_operator_or_sign: ")
@@ -85,13 +85,11 @@ class Parse:
         if self.encontra_token(["+", "-"], 0, "b"):
             return True
 
-
     def multiplying_operator(self):
         self.imprimi_passo_parse("multiplying_operator: ")
 
         if self.encontra_token(["*", "div"], 0, "b"):
             return True
-
 
     def entire_variable_or_array(self):
         self.imprimi_passo_parse("entire_variable_or_array: ")
@@ -100,23 +98,21 @@ class Parse:
             self.avanca_token()
             return True
 
-
     def variable_identifier(self):
         self.imprimi_passo_parse("variable_identifier: ")
 
-        if (self.token_atual == "IDENT" or 
-            self.token_atual == "LITERAL_INT" or 
-            self.token_atual == "LITERAL_STRING"
-            ):
+        if (
+            self.token_atual == "IDENT"
+            or self.token_atual == "LITERAL_INT"
+            or self.token_atual == "LITERAL_STRING"
+        ):
             return True
-
 
     def array_variable(self):
         self.imprimi_passo_parse("array_variable: ")
 
         if self.entire_variable_or_array():
             return True
-    
 
     def indexed_variable(self):
         self.imprimi_passo_parse("indexed_variable: ")
@@ -125,7 +121,6 @@ class Parse:
             self.expression()
             self.encontra_token(["]"], 10, "d")
             return True
-
 
     def variable(self):
         self.imprimi_passo_parse("variable: ")
@@ -138,14 +133,12 @@ class Parse:
         else:
             self.erro_mensagem(17)
 
-
     def aux_var_declr_part(self):
         if self.token_atual == "IDENT":
             self.variable_declaration()
             self.encontra_token([";"], 3, "d")
             return True
 
-    
     def factor(self):
         self.imprimi_passo_parse("factor: ")
 
@@ -155,10 +148,9 @@ class Parse:
             return
         elif self.encontra_token(["("], 0, "b"):
             self.expression()
-            self.encontra_token([")"], 18, "d")                            
+            self.encontra_token([")"], 18, "d")
         elif self.encontra_token(["not"], 21, "b"):
             self.factor()
-
 
     def term(self):
         self.imprimi_passo_parse("term: ")
@@ -171,7 +163,6 @@ class Parse:
                 self.factor()
             else:
                 c = False
-
 
     def simple_expression(self):
         self.imprimi_passo_parse("simple_expression: ")
@@ -186,7 +177,6 @@ class Parse:
             else:
                 c = False
 
-
     def expression(self):
         self.imprimi_passo_parse("expression: ")
 
@@ -194,7 +184,6 @@ class Parse:
 
         if self.relational_operator():
             self.expression()
-
 
     def variable_declaration_part(self):
         self.imprimi_passo_parse("variable_declaration_part: ")
@@ -210,7 +199,6 @@ class Parse:
             if not self.aux_var_declr_part():
                 c = False
 
-
     def variable_declaration(self):
         self.imprimi_passo_parse("variable_declaration: ")
 
@@ -225,7 +213,6 @@ class Parse:
 
         self.type_()
 
-    
     def type_(self):
         self.imprimi_passo_parse("type_: ")
 
@@ -235,13 +222,11 @@ class Parse:
             else:
                 self.erro_mensagem(6)
 
-
     def simple_type(self):
         self.imprimi_passo_parse("simple_type: ")
 
         if self.encontra_token(["char", "integer", "boolean"], 0, "b"):
             return True
-
 
     def array_type(self):
         self.imprimi_passo_parse("array_type: ")
@@ -250,7 +235,7 @@ class Parse:
 
         if self.encontra_token(["["], 8, "b"):
             self.index_range()
-        
+
         self.encontra_token(["]"], 11, "d")
 
         self.encontra_token(["of"], 12, "d")
@@ -260,7 +245,6 @@ class Parse:
 
         return True
 
-
     def index_range(self):
         self.imprimi_passo_parse("index_range: ")
 
@@ -268,12 +252,10 @@ class Parse:
         self.encontra_token([".."], 10, "d")
         self.encontra_token(["LITERAL_INT"], 9, "d")
 
-
     def statement_part(self):
         self.imprimi_passo_parse("statement_part: ")
 
         self.compound_statement()
-
 
     def compound_statement(self):
         self.imprimi_passo_parse("compound_statement: ")
@@ -288,7 +270,6 @@ class Parse:
                     c = False
             self.encontra_token(["end"], 22, "d")
 
-
     def if_statement(self):
         self.imprimi_passo_parse("if_statement: ")
 
@@ -299,7 +280,6 @@ class Parse:
                 if self.encontra_token(["else"], 0, "b"):
                     self.statement()
 
-
     def while_statement(self):
         self.imprimi_passo_parse("while_statement: ")
 
@@ -308,7 +288,6 @@ class Parse:
             if self.encontra_token(["do"], 26, "b"):
                 self.statement()
 
-
     def statement(self):
         self.imprimi_passo_parse("statement: ")
 
@@ -316,7 +295,6 @@ class Parse:
             return
         elif self.structured_statement():
             return
-
 
     def structured_statement(self):
         self.imprimi_passo_parse("structured_statement: ")
@@ -332,8 +310,7 @@ class Parse:
             self.while_statement()
             c = True
 
-        return c    
-
+        return c
 
     def simple_statement(self):
         self.imprimi_passo_parse("simple_statement: ")
@@ -345,15 +322,15 @@ class Parse:
         elif self.token_atual == "write":
             self.write_statement()
             c = True
-        elif (self.token_atual == "IDENT" or 
-              self.token_atual == "LITERAL_INT" or 
-              self.token_atual == "LITERAL_STRING"
-              ):
+        elif (
+            self.token_atual == "IDENT"
+            or self.token_atual == "LITERAL_INT"
+            or self.token_atual == "LITERAL_STRING"
+        ):
             self.assignment_statement()
             c = True
         else:
             return c
-
 
     def write_statement(self):
         self.imprimi_passo_parse("write_statement: ")
@@ -369,7 +346,6 @@ class Parse:
                         c = False
                 self.encontra_token([")"], 18, "d")
 
-
     def read_statement(self):
         self.imprimi_passo_parse("read_statement: ")
 
@@ -384,7 +360,6 @@ class Parse:
                         c = False
                 self.encontra_token([")"], 18, "d")
 
-
     def assignment_statement(self):
         self.imprimi_passo_parse("assignment_statement: ")
 
@@ -394,15 +369,13 @@ class Parse:
 
         self.expression()
 
-
     def mostra_resultado(self):
         print("\nCÓDIGO ANALISADO COM SUCESSO!")
 
         print("\nTABELA DE SÍMBOLOS: \n")
 
         colunas = ["Lexema", "Token", "Linha", "Coluna", "ID", "Valor"]
-        print(tb(self.matriz_tokens, headers = colunas, tablefmt="fancy_grid"))
-
+        print(tb(self.matriz_tokens, headers=colunas, tablefmt="fancy_grid"))
 
     def parse(self):
         self.program()
