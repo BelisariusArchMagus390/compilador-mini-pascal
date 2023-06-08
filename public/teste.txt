@@ -36,3 +36,4 @@ program Exemplo;
             write("LOL1")
             else
             write("LOL2")
+    end.
