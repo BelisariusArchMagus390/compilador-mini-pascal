@@ -4,7 +4,6 @@ from error_message_model import ErrorMessage
 
 # Gramática da linguagem
 
-
 class Parse:
     def __init__(self, codigo, c="parse"):
         self.c = c
@@ -15,6 +14,8 @@ class Parse:
         self.tok = [l[1] for l in self.matriz_tokens]
         self.tok.append("$")
 
+        self.dic_tipo= {}
+
         self.token_atual = self.tok[0]
         self.index = 0
 
@@ -23,6 +24,49 @@ class Parse:
             print(passo_parse, self.token_atual)
         elif self.c == "parse":
             return
+        
+    def complementa(self):
+        for i in self.matriz_tokens:
+            if len(i) == 5:
+                i.extend([None, None, None])
+
+    def atribui_tipo(self, c):
+        if c == "simple":
+            c = True
+            count = self.index-3
+            while c == True:
+                #print(self.matriz_tokens[count][0])
+                if self.matriz_tokens[count][0] == ";":
+                    c = False
+                else:
+                    index_ident = count
+                    tipo = self.matriz_tokens[self.index-1][0]
+
+                    self.matriz_tokens[index_ident].extend([tipo, None, None])
+                    count -= 3
+            
+        elif c == "array":
+            index_ident = self.index-10
+            tipo = "array "+self.matriz_tokens[self.index-1][0]
+
+            self.matriz_tokens[index_ident].extend([tipo, None, None])
+
+    def atribui_valor(self):
+        c = True
+        count = self.index
+        valor = ""
+        while c == True:
+            if self.matriz_tokens[count][1] == ";":
+                c = False
+            else:
+                valor += self.matriz_tokens[count][0]
+                count += 1
+
+        self.matriz_tokens[count-4].extend([None, valor, None])
+
+    def atribui_tam_matriz(self):
+        tamanho_matriz = self.matriz_tokens[self.index][0] + self.matriz_tokens[self.index+1][0] + self.matriz_tokens[self.index+2][0]
+        self.matriz_tokens[self.index-4].extend([None, None, tamanho_matriz])
 
     def avanca_token(self):
         if self.index < len(self.tok):
@@ -204,6 +248,7 @@ class Parse:
 
         c = True
         while c == True:
+            self.dic_tipo[] = [self.index]
             self.encontra_token(["IDENT"], 0, "d")
 
             if not self.encontra_token([","], 0, "b"):
@@ -216,14 +261,15 @@ class Parse:
     def type_(self):
         self.imprimi_passo_parse("type_: ")
 
-        if not self.simple_type():
-            if self.array_type():
-                return
-            else:
-                self.erro_mensagem(6)
+        if self.simple_type():
+            self.atribui_tipo("simple")
+        elif self.array_type():
+            self.atribui_tipo("array")
+        else:
+            self.erro_mensagem(6)
 
     def simple_type(self):
-        self.imprimi_passo_parse("simple_type: ")
+        self.imprimi_passo_parse("simple_type: ")            
 
         if self.encontra_token(["char", "integer", "boolean"], 0, "b"):
             return True
@@ -247,6 +293,8 @@ class Parse:
 
     def index_range(self):
         self.imprimi_passo_parse("index_range: ")
+
+        self.atribui_tam_matriz()
 
         self.encontra_token(["LITERAL_INT"], 9, "d")
         self.encontra_token([".."], 10, "d")
@@ -367,6 +415,8 @@ class Parse:
 
         self.encontra_token([":="], 20, "d")
 
+        self.atribui_valor()
+
         self.expression()
 
     def mostra_resultado(self):
@@ -374,9 +424,14 @@ class Parse:
 
         print("\nTABELA DE SÍMBOLOS: \n")
 
-        colunas = ["Lexema", "Token", "Linha", "Coluna", "ID", "Valor"]
+        #for i in self.matriz_tokens:
+            #print(len(i))
+        #print(len(self.matriz_tokens))
+
+        colunas = ["Lexema", "Token", "Linha", "Coluna", "ID", "Tipo", "Valor", "Tamanho da Matriz"]
         print(tb(self.matriz_tokens, headers=colunas, tablefmt="fancy_grid"))
 
     def parse(self):
         self.program()
+        self.complementa()
         self.mostra_resultado()

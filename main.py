@@ -57,6 +57,7 @@ var
 
 begin
   i := 10;
+  i := 11;
   c := "A";
   b := true;
   d := false;
@@ -77,7 +78,7 @@ begin
   arrInt[4] := arrInt[1] * 3;
   arrInt[5] := arrInt[1] div 2;
   
-  while i > 0 do
+  while i >= 0 do
     if (i = 5) then
       write("LOL1")
     else
