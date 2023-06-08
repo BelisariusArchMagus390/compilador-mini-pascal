@@ -167,4 +167,4 @@ class Tokenizador:
             for i in range(len(self.matriz_tokens))
         ]
 
-        return self.matriz_tokens, self.ids
+        return self.matriz_tokens
