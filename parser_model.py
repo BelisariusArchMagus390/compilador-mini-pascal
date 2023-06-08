@@ -99,7 +99,7 @@ class Parser:
             self.token_atual = self.tok[self.index]
 
     def erro_mensagem(self, erro):
-        token_info = self.matriz_tokens[self.index]
+        token_info = self.matriz_tokens[self.index - 1]
         e = ErrorMessage(
             erro,
             token_info[2],
