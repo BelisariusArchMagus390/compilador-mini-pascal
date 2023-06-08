@@ -9,12 +9,13 @@ class Parse:
         self.c = c
         self.codigo = codigo
         self.tk = Tokenizador(self.codigo)
-        self.matriz_tokens, self.ids = self.tk.tokenizar()
+        self.matriz_tokens = self.tk.tokenizar()
 
         self.tok = [l[1] for l in self.matriz_tokens]
         self.tok.append("$")
 
         self.lst_index_tipo = []
+        self.dic_carac = {}
 
         self.token_atual = self.tok[0]
         self.index = 0
@@ -29,7 +30,19 @@ class Parse:
         
     def complementa(self):
         for i in self.matriz_tokens:
-            if len(i) == 5:
+            if i[0] in self.dic_carac:
+                if len(i) > 5 and i[5] != None:
+                    carac = [self.dic_carac[i[0]][0], i[5], self.dic_carac[i[0]][1]]
+                    i.pop()
+                    i.extend(carac)
+                else:
+                    carac = [self.dic_carac[i[0]][0], None, self.dic_carac[i[0]][1]]
+                    i.extend(carac)
+            elif len(i) > 5 and i[5] != None:
+                carac = [None, i[5], None]
+                i.pop()
+                i.extend(carac)
+            elif len(i) == 5:
                 i.extend([None, None, None])
     
     # atribui através de um dicionário
@@ -37,17 +50,26 @@ class Parse:
         if c == "simple":
             tipo = self.matriz_tokens[self.index-1][0]
             for i in self.lst_index_tipo:
-                self.matriz_tokens[i].extend([tipo, None, None])
+                #self.matriz_tokens[i].extend([tipo, None, None])
+
+                self.dic_carac[self.matriz_tokens[i][0]] = [tipo, None]
+
         elif c == "array":
             tipo = "array "+self.matriz_tokens[self.index-1][0]
             for i in self.lst_index_tipo:
-                self.matriz_tokens[i].insert(5, tipo)
+                #self.matriz_tokens[i].insert(5, tipo)
+
+                if self.matriz_tokens[i][0] in self.dic_carac:
+                    self.dic_carac[self.matriz_tokens[i][0]][0] = tipo
+                else:
+                    self.dic_carac[self.matriz_tokens[i][0]] = [tipo, None]
 
         self.lst_index_tipo.clear()
 
     def atribui_tam_matriz(self):
         tamanho_matriz = self.matriz_tokens[self.index][0] + self.matriz_tokens[self.index+1][0] + self.matriz_tokens[self.index+2][0]
-        self.matriz_tokens[self.index-4].extend([None, tamanho_matriz])
+        #self.matriz_tokens[self.index-4].extend([None, tamanho_matriz])
+        self.dic_carac[self.matriz_tokens[self.index-4][0]] = [None, tamanho_matriz]
 
     def atribui_valor(self):
         c = True
@@ -59,13 +81,12 @@ class Parse:
             else:
                 valor += self.matriz_tokens[count][0]
                 count += 1
-
-        if self.matriz_tokens[count-3][1] == "IDENT":
-            count_regulado = count-3
-            self.matriz_tokens[count_regulado].extend([None, valor, None])
+        count_regulado = self.index-2
+        if self.matriz_tokens[count_regulado][1] == "IDENT":
+            self.matriz_tokens[count_regulado].append(valor)
         else:
-            count_regulado = count-6
-            self.matriz_tokens[count_regulado].extend([None, valor, None])
+            count_regulado = self.index-5
+            self.matriz_tokens[count_regulado].append(valor)
 
     def avanca_token(self):
         if self.index < len(self.tok):

@@ -37,7 +37,6 @@ class ErrorMessage:
 
     def erro_mensagem_model(self):
         if self.erro != 0:
-            # ["Lexema", "Token", "Linha", "Coluna", "ID", "Valor"]
             print("\nLinha: ", self.linha, " | ", "Coluna: ", self.coluna)
             print(self.elemento)
             print("^")
