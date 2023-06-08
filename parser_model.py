@@ -14,7 +14,7 @@ class Parse:
         self.tok = [l[1] for l in self.matriz_tokens]
         self.tok.append("$")
 
-        self.dic_tipo= {}
+        self.lst_index_tipo = []
 
         self.token_atual = self.tok[0]
         self.index = 0
@@ -32,24 +32,18 @@ class Parse:
 
     def atribui_tipo(self, c):
         if c == "simple":
-            c = True
-            count = self.index-3
-            while c == True:
-                #print(self.matriz_tokens[count][0])
-                if self.matriz_tokens[count][0] == ";":
-                    c = False
-                else:
-                    index_ident = count
-                    tipo = self.matriz_tokens[self.index-1][0]
-
-                    self.matriz_tokens[index_ident].extend([tipo, None, None])
-                    count -= 3
-            
+            tipo = self.matriz_tokens[self.index-1][0]
+            print(tipo)
         elif c == "array":
-            index_ident = self.index-10
             tipo = "array "+self.matriz_tokens[self.index-1][0]
+            print(tipo)
+        
+        #print(self.lst_index_tipo)
 
-            self.matriz_tokens[index_ident].extend([tipo, None, None])
+        for i in self.lst_index_tipo:
+            self.matriz_tokens[i].extend([tipo, None, None])
+
+        self.lst_index_tipo.clear()
 
     def atribui_valor(self):
         c = True
@@ -62,7 +56,13 @@ class Parse:
                 valor += self.matriz_tokens[count][0]
                 count += 1
 
-        self.matriz_tokens[count-4].extend([None, valor, None])
+        count_regulado = 0
+        if self.matriz_tokens[count-3][1] == "IDENT":
+            count_regulado = count-3
+        else:
+            count_regulado = count-6
+
+        self.matriz_tokens[count_regulado].extend([None, valor, None])
 
     def atribui_tam_matriz(self):
         tamanho_matriz = self.matriz_tokens[self.index][0] + self.matriz_tokens[self.index+1][0] + self.matriz_tokens[self.index+2][0]
@@ -245,10 +245,9 @@ class Parse:
 
     def variable_declaration(self):
         self.imprimi_passo_parse("variable_declaration: ")
-
         c = True
         while c == True:
-            self.dic_tipo[] = [self.index]
+            self.lst_index_tipo.append(self.index)
             self.encontra_token(["IDENT"], 0, "d")
 
             if not self.encontra_token([","], 0, "b"):
@@ -264,6 +263,7 @@ class Parse:
         if self.simple_type():
             self.atribui_tipo("simple")
         elif self.array_type():
+            #print("LOL")
             self.atribui_tipo("array")
         else:
             self.erro_mensagem(6)
@@ -423,10 +423,6 @@ class Parse:
         print("\nCÓDIGO ANALISADO COM SUCESSO!")
 
         print("\nTABELA DE SÍMBOLOS: \n")
-
-        #for i in self.matriz_tokens:
-            #print(len(i))
-        #print(len(self.matriz_tokens))
 
         colunas = ["Lexema", "Token", "Linha", "Coluna", "ID", "Tipo", "Valor", "Tamanho da Matriz"]
         print(tb(self.matriz_tokens, headers=colunas, tablefmt="fancy_grid"))

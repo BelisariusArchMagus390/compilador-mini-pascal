@@ -77,30 +77,6 @@ class Tokenizador:
             new_id = str(rm.randint(100, 400))
 
         return new_id
-    '''
-    def verifica_valor(self):
-        valores = []
-
-        for i in range(len(self.matriz_tokens)):
-            if (i + 2) < len(self.matriz_tokens):
-                tipo_token = self.matriz_tokens[i + 2][1]
-                if (
-                    self.matriz_tokens[i][1] == "IDENT"
-                    and self.matriz_tokens[i + 1][1] == ":="
-                    and tipo_token == "LITERAL_INT"
-                    or tipo_token == "LITERAL_STRING"
-                    or tipo_token == "BOOLEAN"
-                ):
-                    valor = self.matriz_tokens[i + 2][0]
-                    valores.append(valor)
-                else:
-                    valores.append(None)
-        
-        valores.append(None)
-        valores.append(None)
-
-        return valores
-    '''
 
     def tokenizar(self):
         # For que analisará cada char da string codigo
@@ -185,8 +161,6 @@ class Tokenizador:
             self.ids.get(self.matriz_tokens[i][0])
             for i in range(len(self.matriz_tokens))
         ]
-
-        #valores_list = self.verifica_valor()
 
         self.matriz_tokens = [
             self.matriz_tokens[i]+[ids_list[i]]
