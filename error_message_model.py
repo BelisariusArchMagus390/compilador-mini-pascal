@@ -1,3 +1,6 @@
+from sys import exit
+
+
 class ErrorMessage:
     def __init__(self, erro, linha, coluna, elemento):
         self.erro = erro
@@ -44,4 +47,5 @@ class ErrorMessage:
                 f"Erro sintático {self.erro} - É esperado -> {self.lst_erro[(self.erro - 1)]}"
             )
 
-            raise SystemExit("Cancelando...")
+            print("Cancelando...")
+            exit(0)
