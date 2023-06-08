@@ -1,8 +1,7 @@
-from tokenizador import Tokenizador
 from tabulate import tabulate as tb
-from error_message_model import ErrorMessage
 
-# Gramática da linguagem
+from .tokenizador import Tokenizador
+from .error_message_model import ErrorMessage
 
 
 class Parser:
