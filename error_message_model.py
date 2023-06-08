@@ -1,3 +1,6 @@
+from sys import exit
+
+
 class ErrorMessage:
     def __init__(self, erro, linha, coluna, elemento):
         self.erro = erro
@@ -31,19 +34,18 @@ class ErrorMessage:
             "then",  # 24
             "while",  # 25
             "do",  # 26
-            ".", # 27
-            "Simbolo desconhecido", # 28
+            ".",  # 27
+            "Símbolo desconhecido",  # 28
         ]
 
     def erro_mensagem_model(self):
         if self.erro != 0:
-            print("\nLinha: ", self.linha, " | ", "Coluna: ", self.coluna)
+            print(f"\nLinha: {self.linha} | Coluna: {self.coluna}")
             print(self.elemento)
             print("^")
             print(
-                "Erro sintático ",
-                self.erro,
-                " - É esperado -> " + self.lst_erro[(self.erro - 1)],
+                f"Erro sintático {self.erro} - É esperado -> {self.lst_erro[(self.erro - 1)]}"
             )
 
-            raise SystemExit("Cancelando...")
+            print("Cancelando...")
+            exit(0)

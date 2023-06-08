@@ -4,7 +4,8 @@ from error_message_model import ErrorMessage
 
 # Gramática da linguagem
 
-class Parse:
+
+class Parser:
     def __init__(self, codigo, c="parse"):
         self.c = c
         self.codigo = codigo
@@ -27,7 +28,7 @@ class Parse:
             print(passo_parse, self.token_atual)
         elif self.c == "parse":
             return
-        
+
     def complementa(self):
         for i in self.matriz_tokens:
             if i[0] in self.dic_carac:
@@ -44,20 +45,20 @@ class Parse:
                 i.extend(carac)
             elif len(i) == 5:
                 i.extend([None, None, None])
-    
+
     # atribui através de um dicionário
     def atribui_tipo(self, c):
         if c == "simple":
-            tipo = self.matriz_tokens[self.index-1][0]
+            tipo = self.matriz_tokens[self.index - 1][0]
             for i in self.lst_index_tipo:
-                #self.matriz_tokens[i].extend([tipo, None, None])
+                # self.matriz_tokens[i].extend([tipo, None, None])
 
                 self.dic_carac[self.matriz_tokens[i][0]] = [tipo, None]
 
         elif c == "array":
-            tipo = "array "+self.matriz_tokens[self.index-1][0]
+            tipo = "array " + self.matriz_tokens[self.index - 1][0]
             for i in self.lst_index_tipo:
-                #self.matriz_tokens[i].insert(5, tipo)
+                # self.matriz_tokens[i].insert(5, tipo)
 
                 if self.matriz_tokens[i][0] in self.dic_carac:
                     self.dic_carac[self.matriz_tokens[i][0]][0] = tipo
@@ -67,9 +68,13 @@ class Parse:
         self.lst_index_tipo.clear()
 
     def atribui_tam_matriz(self):
-        tamanho_matriz = self.matriz_tokens[self.index][0] + self.matriz_tokens[self.index+1][0] + self.matriz_tokens[self.index+2][0]
-        #self.matriz_tokens[self.index-4].extend([None, tamanho_matriz])
-        self.dic_carac[self.matriz_tokens[self.index-4][0]] = [None, tamanho_matriz]
+        tamanho_matriz = (
+            self.matriz_tokens[self.index][0]
+            + self.matriz_tokens[self.index + 1][0]
+            + self.matriz_tokens[self.index + 2][0]
+        )
+
+        self.dic_carac[self.matriz_tokens[self.index - 4][0]] = [None, tamanho_matriz]
 
     def atribui_valor(self):
         c = True
@@ -81,11 +86,11 @@ class Parse:
             else:
                 valor += self.matriz_tokens[count][0]
                 count += 1
-        count_regulado = self.index-2
+        count_regulado = self.index - 2
         if self.matriz_tokens[count_regulado][1] == "IDENT":
             self.matriz_tokens[count_regulado].append(valor)
         else:
-            count_regulado = self.index-5
+            count_regulado = self.index - 5
             self.matriz_tokens[count_regulado].append(valor)
 
     def avanca_token(self):
@@ -94,11 +99,12 @@ class Parse:
             self.token_atual = self.tok[self.index]
 
     def erro_mensagem(self, erro):
+        token_info = self.matriz_tokens[self.index - 1]
         e = ErrorMessage(
             erro,
-            self.matriz_tokens[self.index][2],
-            self.matriz_tokens[self.index][3],
-            self.matriz_tokens[self.index][0],
+            token_info[2],
+            token_info[3],
+            token_info[0],
         )
         e.erro_mensagem_model()
 
@@ -112,9 +118,6 @@ class Parse:
                 return True
         else:
             self.erro_mensagem(erro)
-
-# --------------------------------------------------------
-    # Parse
 
     def program(self):
         self.imprimi_passo_parse("program: ")
@@ -291,7 +294,7 @@ class Parse:
             self.erro_mensagem(6)
 
     def simple_type(self):
-        self.imprimi_passo_parse("simple_type: ")            
+        self.imprimi_passo_parse("simple_type: ")
 
         if self.encontra_token(["char", "integer", "boolean"], 0, "b"):
             return True
@@ -431,9 +434,11 @@ class Parse:
 
         self.variable()
 
-        if (not self.encontra_token([":="], 20, "b") and 
-            self.token_atual == ":" or
-            self.token_atual == ","):
+        if (
+            not self.encontra_token([":="], 20, "b")
+            and self.token_atual == ":"
+            or self.token_atual == ","
+        ):
             self.erro_mensagem(4)
 
         self.atribui_valor()
@@ -445,7 +450,16 @@ class Parse:
 
         print("\nTABELA DE SÍMBOLOS: \n")
 
-        colunas = ["Lexema", "Token", "Linha", "Coluna", "ID", "Tipo", "Valor", "Tamanho da Matriz"]
+        colunas = [
+            "Lexema",
+            "Token",
+            "Linha",
+            "Coluna",
+            "ID",
+            "Tipo",
+            "Valor",
+            "Tamanho da Matriz",
+        ]
         print(tb(self.matriz_tokens, headers=colunas, tablefmt="fancy_grid"))
 
     def parse(self):
