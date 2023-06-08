@@ -9,7 +9,7 @@ class Parse:
         self.c = c
         self.codigo = codigo
         self.tk = Tokenizador(self.codigo)
-        self.matriz_tokens = self.tk.tokenizar()
+        self.matriz_tokens, self.ids = self.tk.tokenizar()
 
         self.tok = [l[1] for l in self.matriz_tokens]
         self.tok.append("$")
@@ -29,21 +29,24 @@ class Parse:
         for i in self.matriz_tokens:
             if len(i) == 5:
                 i.extend([None, None, None])
-
+    
+    # atribui através de um dicionário
     def atribui_tipo(self, c):
+        
         if c == "simple":
             tipo = self.matriz_tokens[self.index-1][0]
-            print(tipo)
+            for i in self.lst_index_tipo:
+                self.matriz_tokens[i].extend([tipo, None, None])
         elif c == "array":
             tipo = "array "+self.matriz_tokens[self.index-1][0]
-            print(tipo)
-        
-        #print(self.lst_index_tipo)
-
-        for i in self.lst_index_tipo:
-            self.matriz_tokens[i].extend([tipo, None, None])
+            for i in self.lst_index_tipo:
+                self.matriz_tokens[i].insert(5, tipo)
 
         self.lst_index_tipo.clear()
+
+    def atribui_tam_matriz(self):
+        tamanho_matriz = self.matriz_tokens[self.index][0] + self.matriz_tokens[self.index+1][0] + self.matriz_tokens[self.index+2][0]
+        self.matriz_tokens[self.index-4].extend([None, tamanho_matriz])
 
     def atribui_valor(self):
         c = True
@@ -56,17 +59,12 @@ class Parse:
                 valor += self.matriz_tokens[count][0]
                 count += 1
 
-        count_regulado = 0
         if self.matriz_tokens[count-3][1] == "IDENT":
             count_regulado = count-3
+            self.matriz_tokens[count_regulado].extend([None, valor, None])
         else:
             count_regulado = count-6
-
-        self.matriz_tokens[count_regulado].extend([None, valor, None])
-
-    def atribui_tam_matriz(self):
-        tamanho_matriz = self.matriz_tokens[self.index][0] + self.matriz_tokens[self.index+1][0] + self.matriz_tokens[self.index+2][0]
-        self.matriz_tokens[self.index-4].extend([None, None, tamanho_matriz])
+            self.matriz_tokens[count_regulado].extend([None, valor, None])
 
     def avanca_token(self):
         if self.index < len(self.tok):
@@ -263,7 +261,6 @@ class Parse:
         if self.simple_type():
             self.atribui_tipo("simple")
         elif self.array_type():
-            #print("LOL")
             self.atribui_tipo("array")
         else:
             self.erro_mensagem(6)
