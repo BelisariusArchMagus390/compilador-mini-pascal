@@ -1,13 +1,13 @@
 from sys import exit
-from os import path
+from pathlib import Path
 
-from parser_model import Parser
+from .parser_model import Parser
 
 
 class Program:
     def read_file(file_name):
-        file_dir = path.dirname(path.abspath(__file__))
-        desired_file = path.join(file_dir, file_name)
+        file_dir = Path(__file__).parent.parent.joinpath("public")
+        desired_file = file_dir.joinpath(file_dir, file_name)
 
         try:
             with open(desired_file) as file:
@@ -16,6 +16,7 @@ class Program:
                 mini_pascal_code = mini_pascal_code + " "
         except FileNotFoundError:
             print(f"O arquivo {file_name} não existe.")
+            exit(0)
 
         return mini_pascal_code
 
@@ -31,7 +32,7 @@ class Program:
         match opcao:
             case "1":
                 file_name = input(
-                    "Digite o nome do arquivo (IMPORTANTE!!! o arquivo deve estar na pasta raiz): "
+                    "Digite o nome do arquivo (IMPORTANTE!!! o arquivo deve estar na pasta public): "
                 )
 
                 if file_name.endswith(".txt"):

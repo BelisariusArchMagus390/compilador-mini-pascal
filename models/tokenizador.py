@@ -1,6 +1,7 @@
 import random as rm
 import re
-from error_message_model import ErrorMessage
+
+from .error_message_model import ErrorMessage
 
 
 class Tokenizador:
@@ -163,7 +164,7 @@ class Tokenizador:
         ]
 
         self.matriz_tokens = [
-            self.matriz_tokens[i]+[ids_list[i]]
+            self.matriz_tokens[i] + [ids_list[i]]
             for i in range(len(self.matriz_tokens))
         ]
 
