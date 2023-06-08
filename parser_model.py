@@ -19,6 +19,8 @@ class Parse:
         self.token_atual = self.tok[0]
         self.index = 0
 
+    # Funções auxiliares
+
     def imprimi_passo_parse(self, passo_parse):
         if self.c == "debug":
             print(passo_parse, self.token_atual)
@@ -32,7 +34,6 @@ class Parse:
     
     # atribui através de um dicionário
     def atribui_tipo(self, c):
-        
         if c == "simple":
             tipo = self.matriz_tokens[self.index-1][0]
             for i in self.lst_index_tipo:
@@ -91,6 +92,9 @@ class Parse:
         else:
             self.erro_mensagem(erro)
 
+# --------------------------------------------------------
+    # Parse
+
     def program(self):
         self.imprimi_passo_parse("program: ")
 
@@ -102,7 +106,7 @@ class Parse:
 
         self.block()
 
-        self.encontra_token(["."], 28, "d")
+        self.encontra_token(["."], 27, "d")
 
         if self.token_atual == "$":
             return
@@ -367,11 +371,7 @@ class Parse:
         elif self.token_atual == "write":
             self.write_statement()
             c = True
-        elif (
-            self.token_atual == "IDENT"
-            or self.token_atual == "LITERAL_INT"
-            or self.token_atual == "LITERAL_STRING"
-        ):
+        elif self.token_atual == "IDENT":
             self.assignment_statement()
             c = True
         else:
@@ -410,7 +410,10 @@ class Parse:
 
         self.variable()
 
-        self.encontra_token([":="], 20, "d")
+        if (not self.encontra_token([":="], 20, "b") and 
+            self.token_atual == ":" or
+            self.token_atual == ","):
+            self.erro_mensagem(4)
 
         self.atribui_valor()
 

@@ -31,8 +31,8 @@ class ErrorMessage:
             "then",  # 24
             "while",  # 25
             "do",  # 26
-            "var ou identificador",  # 27
-            "." "Simbolo desconhecido",  # 28  # 29
+            ".", # 27
+            "Simbolo desconhecido", # 28
         ]
 
     def erro_mensagem_model(self):

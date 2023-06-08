@@ -152,7 +152,7 @@ class Tokenizador:
 
         if erro == True:
             e = ErrorMessage(
-                29, self.erro_elemento[1], self.erro_elemento[2], self.erro_elemento[0]
+                28, self.erro_elemento[1], self.erro_elemento[2], self.erro_elemento[0]
             )
             e.erro_mensagem_model()
 
@@ -166,7 +166,5 @@ class Tokenizador:
             self.matriz_tokens[i]+[ids_list[i]]
             for i in range(len(self.matriz_tokens))
         ]
-
-        #print(self.ids)
 
         return self.matriz_tokens, self.ids
