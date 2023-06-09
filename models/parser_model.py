@@ -70,7 +70,6 @@ class Parser:
             elif len(i) == 5:
                 i.extend([None, None, None])
 
-    # atribui através de um dicionário
     def atribui_tipo(self, c):
         if c == "simple":
             tipo = self.matriz_tokens[self.index - 1][0]
