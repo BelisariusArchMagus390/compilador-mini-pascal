@@ -158,7 +158,7 @@ class Parser:
             return
 
     def relational_operator(self):
-        operadores = ["=", "<>", "<", "<=", ">=", ">"]
+        operadores = ["=", "<>", "<", "<=", ">=", ">", "and", "or"]
         return self.encontra_token(operadores, 0, "b")
 
     def adding_operator_or_sign(self):
