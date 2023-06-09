@@ -65,7 +65,7 @@ Tomamos a liberdade de adicionar pequenas mudanças nas regras gramáticais do m
 - A regra `< sign >` foi removida pois pode ser substituída por `< adding operator >`.
 - As regras `< array variable >` e `< entire variable >` foram removidas e passaram a ser produções da regra `< variable identifier >` pois se comportavam como "produções unitárias" e foram simplificadas.
 - A regra `< type identifier >` foi removida por ser um símbolo inacessível, afinal, nenhuma outra regra a deriva.
-- Foi retirado as palavras reservadas 'or', 'and', 'function' e 'procedure' da grámatica léxica, por não estarem sendo utilizados na gramática sintática.
+- Foi retirado da grámatica léxica as palavras reservadas 'function' e 'procedure' por não estarem declaradas na gramática sintática, além de'or' e 'and' pela a sintaxe não permitir uma expressão com múltiplas condições seguidas.
 
 ### 2.4 - Erros sintáticos
 Abaixo está listado todos os erros sintáticos implementados:
