@@ -55,13 +55,13 @@ class Parser:
             if lexema in self.dic_carac:
                 valor = self.dic_carac[lexema]
                 tipo = valor[0]
-                tam_matriz = valor[1]
+                tam_array = valor[1]
 
                 if len(i) > 5 and i[5] != None:
-                    carac = [tipo, i[5], tam_matriz]
+                    carac = [tipo, i[5], tam_array]
                     i.pop()
                 else:
-                    carac = [tipo, None, tam_matriz]
+                    carac = [tipo, None, tam_array]
                 i.extend(carac)
             elif len(i) > 5 and i[5] != None:
                 carac = [None, i[5], None]
@@ -77,7 +77,7 @@ class Parser:
                 self.dic_carac[self.matriz_tokens[i][0]] = [tipo, None]
 
         elif c == "array":
-            tipo = "array " + self.matriz_tokens[self.index - 1][0]
+            tipo = "Array " + self.matriz_tokens[self.index - 1][0]
             for i in self.lst_index_tipo:
                 lexema = self.matriz_tokens[i][0]
                 if lexema in self.dic_carac:
@@ -87,7 +87,7 @@ class Parser:
 
         self.lst_index_tipo.clear()
 
-    def atribui_tam_matriz(self):
+    def atribui_tam_array(self):
         tamanho_matriz = (
             self.matriz_tokens[self.index][0]
             + self.matriz_tokens[self.index + 1][0]
@@ -168,11 +168,7 @@ class Parser:
         return self.encontra_token(["*", "div"], 0, "b")
 
     def variable_identifier(self):
-        return (
-            self.encontra_token(["IDENT"], 0, "b")
-            or self.encontra_token(["LITERAL_INT"], 0, "b")
-            or self.encontra_token(["LITERAL_STRING"], 0, "b")
-        )
+        return self.encontra_token(["IDENT"], 0, "b")
 
     def indexed_variable(self):
         if self.encontra_token(["["], 0, "b"):
@@ -285,7 +281,7 @@ class Parser:
         return True
 
     def index_range(self):
-        self.atribui_tam_matriz()
+        self.atribui_tam_array()
 
         self.encontra_token(["LITERAL_INT"], ERRO_FALTA_LITERAL_INT, "d")
         self.encontra_token([".."], ERRO_FALTA_DOIS_PONTOS, "d")
@@ -349,7 +345,11 @@ class Parser:
     def write_statement(self):
         if self.encontra_token(["write"], ERRO_FALTA_WRITE, "b"):
             if self.encontra_token(["("], ERRO_FALTA_COMECO_PARENTESE, "b"):
-                self.variable()
+                if not (
+                    self.encontra_token(["LITERAL_INT"], 0, "b")
+                    or self.encontra_token(["LITERAL_STRING"], 0, "b")
+                ):
+                    self.variable()
                 c = True
                 while c is True:
                     if self.encontra_token([","], 0, "b"):
@@ -397,7 +397,7 @@ class Parser:
             "ID",
             "Tipo",
             "Valor",
-            "Tamanho da Matriz",
+            "Tamanho do Array",
         ]
         print(tb(self.matriz_tokens, headers=colunas, tablefmt="fancy_grid"))
 
