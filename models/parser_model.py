@@ -168,30 +168,20 @@ class Parser:
     def multiplying_operator(self):
         return self.encontra_token(["*", "div"], 0, "b")
 
-    def entire_variable_or_array(self):
-        if self.variable_identifier():
-            self.avanca_token()
-            return True
-
     def variable_identifier(self):
         return (
-            self.token_atual == "IDENT"
-            or self.token_atual == "LITERAL_INT"
-            or self.token_atual == "LITERAL_STRING"
+            self.encontra_token(["IDENT"], 0, "b")
+            or self.encontra_token(["LITERAL_INT"], 0, "b")
+            or self.encontra_token(["LITERAL_STRING"], 0, "b")
         )
-
-    def array_variable(self):
-        if self.entire_variable_or_array():
-            return True
 
     def indexed_variable(self):
         if self.encontra_token(["["], 0, "b"):
             self.expression()
             self.encontra_token(["]"], ERRO_FINAL_COLCHETE, "d")
-            return True
 
     def variable(self):
-        if self.entire_variable_or_array():
+        if self.variable_identifier():
             self.indexed_variable()
         else:
             self.erro_mensagem(ERRO_NAO_FEITA_DECLARACAO_DE_VARIAVEL)
