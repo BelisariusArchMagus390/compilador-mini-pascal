@@ -14,8 +14,6 @@ class Tokenizador:
         self.palavras_reservadas = [
             "while",
             "div",
-            "or",
-            "and",
             "not",
             "if",
             "then",
@@ -29,8 +27,6 @@ class Tokenizador:
             "write",
             "var",
             "array",
-            "function",
-            "procedure",
             "program",
             "true",
             "false",

@@ -3,10 +3,38 @@ from tabulate import tabulate as tb
 from .tokenizador import Tokenizador
 from .error_message_model import ErrorMessage
 
+ERRO_FALTA_PROGRAM = 1
+ERRO_FALTA_IDENTIFICADOR = 2
+ERRO_PONTO_E_VIRGULA = 3
+ERRO_FALTA_VAR = 4
+ERRO_FALTA_DOIS_PONTOS_E_UM_IDENTIFICADOR = 5
+ERRO_NAO_E_SIMPLE_TYPE_OU_ARRAY_TYPE = 6
+ERRO_FALTA_ARRAY = 7
+ERRO_COMECO_COLCHETE = 8
+ERRO_FALTA_LITERAL_INT = 9
+ERRO_FALTA_DOIS_PONTOS = 10
+ERRO_FINAL_COLCHETE = 11
+ERRO_FALTA_OF = 12
+ERRO_FALTA_SIMPLE_TYPE = 13
+ERRO_FALTA_BEGIN = 14
+ERRO_FALTA_READ = 15
+ERRO_FALTA_COMECO_PARENTESE = 16
+ERRO_NAO_FEITA_DECLARACAO_DE_VARIAVEL = 17
+ERRO_FIM_PARENTESE = 18
+ERRO_FALTA_WRITE = 19
+ERRO_FALTA_SINAL_DE_ATRIBUICAO = 20
+ERRO_FALTA_LITERAL_INT_OU_LITERAL_STRING_OU_COMECO_PARENTESE_OU_NOT = 21
+ERRO_FALTA_END = 22
+ERRO_FALTA_IF = 23
+ERRO_FALTA_THEN = 24
+ERRO_FALTA_WHILE = 25
+ERRO_FALTA_DO = 26
+ERRO_FALTA_PONTO_FINAL = 27
+ERRO_FALTA_UMA_EXPRESSAO = 29
+
 
 class Parser:
-    def __init__(self, codigo, c="parse"):
-        self.c = c
+    def __init__(self, codigo):
         self.codigo = codigo
         self.tk = Tokenizador(self.codigo)
         self.matriz_tokens = self.tk.tokenizar()
@@ -21,23 +49,20 @@ class Parser:
         self.index = 0
 
     # Funções auxiliares
-
-    def imprimi_passo_parse(self, passo_parse):
-        if self.c == "debug":
-            print(passo_parse, self.token_atual)
-        elif self.c == "parse":
-            return
-
     def complementa(self):
         for i in self.matriz_tokens:
-            if i[0] in self.dic_carac:
+            lexema = i[0]
+            if lexema in self.dic_carac:
+                valor = self.dic_carac[lexema]
+                tipo = valor[0]
+                tam_array = valor[1]
+
                 if len(i) > 5 and i[5] != None:
-                    carac = [self.dic_carac[i[0]][0], i[5], self.dic_carac[i[0]][1]]
+                    carac = [tipo, i[5], tam_array]
                     i.pop()
-                    i.extend(carac)
                 else:
-                    carac = [self.dic_carac[i[0]][0], None, self.dic_carac[i[0]][1]]
-                    i.extend(carac)
+                    carac = [tipo, None, tam_array]
+                i.extend(carac)
             elif len(i) > 5 and i[5] != None:
                 carac = [None, i[5], None]
                 i.pop()
@@ -45,28 +70,24 @@ class Parser:
             elif len(i) == 5:
                 i.extend([None, None, None])
 
-    # atribui através de um dicionário
     def atribui_tipo(self, c):
         if c == "simple":
             tipo = self.matriz_tokens[self.index - 1][0]
             for i in self.lst_index_tipo:
-                # self.matriz_tokens[i].extend([tipo, None, None])
-
                 self.dic_carac[self.matriz_tokens[i][0]] = [tipo, None]
 
         elif c == "array":
-            tipo = "array " + self.matriz_tokens[self.index - 1][0]
+            tipo = "Array " + self.matriz_tokens[self.index - 1][0]
             for i in self.lst_index_tipo:
-                # self.matriz_tokens[i].insert(5, tipo)
-
-                if self.matriz_tokens[i][0] in self.dic_carac:
-                    self.dic_carac[self.matriz_tokens[i][0]][0] = tipo
+                lexema = self.matriz_tokens[i][0]
+                if lexema in self.dic_carac:
+                    self.dic_carac[lexema][0] = tipo
                 else:
-                    self.dic_carac[self.matriz_tokens[i][0]] = [tipo, None]
+                    self.dic_carac[lexema] = [tipo, None]
 
         self.lst_index_tipo.clear()
 
-    def atribui_tam_matriz(self):
+    def atribui_tam_array(self):
         tamanho_matriz = (
             self.matriz_tokens[self.index][0]
             + self.matriz_tokens[self.index + 1][0]
@@ -79,18 +100,20 @@ class Parser:
         c = True
         count = self.index
         valor = ""
-        while c == True:
-            if self.matriz_tokens[count][1] == ";":
+        while c is True:
+            linha_matriz = self.matriz_tokens[count]
+
+            if linha_matriz[1] == ";":
                 c = False
             else:
-                valor += self.matriz_tokens[count][0]
+                valor += linha_matriz[0]
                 count += 1
         count_regulado = self.index - 2
-        if self.matriz_tokens[count_regulado][1] == "IDENT":
-            self.matriz_tokens[count_regulado].append(valor)
-        else:
+        lexema = self.matriz_tokens[count_regulado]
+        if not lexema[1] == "IDENT":
             count_regulado = self.index - 5
-            self.matriz_tokens[count_regulado].append(valor)
+
+        lexema.append(valor)
 
     def avanca_token(self):
         if self.index < len(self.tok):
@@ -119,258 +142,181 @@ class Parser:
             self.erro_mensagem(erro)
 
     def program(self):
-        self.imprimi_passo_parse("program: ")
+        self.encontra_token(["program"], ERRO_FALTA_PROGRAM, "d")
 
-        self.encontra_token(["program"], 1, "d")
+        self.encontra_token(["IDENT"], ERRO_FALTA_IDENTIFICADOR, "d")
 
-        self.encontra_token(["IDENT"], 2, "d")
+        self.encontra_token([";"], ERRO_PONTO_E_VIRGULA, "d")
 
-        self.encontra_token([";"], 3, "d")
+        # block
+        self.variable_declaration_part()
+        self.compound_statement()
 
-        self.block()
-
-        self.encontra_token(["."], 27, "d")
+        self.encontra_token(["."], ERRO_FALTA_PONTO_FINAL, "d")
 
         if self.token_atual == "$":
             return
 
-    def block(self):
-        self.imprimi_passo_parse("block: ")
-
-        self.variable_declaration_part()
-
-        self.statement_part()
-
     def relational_operator(self):
-        self.imprimi_passo_parse("relational_operator: ")
-
         operadores = ["=", "<>", "<", "<=", ">=", ">", "or", "and"]
-        if self.encontra_token(operadores, 0, "b"):
-            return True
+        return self.encontra_token(operadores, 0, "b")
 
     def adding_operator_or_sign(self):
-        self.imprimi_passo_parse("adding_operator_or_sign: ")
-
-        if self.encontra_token(["+", "-"], 0, "b"):
-            return True
+        return self.encontra_token(["+", "-"], 0, "b")
 
     def multiplying_operator(self):
-        self.imprimi_passo_parse("multiplying_operator: ")
-
-        if self.encontra_token(["*", "div"], 0, "b"):
-            return True
-
-    def entire_variable_or_array(self):
-        self.imprimi_passo_parse("entire_variable_or_array: ")
-
-        if self.variable_identifier():
-            self.avanca_token()
-            return True
+        return self.encontra_token(["*", "div"], 0, "b")
 
     def variable_identifier(self):
-        self.imprimi_passo_parse("variable_identifier: ")
-
-        if (
-            self.token_atual == "IDENT"
-            or self.token_atual == "LITERAL_INT"
-            or self.token_atual == "LITERAL_STRING"
-        ):
-            return True
-
-    def array_variable(self):
-        self.imprimi_passo_parse("array_variable: ")
-
-        if self.entire_variable_or_array():
-            return True
+        return self.encontra_token(["IDENT"], 0, "b")
 
     def indexed_variable(self):
-        self.imprimi_passo_parse("indexed_variable: ")
-
         if self.encontra_token(["["], 0, "b"):
             self.expression()
-            self.encontra_token(["]"], 10, "d")
-            return True
+            self.encontra_token(["]"], ERRO_FINAL_COLCHETE, "d")
 
     def variable(self):
-        self.imprimi_passo_parse("variable: ")
-
-        if self.entire_variable_or_array():
-            if self.indexed_variable():
-                return
-            else:
-                return
+        if self.variable_identifier():
+            self.indexed_variable()
         else:
-            self.erro_mensagem(17)
+            self.erro_mensagem(ERRO_NAO_FEITA_DECLARACAO_DE_VARIAVEL)
 
     def aux_var_declr_part(self):
         if self.token_atual == "IDENT":
             self.variable_declaration()
-            self.encontra_token([";"], 3, "d")
+            self.encontra_token([";"], ERRO_PONTO_E_VIRGULA, "d")
             return True
 
     def factor(self):
-        self.imprimi_passo_parse("factor: ")
-
         if self.token_atual == "IDENT":
             self.variable()
-        elif self.encontra_token(["LITERAL_STRING", "LITERAL_INT", "BOOLEAN"], 0, "b"):
-            return
-        elif self.encontra_token(["("], 0, "b"):
-            self.expression()
-            self.encontra_token([")"], 18, "d")
-        elif self.encontra_token(["not"], 21, "b"):
-            self.factor()
+        else:
+            if not self.encontra_token(
+                ["LITERAL_STRING", "LITERAL_INT", "BOOLEAN"], 0, "b"
+            ):
+                if self.encontra_token(["("], 0, "b"):
+                    self.expression()
+                    self.encontra_token([")"], ERRO_FIM_PARENTESE, "d")
+                elif self.encontra_token(
+                    ["not"],
+                    ERRO_FALTA_LITERAL_INT_OU_LITERAL_STRING_OU_COMECO_PARENTESE_OU_NOT,
+                    "b",
+                ):
+                    self.factor()
 
     def term(self):
-        self.imprimi_passo_parse("term: ")
-
         self.factor()
 
         c = True
-        while c == True:
+        while c is True:
             if self.multiplying_operator():
                 self.factor()
             else:
                 c = False
 
     def simple_expression(self):
-        self.imprimi_passo_parse("simple_expression: ")
-
         self.adding_operator_or_sign()
         self.term()
 
         c = True
-        while c == True:
+        while c is True:
             if self.adding_operator_or_sign():
                 self.term()
             else:
                 c = False
 
     def expression(self):
-        self.imprimi_passo_parse("expression: ")
-
         self.simple_expression()
 
         if self.relational_operator():
             self.expression()
 
     def variable_declaration_part(self):
-        self.imprimi_passo_parse("variable_declaration_part: ")
-
-        if not self.encontra_token(["var"], 0, "b"):
-            return
-
-        if not self.aux_var_declr_part():
-            self.erro_mensagem(2)
-
-        c = True
-        while c == True:
+        if self.encontra_token(["var"], 0, "b"):
             if not self.aux_var_declr_part():
-                c = False
+                self.erro_mensagem(2)
+
+            c = True
+            while c is True:
+                if not self.aux_var_declr_part():
+                    c = False
 
     def variable_declaration(self):
-        self.imprimi_passo_parse("variable_declaration: ")
         c = True
-        while c == True:
+        while c is True:
             self.lst_index_tipo.append(self.index)
             self.encontra_token(["IDENT"], 0, "d")
 
             if not self.encontra_token([","], 0, "b"):
                 c = False
 
-        self.encontra_token([":"], 5, "d")
+        self.encontra_token([":"], ERRO_FALTA_DOIS_PONTOS_E_UM_IDENTIFICADOR, "d")
 
         self.type_()
 
     def type_(self):
-        self.imprimi_passo_parse("type_: ")
-
         if self.simple_type():
             self.atribui_tipo("simple")
         elif self.array_type():
             self.atribui_tipo("array")
         else:
-            self.erro_mensagem(6)
+            self.erro_mensagem(ERRO_NAO_E_SIMPLE_TYPE_OU_ARRAY_TYPE)
 
     def simple_type(self):
-        self.imprimi_passo_parse("simple_type: ")
-
-        if self.encontra_token(["char", "integer", "boolean"], 0, "b"):
-            return True
+        return self.encontra_token(["char", "integer", "boolean"], 0, "b")
 
     def array_type(self):
-        self.imprimi_passo_parse("array_type: ")
+        self.encontra_token(["array"], ERRO_FALTA_ARRAY, "d")
 
-        self.encontra_token(["array"], 7, "d")
-
-        if self.encontra_token(["["], 8, "b"):
+        if self.encontra_token(["["], ERRO_COMECO_COLCHETE, "b"):
             self.index_range()
 
-        self.encontra_token(["]"], 11, "d")
+        self.encontra_token(["]"], ERRO_FINAL_COLCHETE, "d")
 
-        self.encontra_token(["of"], 12, "d")
+        self.encontra_token(["of"], ERRO_FALTA_OF, "d")
 
         if not self.simple_type():
-            self.erro_mensagem(13)
+            self.erro_mensagem(ERRO_FALTA_SIMPLE_TYPE)
 
         return True
 
     def index_range(self):
-        self.imprimi_passo_parse("index_range: ")
+        self.atribui_tam_array()
 
-        self.atribui_tam_matriz()
-
-        self.encontra_token(["LITERAL_INT"], 9, "d")
-        self.encontra_token([".."], 10, "d")
-        self.encontra_token(["LITERAL_INT"], 9, "d")
-
-    def statement_part(self):
-        self.imprimi_passo_parse("statement_part: ")
-
-        self.compound_statement()
+        self.encontra_token(["LITERAL_INT"], ERRO_FALTA_LITERAL_INT, "d")
+        self.encontra_token([".."], ERRO_FALTA_DOIS_PONTOS, "d")
+        self.encontra_token(["LITERAL_INT"], ERRO_FALTA_LITERAL_INT, "d")
 
     def compound_statement(self):
-        self.imprimi_passo_parse("compound_statement: ")
-
-        if self.encontra_token(["begin"], 14, "b"):
+        if self.encontra_token(["begin"], ERRO_FALTA_BEGIN, "b"):
             self.statement()
             c = True
-            while c == True:
+            while c is True:
                 if self.encontra_token([";"], 0, "b"):
                     self.statement()
                 else:
                     c = False
-            self.encontra_token(["end"], 22, "d")
+            self.encontra_token(["end"], ERRO_FALTA_END, "d")
 
     def if_statement(self):
-        self.imprimi_passo_parse("if_statement: ")
-
-        if self.encontra_token(["if"], 23, "b"):
+        if self.encontra_token(["if"], ERRO_FALTA_IF, "b"):
             self.expression()
-            if self.encontra_token(["then"], 24, "b"):
+            if self.encontra_token(["then"], ERRO_FALTA_THEN, "b"):
                 self.statement()
                 if self.encontra_token(["else"], 0, "b"):
                     self.statement()
 
     def while_statement(self):
-        self.imprimi_passo_parse("while_statement: ")
-
-        if self.encontra_token(["while"], 25, "b"):
+        if self.encontra_token(["while"], ERRO_FALTA_WHILE, "b"):
             self.expression()
-            if self.encontra_token(["do"], 26, "b"):
+            if self.encontra_token(["do"], ERRO_FALTA_DO, "b"):
                 self.statement()
 
     def statement(self):
-        self.imprimi_passo_parse("statement: ")
-
-        if self.simple_statement():
-            return
-        elif self.structured_statement():
-            return
+        if not (self.simple_statement() or self.structured_statement()):
+            self.erro_mensagem(ERRO_FALTA_UMA_EXPRESSAO)
 
     def structured_statement(self):
-        self.imprimi_passo_parse("structured_statement: ")
-
         c = False
         if self.token_atual == "begin":
             self.compound_statement()
@@ -381,12 +327,9 @@ class Parser:
         elif self.token_atual == "while":
             self.while_statement()
             c = True
-
         return c
 
     def simple_statement(self):
-        self.imprimi_passo_parse("simple_statement: ")
-
         c = False
         if self.token_atual == "read":
             self.read_statement()
@@ -397,48 +340,45 @@ class Parser:
         elif self.token_atual == "IDENT":
             self.assignment_statement()
             c = True
-        else:
-            return c
+        return c
 
     def write_statement(self):
-        self.imprimi_passo_parse("write_statement: ")
-
-        if self.encontra_token(["write"], 19, "b"):
-            if self.encontra_token(["("], 16, "b"):
-                self.variable()
+        if self.encontra_token(["write"], ERRO_FALTA_WRITE, "b"):
+            if self.encontra_token(["("], ERRO_FALTA_COMECO_PARENTESE, "b"):
+                if not (
+                    self.encontra_token(["LITERAL_INT"], 0, "b")
+                    or self.encontra_token(["LITERAL_STRING"], 0, "b")
+                ):
+                    self.variable()
                 c = True
-                while c == True:
+                while c is True:
                     if self.encontra_token([","], 0, "b"):
                         self.variable()
                     else:
                         c = False
-                self.encontra_token([")"], 18, "d")
+                self.encontra_token([")"], ERRO_FIM_PARENTESE, "d")
 
     def read_statement(self):
-        self.imprimi_passo_parse("read_statement: ")
-
-        if self.encontra_token(["read"], 15, "b"):
-            if self.encontra_token(["("], 16, "b"):
+        if self.encontra_token(["read"], ERRO_FALTA_READ, "b"):
+            if self.encontra_token(["("], ERRO_FALTA_COMECO_PARENTESE, "b"):
                 self.variable()
                 c = True
-                while c == True:
+                while c is True:
                     if self.encontra_token([","], 0, "b"):
                         self.variable()
                     else:
                         c = False
-                self.encontra_token([")"], 18, "d")
+                self.encontra_token([")"], ERRO_FIM_PARENTESE, "d")
 
     def assignment_statement(self):
-        self.imprimi_passo_parse("assignment_statement: ")
-
         self.variable()
 
         if (
-            not self.encontra_token([":="], 20, "b")
+            not self.encontra_token([":="], ERRO_FALTA_SINAL_DE_ATRIBUICAO, "b")
             and self.token_atual == ":"
             or self.token_atual == ","
         ):
-            self.erro_mensagem(4)
+            self.erro_mensagem(ERRO_FALTA_VAR)
 
         self.atribui_valor()
 
@@ -457,7 +397,7 @@ class Parser:
             "ID",
             "Tipo",
             "Valor",
-            "Tamanho da Matriz",
+            "Tamanho do Array",
         ]
         print(tb(self.matriz_tokens, headers=colunas, tablefmt="fancy_grid"))
 

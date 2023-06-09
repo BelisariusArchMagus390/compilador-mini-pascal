@@ -36,6 +36,7 @@ class ErrorMessage:
             "do",  # 26
             ".",  # 27
             "Símbolo desconhecido",  # 28
+            "uma expressão",  # 29
         ]
 
     def erro_mensagem_model(self):
