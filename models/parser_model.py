@@ -151,7 +151,7 @@ class Parser:
 
         # block
         self.variable_declaration_part()
-        self.statement_part()
+        self.compound_statement()
 
         self.encontra_token(["."], ERRO_FALTA_PONTO_FINAL, "d")
 
@@ -292,9 +292,6 @@ class Parser:
         self.encontra_token([".."], ERRO_FALTA_DOIS_PONTOS, "d")
         self.encontra_token(["LITERAL_INT"], ERRO_FALTA_LITERAL_INT, "d")
 
-    def statement_part(self):
-        self.compound_statement()
-
     def compound_statement(self):
         if self.encontra_token(["begin"], ERRO_FALTA_BEGIN, "b"):
             self.statement()
@@ -321,20 +318,8 @@ class Parser:
                 self.statement()
 
     def statement(self):
-        lol = self.simple_statement()
-        if lol:
-            return
-        lal = self.structured_statement()
-        if lal:
-            return
-        # self.erro_mensagem(ERRO_FALTA_UMA_EXPRESSAO)
-
-    """
-    def statement(self):
         if not (self.simple_statement() or self.structured_statement()):
-            print(self.token_atual)
             self.erro_mensagem(ERRO_FALTA_UMA_EXPRESSAO)
-    """
 
     def structured_statement(self):
         c = False
@@ -347,7 +332,6 @@ class Parser:
         elif self.token_atual == "while":
             self.while_statement()
             c = True
-
         return c
 
     def simple_statement(self):
@@ -361,8 +345,7 @@ class Parser:
         elif self.token_atual == "IDENT":
             self.assignment_statement()
             c = True
-        else:
-            return c
+        return c
 
     def write_statement(self):
         if self.encontra_token(["write"], ERRO_FALTA_WRITE, "b"):
