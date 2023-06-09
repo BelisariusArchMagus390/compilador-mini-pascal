@@ -52,10 +52,11 @@ class Parser:
     def complementa(self):
         for i in self.matriz_tokens:
             lexema = i[0]
-            valor = self.dic_carac[lexema]
-            tipo = valor[0]
-            tam_matriz = valor[1]
             if lexema in self.dic_carac:
+                valor = self.dic_carac[lexema]
+                tipo = valor[0]
+                tam_matriz = valor[1]
+
                 if len(i) > 5 and i[5] != None:
                     carac = [tipo, i[5], tam_matriz]
                     i.pop()
@@ -191,10 +192,7 @@ class Parser:
 
     def variable(self):
         if self.entire_variable_or_array():
-            if self.indexed_variable():
-                return
-            else:
-                return
+            self.indexed_variable()
         else:
             self.erro_mensagem(ERRO_NAO_FEITA_DECLARACAO_DE_VARIAVEL)
 
@@ -333,8 +331,20 @@ class Parser:
                 self.statement()
 
     def statement(self):
+        lol = self.simple_statement()
+        if lol:
+            return
+        lal = self.structured_statement()
+        if lal:
+            return
+        # self.erro_mensagem(ERRO_FALTA_UMA_EXPRESSAO)
+
+    """
+    def statement(self):
         if not (self.simple_statement() or self.structured_statement()):
+            print(self.token_atual)
             self.erro_mensagem(ERRO_FALTA_UMA_EXPRESSAO)
+    """
 
     def structured_statement(self):
         c = False
