@@ -65,7 +65,7 @@ Tomamos a liberdade de adicionar pequenas mudanças nas regras gramáticais do m
 - A regra `< sign >` foi removida pois pode ser substituída por `< adding operator >`.
 - As regras `< array variable >` e `< entire variable >` foram removidas e passaram a ser produções da regra `< variable identifier >` pois se comportavam como "produções unitárias" e foram simplificadas.
 - A regra `< type identifier >` foi removida por ser um símbolo inacessível, afinal, nenhuma outra regra a deriva.
-- Desconsiderou-se as palavras reservadas 'function' e 'procedure' por não haver regras na sintaxe do mini-pascal que definissem como deve ser estruturado uma 'function' ou um 'procedure.
+- Desconsiderou-se as palavras reservadas `function` e `procedure` por não haver regras na sintaxe do mini-pascal que definissem como deve ser estruturado uma `function` ou um `procedure`.
 
 ### 2.4 - Erros sintáticos
 Abaixo está listado todos os erros sintáticos implementados:
