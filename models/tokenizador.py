@@ -9,7 +9,8 @@ class Tokenizador:
         self.codigo = codigo.replace("\n", " \n ")
         self.id = r"^[a-zA-Z]([a-zA-Z]|[0-9])*$"
         self.digito_inteiro = r"^[0-9]+$"
-        self.string_constante = r'^"+[a-zA-Z]([a-zA-Z]|[0-9])*"+$'
+        self.string_constante_aspas_duplas = r'^"+[a-zA-Z]([a-zA-Z]|[0-9])*"+$'
+        self.string_constante_aspas_simples = r"^'+([a-zA-Z]|[0-9])'+$"
 
         self.palavras_reservadas = [
             "while",
@@ -114,7 +115,11 @@ class Tokenizador:
                         coluna = 0
                         linha += 1
                     else:
-                        if re.match(self.string_constante, lexema) != None:
+                        if (
+                            re.match(self.string_constante_aspas_duplas, lexema) != None
+                            or re.match(self.string_constante_aspas_simples, lexema)
+                            != None
+                        ):
                             second_item = "LITERAL_STRING"
 
                         elif lexema in self.palavras_reservadas:
