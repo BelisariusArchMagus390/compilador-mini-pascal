@@ -166,6 +166,7 @@ class Tokenizador:
             for i in range(len(self.matriz_tokens))
         ]
 
+        # Inserção da coluna id
         self.matriz_tokens = [
             self.matriz_tokens[i] + [ids_list[i]]
             for i in range(len(self.matriz_tokens))

@@ -48,7 +48,8 @@ class Parser:
         self.token_atual = self.tok[0]
         self.index = 0
 
-    # Funções auxiliares
+    # Função que faz o complemento das informações dos tokens na tabela de
+    # símbolos
     def complementa(self):
         for i in self.matriz_tokens:
             lexema = i[0]
@@ -130,8 +131,11 @@ class Parser:
         )
         e.erro_mensagem_model()
 
-    # d = Default, b = Boolean
+    # Função que encontra o token e avança para o próximo
     def encontra_token(self, token_esperado, erro, config):
+        # Através do parâmetro config faz com que configure a função para
+        # retorna um valor booleano True caso seja configurado como "b", ou não
+        # retorna um valor caso seja "d"
         if self.token_atual in token_esperado:
             if config == "d":
                 self.avanca_token()
@@ -148,7 +152,6 @@ class Parser:
 
         self.encontra_token([";"], ERRO_PONTO_E_VIRGULA, "d")
 
-        # block
         self.variable_declaration_part()
         self.compound_statement()
 
