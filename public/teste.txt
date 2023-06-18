@@ -4,7 +4,7 @@ program Exemplo;
         i: integer;
         c: char;
         b, d: boolean;
-        arrI: array[1..5] of integer;
+        arrI, arrInt: array[1..5] of integer;
         arrC: array[1..5] of char;
         arrB: array[1..5] of boolean;
 
