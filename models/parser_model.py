@@ -299,7 +299,10 @@ class Parser:
                     self.statement()
                 else:
                     c = False
+
             self.encontra_token(["end"], ERRO_FALTA_END, "d")
+
+            self.encontra_token([";"], 0, "d")
 
     def if_statement(self):
         if self.encontra_token(["if"], ERRO_FALTA_IF, "b"):
