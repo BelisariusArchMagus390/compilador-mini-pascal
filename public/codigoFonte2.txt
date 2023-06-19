@@ -11,9 +11,9 @@ begin
     numero := 5;
   
     if numero > 0 then
-        write("O numero é positivo.");
-        write("O dobro do número é: ", dobro(numero));
+        write('O numero é positivo.');
+        write('O dobro do número é: ', dobro(numero));
     else
-        write("O numero nao é positivo.");
-        write("O dobro do numero é: ", dobro(numero));
+        write('O numero nao é positivo.');
+        write('O dobro do numero é: ', dobro(numero));
 end.

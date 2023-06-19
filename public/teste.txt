@@ -11,17 +11,17 @@ program Exemplo;
     begin
         i := 10;
         i := 11;
-        c := "A";
+        c := 'A';
         b := true;
         d := false;
         
-        write("Digite");
+        write('1 - Digite um número: ');
         read(arrInt[1]);
         
-        write("Digite");
+        write('2 - Digite um número: ');
         read(arrChar[1]);
         
-        write("Digite");
+        write('3 - Digite um número: ');
         read(arrBool[1]);
 
         i := i - 1;
@@ -32,8 +32,12 @@ program Exemplo;
         arrInt[5] := arrInt[1] div 2;
     
         while i >= 0 do
-            if (i = 5) then
-            write("LOL1")
-            else
-            write("LOL2")
+            begin
+            begin
+                if (i = 5) then
+                    write('LOL1')
+                else
+                    write('LOL2')
+            end;
+            end
     end.

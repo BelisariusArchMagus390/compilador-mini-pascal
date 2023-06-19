@@ -20,12 +20,12 @@ end;
 begin
     numero := -10 + 5;
     numero2 := 10;
-    str := "Olá, mundo!";
+    str := 'Olá, mundo!';
 
     condicao := (numero > 0) and (numero2 <= 10);
     
     if condicao then
-        write("A soma é: ", somar(numero, 20));
+        write('A soma é: ', somar(numero, 20));
     else
-        write("Nao satisfaz a condicao.");
+        write('Nao satisfaz a condicao.');
 end.

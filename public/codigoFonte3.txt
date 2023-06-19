@@ -10,9 +10,9 @@ begin
   numeros[4] := 40;
   numeros[5] := 50;
 
-  write("Elementos do vetor:");
+  write('Elementos do vetor:');
   for i := 1 to 5 do
   begin
-    write("Elemento ", i, ": ", numeros[i]);
+    write('Elemento ', i, ': ', numeros[i]);
   end;
 end.

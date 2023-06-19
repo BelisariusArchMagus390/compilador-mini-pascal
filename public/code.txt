@@ -10,20 +10,20 @@ begin
   numero1 := 10;
   numero2 := 10;
   k[2] := 10;
-  z:= "Manchester city";
+  z:= 'Manchester city';
   d:= z;
 end;
 
 begin
   if i >= 0
-    read("Internazionale")
+    read('Internazionale')
   i := 1;
   while i <= 5 do
   begin
     numero1 := numero1 + 1;
     numero2 := numero2 + 2;
     i := i + 1;
-    write("O Vencedor da UEFA Champions League foi o");
+    write('O Vencedor da UEFA Champions League foi o');
     write(z);
   end;
 
