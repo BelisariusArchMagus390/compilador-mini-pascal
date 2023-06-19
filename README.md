@@ -66,11 +66,13 @@ Tomamos a liberdade de adicionar pequenas mudanças nas regras gramáticais do m
 - As regras `< array variable >` e `< entire variable >` foram removidas e passaram a ser produções da regra `< variable identifier >` pois se comportavam como "produções unitárias" e foram simplificadas.
 - A regra `< type identifier >` foi removida por ser um símbolo inacessível, afinal, nenhuma outra regra a deriva.
 - Desconsiderou-se as palavras reservadas `function` e `procedure` por não haver regras na sintaxe do mini-pascal que definissem como deve ser estruturado uma `function` ou um `procedure`.
+- A declaração de uma constante de char é feita somente entre aspas simples, não diferenciando entre um char e uma string.
 
 ### 2.4 - Erros sintáticos
 Abaixo está listado todos os erros sintáticos implementados:
 |Número do erro |Descrição do erro                                          |
 |---------------|-----------------------------------------------------------|
+|0              |Caso não encontre o símbolo, apenas ignore                 |
 |1              |Falta a palvra reservada program                           |
 |2              |Falta um identificador                                     |
 |3              |Falta um ;                                                 |
