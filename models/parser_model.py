@@ -31,6 +31,8 @@ ERRO_FALTA_WHILE = 25
 ERRO_FALTA_DO = 26
 ERRO_FALTA_PONTO_FINAL = 27
 ERRO_FALTA_UMA_EXPRESSAO = 29
+ERRO_FALTA_PROCEDURE = 30
+ERRO_FALTA_FUNCTION = 31
 
 
 class Parser:
@@ -152,13 +154,17 @@ class Parser:
 
         self.encontra_token([";"], ERRO_PONTO_E_VIRGULA, "d")
 
-        self.variable_declaration_part()
-        self.compound_statement()
+        self.block()
 
         self.encontra_token(["."], ERRO_FALTA_PONTO_FINAL, "d")
 
         if self.token_atual == "$":
             return
+
+    def block(self):
+        self.variable_declaration_part()
+        self.subroutine_declaration_part()
+        self.compound_statement()
 
     def relational_operator(self):
         operadores = ["=", "<>", "<", "<=", ">=", ">", "and", "or"]
@@ -237,7 +243,7 @@ class Parser:
     def variable_declaration_part(self):
         if self.encontra_token(["var"], 0, "b"):
             if not self.aux_var_declr_part():
-                self.erro_mensagem(2)
+                self.erro_mensagem(ERRO_FALTA_IDENTIFICADOR)
 
             c = True
             while c is True:
@@ -303,6 +309,46 @@ class Parser:
             self.encontra_token(["end"], ERRO_FALTA_END, "d")
 
             self.encontra_token([";"], 0, "d")
+
+    def subroutine_declaration_part(self):
+        if self.token_atual == "procedure":
+            self.procedure_declaration()
+        elif self.token_atual == "function":
+            self.function_declaration()
+
+    def procedure_declaration(self):
+        self.encontra_token(["procedure"], ERRO_FALTA_PROCEDURE, "d")
+        self.encontra_token(["IDENT"], ERRO_FALTA_IDENTIFICADOR, "d")
+        self.formal_parameters()
+        self.encontra_token([";"], ERRO_PONTO_E_VIRGULA, "d")
+        self.block()
+
+    def function_declaration(self):
+        self.encontra_token(["function"], ERRO_FALTA_FUNCTION, "d")
+        self.encontra_token(["IDENT"], ERRO_FALTA_IDENTIFICADOR, "d")
+        self.formal_parameters()
+        self.encontra_token([":"], ERRO_FALTA_DOIS_PONTOS, "d")
+        self.type_()
+        self.encontra_token([";"], ERRO_PONTO_E_VIRGULA, "d")
+        self.block()
+
+    def aux_var_declr_par_sec(self):
+        if self.token_atual == "IDENT":
+            self.variable_declaration()
+            return True
+
+    def formal_parameters(self):
+        if self.encontra_token(["("], ERRO_FALTA_COMECO_PARENTESE, "b"):
+            if not self.aux_var_declr_par_sec():
+                self.erro_mensagem(ERRO_FALTA_IDENTIFICADOR)
+
+            if self.encontra_token([";"], 0, "b"):
+                c = True
+                while c is True:
+                    if not self.aux_var_declr_part():
+                        c = False
+
+            self.encontra_token([")"], ERRO_FIM_PARENTESE, "d")
 
     def if_statement(self):
         if self.encontra_token(["if"], ERRO_FALTA_IF, "b"):
