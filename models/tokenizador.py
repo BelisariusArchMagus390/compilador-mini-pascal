@@ -83,6 +83,7 @@ class Tokenizador:
         # For que analisará cada char da string codigo
         linha = 1
         coluna = 0
+        tipo_token = ""
 
         erro = False
 
@@ -131,22 +132,29 @@ class Tokenizador:
                             != None
                         ):
                             second_item = "LITERAL_STRING"
+                            tipo_token = "Literal String"
 
                         elif lexema in self.palavras_reservadas:
-                            second_item = (
-                                "BOOLEAN" if lexema in ["true", "false"] else lexema
-                            )
+                            if lexema in ["true", "false"]:
+                                second_item = "BOOLEAN"
+                                tipo_token = "Literal Booleano"
+                            else:
+                                second_item = lexema
+                                tipo_token = "Palavra reservada"
 
                         elif re.match(self.id, lexema) != None:
                             self.ids[lexema] = self.defini_id(lexema)
                             second_item = "IDENT"
+                            tipo_token = "Identificador"
 
                         elif re.match(self.digito_inteiro, lexema) != None:
                             second_item = "LITERAL_INT"
+                            tipo_token = "Literal inteiro"
 
                         elif curr_lex in self.esp_simbolos:
                             second_item = curr_lex.strip(" ")
                             lexema = curr_lex.strip(" ")
+                            tipo_token = "Símbolo especial"
                         elif (
                             curr_lex in self.esp_simbolos
                             or lexema in self.operadores_aritmeticos
@@ -154,12 +162,13 @@ class Tokenizador:
                             or lexema in self.simbolos_especiais
                         ):
                             second_item = lexema
+                            tipo_token = "Símbolo especial"
                         else:
                             erro = True
                             self.erro_elemento.extend([lexema, linha, coluna])
                             break
 
-                        appendable = [lexema, second_item, linha, coluna]
+                        appendable = [lexema, second_item, linha, coluna, tipo_token]
                         self.matriz_tokens.append(appendable)
 
                     lexema = ""
