@@ -65,7 +65,7 @@ Tomamos a liberdade de adicionar pequenas mudanças nas regras gramáticais do m
 - A regra `< sign >` foi removida pois pode ser substituída por `< adding operator >`.
 - As regras `< array variable >` e `< entire variable >` foram removidas e passaram a ser produções da regra `< variable identifier >` pois se comportavam como "produções unitárias" e foram simplificadas.
 - A regra `< type identifier >` foi removida por ser um símbolo inacessível, afinal, nenhuma outra regra a deriva.
-- Desconsiderou-se as palavras reservadas `function` e `procedure` por não haver regras na sintaxe do mini-pascal que definissem como deve ser estruturado uma `function` ou um `procedure`.
+- Foram adicionados regras sintáticas para a declaração das estruturas de function e procedure.
 - A declaração de uma constante de char é feita somente entre aspas simples, não diferenciando entre um char e uma string.
 
 ### 2.4 - Erros sintáticos
@@ -94,14 +94,16 @@ Abaixo está listado todos os erros sintáticos implementados:
 |19             |Falta a palvra reservada write                             |
 |20             |Faltou o símbolo de atribuição :=                          |
 |21             |Não é do tipo literal_int, literal_string ou usou ( ou not |
-|22             |Falta a palvra reservada end                               |
-|23             |Falta a palvra reservada if                                |
-|24             |Falta a palvra reservada then                              |
-|25             |Falta a palvra reservada while                             |
-|26             |Falta a palvra reservada do                                |
+|22             |Falta a palavra reservada end                              |
+|23             |Falta a palavra reservada if                               |
+|24             |Falta a palavra reservada then                             |
+|25             |Falta a palavra reservada while                            |
+|26             |Falta a palavra reservada do                               |
 |27             |Faltou o .                                                 |
 |28             |Símbolo desconhecido                                       |
 |29             |Falta ser feito uma expressão                              |
+|30             |Falta a palavra reservada procedure                        |
+|31             |Falta a palavra reservada function                         |
 
 ### 2.5 - Ressalvas
 Por ser um analisador léxico, certos elementos não serão garantidos, como atribuições, tipos e etc, como é melhor detalhado abaixo: 
