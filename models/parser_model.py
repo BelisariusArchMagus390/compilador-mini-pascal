@@ -50,74 +50,6 @@ class Parser:
         self.token_atual = self.tok[0]
         self.index = 0
 
-    # Função que faz o complemento das informações dos tokens na tabela de
-    # símbolos
-    def complementa(self):
-        for i in self.matriz_tokens:
-            lexema = i[0]
-            if lexema in self.dic_carac:
-                valor = self.dic_carac[lexema]
-                tipo = valor[0]
-                tam_array = valor[1]
-
-                if len(i) > 5 and i[5] != None:
-                    carac = [tipo, i[5], tam_array]
-                    i.pop()
-                else:
-                    carac = [tipo, None, tam_array]
-                i.extend(carac)
-            elif len(i) > 5 and i[5] != None:
-                carac = [None, i[5], None]
-                i.pop()
-                i.extend(carac)
-            elif len(i) == 5:
-                i.extend([None, None, None])
-
-    def atribui_tipo(self, c):
-        if c == "simple":
-            tipo = self.matriz_tokens[self.index - 1][0]
-            for i in self.lst_index_tipo:
-                self.dic_carac[self.matriz_tokens[i][0]] = [tipo, None]
-
-        elif c == "array":
-            tipo = "Array " + self.matriz_tokens[self.index - 1][0]
-            for i in self.lst_index_tipo:
-                lexema = self.matriz_tokens[i][0]
-                if lexema in self.dic_carac:
-                    self.dic_carac[lexema][0] = tipo
-                else:
-                    self.dic_carac[lexema] = [tipo, None]
-
-        self.lst_index_tipo.clear()
-
-    def atribui_tam_array(self):
-        tamanho_matriz = (
-            self.matriz_tokens[self.index][0]
-            + self.matriz_tokens[self.index + 1][0]
-            + self.matriz_tokens[self.index + 2][0]
-        )
-
-        self.dic_carac[self.matriz_tokens[self.index - 4][0]] = [None, tamanho_matriz]
-
-    def atribui_valor(self):
-        c = True
-        count = self.index
-        valor = ""
-        while c is True:
-            linha_matriz = self.matriz_tokens[count]
-
-            if linha_matriz[1] == ";":
-                c = False
-            else:
-                valor += linha_matriz[0]
-                count += 1
-        count_regulado = self.index - 2
-        lexema = self.matriz_tokens[count_regulado]
-        if not lexema[1] == "IDENT":
-            count_regulado = self.index - 5
-
-        lexema.append(valor)
-
     def avanca_token(self):
         if self.index < len(self.tok):
             self.index += 1
@@ -264,11 +196,7 @@ class Parser:
         self.type_()
 
     def type_(self):
-        if self.simple_type():
-            self.atribui_tipo("simple")
-        elif self.array_type():
-            self.atribui_tipo("array")
-        else:
+        if not (self.simple_type() or self.array_type()):
             self.erro_mensagem(ERRO_NAO_E_SIMPLE_TYPE_OU_ARRAY_TYPE)
 
     def simple_type(self):
@@ -290,8 +218,6 @@ class Parser:
         return True
 
     def index_range(self):
-        self.atribui_tam_array()
-
         self.encontra_token(["LITERAL_INT"], ERRO_FALTA_LITERAL_INT, "d")
         self.encontra_token([".."], ERRO_FALTA_DOIS_PONTOS, "d")
         self.encontra_token(["LITERAL_INT"], ERRO_FALTA_LITERAL_INT, "d")
@@ -432,8 +358,6 @@ class Parser:
         ):
             self.erro_mensagem(ERRO_FALTA_VAR)
 
-        self.atribui_valor()
-
         self.expression()
 
     def mostra_resultado(self):
@@ -446,14 +370,11 @@ class Parser:
             "Token",
             "Linha",
             "Coluna",
+            "Tipo Token",
             "ID",
-            "Tipo",
-            "Valor",
-            "Tamanho do Array",
         ]
         print(tb(self.matriz_tokens, headers=colunas, tablefmt="fancy_grid"))
 
     def parse(self):
         self.program()
-        self.complementa()
         self.mostra_resultado()
