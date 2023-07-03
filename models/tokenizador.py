@@ -35,6 +35,8 @@ class Tokenizador:
             "boolean",
             "and",
             "or",
+            "procedure",
+            "function",
         ]
 
         self.operadores_aritmeticos = ["+", "-", "*"]
