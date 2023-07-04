@@ -44,9 +44,6 @@ class Parser:
         self.tok = [l[1] for l in self.matriz_tokens]
         self.tok.append("$")
 
-        self.lst_index_tipo = []
-        self.dic_carac = {}
-
         self.token_atual = self.tok[0]
         self.index = 0
 
@@ -129,7 +126,9 @@ class Parser:
             return True
 
     def factor(self):
-        if self.token_atual == "IDENT":
+        if self.token_atual == "IDENT" and self.tok[self.index + 1] == "(":
+            self.function_procedure_statement()
+        elif self.token_atual == "IDENT":
             self.variable()
         else:
             if not self.encontra_token(
@@ -185,7 +184,6 @@ class Parser:
     def variable_declaration(self):
         c = True
         while c is True:
-            self.lst_index_tipo.append(self.index)
             self.encontra_token(["IDENT"], 0, "d")
 
             if not self.encontra_token([","], 0, "b"):
@@ -276,6 +274,27 @@ class Parser:
 
             self.encontra_token([")"], ERRO_FIM_PARENTESE, "d")
 
+    def parameters(self):
+        c = True
+        while c is True:
+            self.encontra_token(
+                ["LITERAL_STRING", "LITERAL_INT", "BOOLEAN", "IDENT"], 0, "d"
+            )
+
+            if not self.encontra_token([","], 0, "b"):
+                c = False
+
+    # Regras sintáticas alteradas
+    # <function_procedure statement> ::= <function_procedure identifier> ( <paramaters> )
+    # <parameters> ::= <empty> | <identifier> | <constant> {, <identifier> | <constant> ,}
+    # <factor> ::= <function_procedure statement> | <variable> | <constant> | ( <expression> ) | not <factor>
+
+    def function_procedure_statement(self):
+        self.encontra_token(["IDENT"], ERRO_FALTA_IDENTIFICADOR, "d")
+        self.encontra_token(["("], ERRO_FALTA_COMECO_PARENTESE, "d")
+        self.parameters()
+        self.encontra_token([")"], ERRO_FIM_PARENTESE, "d")
+
     def if_statement(self):
         if self.encontra_token(["if"], ERRO_FALTA_IF, "b"):
             self.expression()
@@ -314,6 +333,9 @@ class Parser:
             c = True
         elif self.token_atual == "write":
             self.write_statement()
+            c = True
+        elif self.token_atual == "IDENT" and self.tok[self.index + 1] == "(":
+            self.function_procedure_statement()
             c = True
         elif self.token_atual == "IDENT":
             self.assignment_statement()
