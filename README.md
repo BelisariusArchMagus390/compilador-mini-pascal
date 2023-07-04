@@ -65,7 +65,8 @@ Tomamos a liberdade de adicionar pequenas mudanças nas regras gramáticais do m
 - A regra `< sign >` foi removida pois pode ser substituída por `< adding operator >`.
 - As regras `< array variable >` e `< entire variable >` foram removidas e passaram a ser produções da regra `< variable identifier >` pois se comportavam como "produções unitárias" e foram simplificadas.
 - A regra `< type identifier >` foi removida por ser um símbolo inacessível, afinal, nenhuma outra regra a deriva.
-- Foram adicionados regras sintáticas para a declaração das estruturas de function e procedure.
+- Foram adicionados regras sintáticas para a declaração das estruturas de function e procedure, além da chamada das mesmas.
+- Foi alterada a regra < factor > para que pudesse aceitar chamadas de functions e procedures como expressions em assign statements.
 - A declaração de uma constante de char é feita somente entre aspas simples, não diferenciando entre um char e uma string.
 
 ### 2.4 - Erros sintáticos
