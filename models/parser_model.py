@@ -385,7 +385,7 @@ class Parser:
     def mostra_resultado(self):
         print("\nCÓDIGO ANALISADO COM SUCESSO!")
 
-        print("\nTABELA DE SÍMBOLOS: \n")
+        print("\nTABELA DE LÉXICA: \n")
 
         colunas = [
             "Lexema",
