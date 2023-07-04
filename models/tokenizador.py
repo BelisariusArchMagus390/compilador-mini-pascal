@@ -75,7 +75,7 @@ class Tokenizador:
         ids_values = self.ids.values()
 
         while new_id is None or new_id in ids_values:
-            new_id = str(rm.randint(100, 400))
+            new_id = rm.randint(100, 400)
 
         return new_id
 
