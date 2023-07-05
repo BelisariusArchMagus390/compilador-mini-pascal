@@ -47,6 +47,8 @@ class Parser:
         self.token_atual = self.tok[0]
         self.index = 0
 
+        self.tab_simb = self.tk.tabela_simbolo()
+
     def avanca_token(self):
         if self.index < len(self.tok):
             self.index += 1
@@ -385,7 +387,7 @@ class Parser:
     def mostra_resultado(self):
         print("\nCÓDIGO ANALISADO COM SUCESSO!")
 
-        print("\nTABELA DE LÉXICA: \n")
+        print("\nTABELA LÉXICA: \n")
 
         colunas = [
             "Lexema",
@@ -396,6 +398,8 @@ class Parser:
             "ID",
         ]
         print(tb(self.matriz_tokens, headers=colunas, tablefmt="fancy_grid"))
+
+        self.tab_simb.table_show()
 
     def parse(self):
         self.program()
