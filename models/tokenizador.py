@@ -2,6 +2,7 @@ import random as rm
 import re
 
 from .error_message_model import ErrorMessage
+from .tree import SymbolTable
 
 
 class Tokenizador:
@@ -192,3 +193,10 @@ class Tokenizador:
         ]
 
         return self.matriz_tokens
+
+    def tabela_simbolo(self):
+        st = SymbolTable()
+        for lexema, id in self.ids.items():
+            st.insert(id, lexema)
+
+        return st
