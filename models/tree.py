@@ -54,7 +54,6 @@ class SymbolTable:
         if node.left:
             self.inorder_traversal_tree(node.left)
         self.node_matr.append(node.data)
-        # print(node, end=" ")
         if node.right:
             self.inorder_traversal_tree(node.right)
 
