@@ -1,7 +1,8 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
-from tkinter import font
+
+# from tkinter import font
 
 from sys import exit
 from pathlib import Path
@@ -42,7 +43,7 @@ class Tab_editor:
             xscrollcommand=self.hor_scroll.set,
             wrap="none",
         )
-        self.my_text.pack(fill="both", expand=1)
+        self.my_text.pack()
 
         # Configuração das Scrollbars
         self.ver_scroll.config(command=self.my_text.yview)
@@ -174,6 +175,34 @@ class Tab_editor:
     def _edit_redo(self):
         self.my_text.edit_redo()
 
+    def debug(self):
+        self.my_text.config(height=13)
+
+        fr = Frame(self.frame)
+        fr.pack(fill="both", expand=1)
+        # Scrollbar vertical da Text box
+        ver_scroll = ttk.Scrollbar(fr, orient="vertical")
+        ver_scroll.pack(side="right", fill="y")
+
+        # Text Box
+        my_text = Text(
+            fr,
+            width=97,
+            height=10,
+            font=("Helvetica", 16),
+            selectbackground="yellow",
+            selectforeground="black",
+            undo=True,
+            yscrollcommand=self.ver_scroll.set,
+            wrap="none",
+        )
+        my_text.insert(INSERT, "Successful Execution!")
+        my_text.config(state=DISABLED)
+        my_text.pack(side="bottom")
+
+        # Configuração das Scrollbars
+        ver_scroll.config(command=my_text.yview)
+
 
 class App:
     def __init__(self):
@@ -287,7 +316,8 @@ class App:
         self.root.bind("<F5>", self.debug)
 
     def debug(self):
-        pass
+        tab = self.get_tab()
+        tab.debug()
 
     def get_tab(self):
         idx = self.my_notebook.index(self.my_notebook.select())
