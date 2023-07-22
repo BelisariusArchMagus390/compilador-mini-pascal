@@ -57,6 +57,9 @@ class Tab_editor:
         # Seta variável do texto selecionado
         self.selected = False
 
+    def change_text(self, tittle):
+        self.my_notebook.tab(self.frame, text=tittle)
+
     # Abre arquivo
     def open_file(self):
         # Pega Filename
@@ -79,6 +82,7 @@ class Tab_editor:
             self.status_bar.config(text=f"{name}        ")
             name = os.path.basename(name)
             self.root.title(f"{name} - TextPad")
+            self.change_text(name)
 
             # Abrindo o arquivo
             text_file = open(text_file, "r")
@@ -102,6 +106,7 @@ class Tab_editor:
             self.status_bar.config(text=f"Saved: {name}        ")
             name = os.path.basename(name)
             self.root.title(f"{name} - TextPad")
+            self.change_text(name)
 
             # Salva o arquivo
             text_file = open(text_file, "w")
@@ -175,7 +180,7 @@ class Tab_editor:
     def _edit_redo(self):
         self.my_text.edit_redo()
 
-    def debug(self):
+    def debug(self, _=None):
         self.my_text.config(height=13)
 
         fr = Frame(self.frame)
@@ -315,7 +320,7 @@ class App:
         # Atalhos de Run
         self.root.bind("<F5>", self.debug)
 
-    def debug(self):
+    def debug(self, _=None):
         tab = self.get_tab()
         tab.debug()
 
