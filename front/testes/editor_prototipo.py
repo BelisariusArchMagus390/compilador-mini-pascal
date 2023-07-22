@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 from tkinter import filedialog
 from tkinter import font
 
@@ -24,7 +25,7 @@ selected = False
 
 # Cria New File Function
 def new_file(e=True):
-    # se é ativado ou não o atalho
+    # Se é ativado ou não o atalho
     if e:
         # Exclui o texto anterior
         my_text.delete("1.0", END)
@@ -38,7 +39,7 @@ def new_file(e=True):
 
 # Abre arquivo
 def open_file(e=True):
-    # se é ativado ou não o atalho
+    # Se é ativado ou não o atalho
     if e:
         # Pega Filename
         text_file = filedialog.askopenfilename(
@@ -73,7 +74,7 @@ def open_file(e=True):
 
 # Salva como arquivo
 def save_as_file(e=True):
-    # se é ativado ou não o atalho
+    # Se é ativado ou não o atalho
     if e:
         text_file = filedialog.asksaveasfilename(
             defaultextension=".*",
@@ -96,7 +97,7 @@ def save_as_file(e=True):
 
 
 def save_file(e=True):
-    # se é ativado ou não o atalho
+    # Se é ativado ou não o atalho
     if e:
         global open_status_name
         if open_status_name:
@@ -157,9 +158,22 @@ def paste_text(e):
             my_text.insert(position, selected)
 
 
+# Select all text
+def select_all(e=True):
+    # Se é ativado ou não o atalho
+    if e:
+        # Adiciona sel tag ao select all text
+        my_text.tag_add("sel", "1.0", "end")
+
+
+# ------------------------------------------------------------------------
+
+my_notebook = ttk.Notebook(root)
+my_notebook.pack(pady=15)
+
 # Main Frame
-my_frame = Frame(root)
-my_frame.pack(pady=5)
+my_frame = Frame(my_notebook)
+my_frame.pack(fill="both", expand=1)
 
 # Scrollbar vertical da Text box
 ver_scroll = Scrollbar(my_frame)
@@ -187,6 +201,10 @@ my_text.pack()
 # Configuração das Scrollbars
 ver_scroll.config(command=my_text.yview)
 hor_scroll.config(command=my_text.xview)
+
+my_notebook.add(my_frame, text="TextPad")
+
+# ------------------------------------------------------------------------
 
 # Menu
 my_menu = Menu(root)
@@ -220,6 +238,8 @@ edit_menu.add_command(
 edit_menu.add_separator()
 edit_menu.add_command(label="Undo", command=my_text.edit_undo, accelerator="Ctrl+Z")
 edit_menu.add_command(label="Redo", command=my_text.edit_redo, accelerator="Ctrl+Y")
+edit_menu.add_separator()
+edit_menu.add_command(label="Select All", command=select_all, accelerator="Ctrl+A")
 
 # Adiciona Status Bar na parte de baixo da página
 status_bar = Label(root, text="Ready        ", anchor=E)
@@ -229,6 +249,7 @@ status_bar.pack(fill=X, side=BOTTOM, ipady=15)
 root.bind("<Control-Key-x>", cut_text)
 root.bind("<Control-Key-c>", copy_text)
 root.bind("<Control-Key-v>", paste_text)
+root.bind("<Control-Key-a>", select_all)
 
 # Atalhos de File
 root.bind("<Control-Key-n>", new_file)
