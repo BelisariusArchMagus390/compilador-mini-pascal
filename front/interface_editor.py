@@ -19,16 +19,14 @@ class Tab_editor:
         # Caminho da pasta save_file
         self.file_dir = Path(__file__).parent.parent.joinpath("save_file")
 
-        self.frame = Frame(self.my_notebook)
+        self.frame = ttk.Frame(self.my_notebook)
         self.frame.pack(fill="both", expand=1)
 
         # Scrollbar vertical da Text box
         self.ver_scroll = ttk.Scrollbar(self.frame, orient="vertical")
-        self.ver_scroll.pack(side="right", fill="y")
 
         # Scrollbar horizontal da Text box
         self.hor_scroll = ttk.Scrollbar(self.frame, orient="horizontal")
-        self.hor_scroll.pack(side="bottom", fill="x")
 
         # Text Box
         self.my_text = Text(
@@ -36,18 +34,23 @@ class Tab_editor:
             width=97,
             height=23,
             font=("Helvetica", 16),
-            selectbackground="yellow",
-            selectforeground="black",
+            selectbackground="#b2b2b2",
             undo=True,
             yscrollcommand=self.ver_scroll.set,
             xscrollcommand=self.hor_scroll.set,
             wrap="none",
+            # background="#ffffff",
         )
-        self.my_text.pack()
 
         # Configuração das Scrollbars
         self.ver_scroll.config(command=self.my_text.yview)
         self.hor_scroll.config(command=self.my_text.xview)
+
+        # Pack dos Scrollbars
+        self.ver_scroll.pack(side="right", fill="y")
+        self.hor_scroll.pack(side="bottom", fill="x")
+
+        self.my_text.pack()
 
         self.my_notebook.add(self.frame, text="New File")
 
@@ -56,6 +59,8 @@ class Tab_editor:
 
         # Seta variável do texto selecionado
         self.selected = False
+
+        self.output_terminal = Frame()
 
     def change_text(self, tittle):
         self.my_notebook.tab(self.frame, text=tittle)
@@ -171,26 +176,23 @@ class Tab_editor:
         # Adiciona sel tag ao select all text
         self.my_text.tag_add("sel", "1.0", "end")
 
-    def close_tab(self, _=None):
-        self.frame.destroy()
-
     def _edit_undo(self):
         self.my_text.edit_undo()
 
     def _edit_redo(self):
         self.my_text.edit_redo()
 
-    def debug(self, _=None):
+    def execute(self, _=None):
         self.my_text.config(height=13)
 
         fr = Frame(self.frame)
         fr.pack(fill="both", expand=1)
         # Scrollbar vertical da Text box
-        ver_scroll = ttk.Scrollbar(fr, orient="vertical")
-        ver_scroll.pack(side="right", fill="y")
+        ver_scroll_output = ttk.Scrollbar(fr, orient="vertical")
+        ver_scroll_output.pack(side="right", fill="y")
 
         # Text Box
-        my_text = Text(
+        out_put_txt = Text(
             fr,
             width=97,
             height=10,
@@ -198,15 +200,27 @@ class Tab_editor:
             selectbackground="yellow",
             selectforeground="black",
             undo=True,
-            yscrollcommand=self.ver_scroll.set,
+            yscrollcommand=ver_scroll_output.set,
             wrap="none",
         )
-        my_text.insert(INSERT, "Successful Execution!")
-        my_text.config(state=DISABLED)
-        my_text.pack(side="bottom")
+        out_put_txt.insert(INSERT, "Successful Execution!")
+        out_put_txt.config(state=DISABLED)
+        out_put_txt.pack(side="bottom")
 
         # Configuração das Scrollbars
-        ver_scroll.config(command=my_text.yview)
+        ver_scroll_output.config(command=out_put_txt.yview)
+
+        self.output_terminal = fr
+
+    def close_tab(self, _=None):
+        self.frame.destroy()
+
+    def close_output_terminal(self, _=None):
+        self.output_terminal.destroy()
+        self.my_text.config(height=23)
+
+    def change_color_bg(self, bg_color, fg_color):
+        self.my_text.config(background=bg_color, fg=fg_color)
 
 
 class App:
@@ -222,6 +236,7 @@ class App:
         # dir_path = os.path.dirname(os.path.realpath(__file__))
 
         self.dir_path = Path(__file__).parent.joinpath("themes")
+        self.root.tk.call("source", os.path.join(self.dir_path, "forest-light.tcl"))
         self.root.tk.call("source", os.path.join(self.dir_path, "forest-dark.tcl"))
 
         self.style.theme_use("forest-dark")
@@ -301,7 +316,25 @@ class App:
         self.run_menu = Menu(self.my_menu, tearoff=False)
         self.my_menu.add_cascade(label="Run", menu=self.run_menu)
         self.run_menu.add_command(
-            label="Start Debugging", command=self.debug, accelerator="F5"
+            label="Execute", command=self.execute, accelerator="F5"
+        )
+        self.run_menu.add_separator()
+        self.run_menu.add_command(
+            label="Close Terminal",
+            command=self.close_output_terminal,
+            accelerator="Ctrl+F3",
+        )
+
+        # Adiciona View Menu
+        self.view = Menu(self.my_menu, tearoff=False)
+        self.my_menu.add_cascade(label="View", menu=self.view)
+        self.view.add_command(
+            label="Dark Mode", command=self.change_theme_dark, accelerator="Crtl+D"
+        )
+        self.view.add_command(
+            label="Light Mode",
+            command=self.change_theme_light,
+            accelerator="Ctrl+L",
         )
 
         # Atalhos de Edit
@@ -318,11 +351,20 @@ class App:
         self.root.bind("<Control-F4>", self.close_tab)
 
         # Atalhos de Run
-        self.root.bind("<F5>", self.debug)
+        self.root.bind("<F5>", self.execute)
+        self.root.bind("<Control-F3>", self.close_output_terminal)
 
-    def debug(self, _=None):
+        # Atalhos de View
+        self.root.bind("<Control-Key-d>", self.change_theme_dark)
+        self.root.bind("<Control-Key-l>", self.change_theme_light)
+
+    def execute(self, _=None):
         tab = self.get_tab()
-        tab.debug()
+        tab.execute()
+
+    def close_output_terminal(self, _=None):
+        tab = self.get_tab()
+        tab.close_output_terminal()
 
     def get_tab(self):
         idx = self.my_notebook.index(self.my_notebook.select())
@@ -382,6 +424,26 @@ class App:
     def select_all(self, _=None):
         tab = self.get_tab()
         tab.select_all()
+
+    def change_theme_light(self):
+        bg_color = "#ffffff"
+        fg_color = "#313131"
+
+        self.style.theme_use("forest-light")
+        self.root.configure(background=bg_color)
+        self.status_bar.configure(background=bg_color, fg=fg_color)
+        tab = self.get_tab()
+        tab.change_color_bg(bg_color, fg_color)
+
+    def change_theme_dark(self):
+        bg_color = "#313131"
+        fg_color = "#ffffff"
+
+        self.style.theme_use("forest-dark")
+        self.root.configure(background=bg_color)
+        self.status_bar.configure(background=bg_color, fg=fg_color)
+        tab = self.get_tab()
+        tab.change_color_bg(bg_color, fg_color)
 
     def startApp(self):
         self.root.mainloop()
