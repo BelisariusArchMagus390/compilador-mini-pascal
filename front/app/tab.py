@@ -104,7 +104,7 @@ class Tab_editor:
         self.linenumbers.attach(self.my_text)
 
         self.linenumbers.pack(side="left", fill="y")
-        self.my_text.pack(side="right", fill="both", expand=True)
+        self.my_text.pack(side="top", fill="both", expand=True)
 
         self.my_notebook.add(self.frame, text="New File")
 
@@ -244,8 +244,7 @@ class Tab_editor:
 
     def execute(self, _=None):
         self.my_text.config(height=13)
-
-        fr = Frame(self.frame)
+        fr = ttk.Frame(self.frame)
         fr.pack(fill="both", expand=1)
         # Scrollbar vertical da Text box
         ver_scroll_output = ttk.Scrollbar(fr, orient="vertical")
