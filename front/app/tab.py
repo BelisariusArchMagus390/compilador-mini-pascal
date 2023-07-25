@@ -68,6 +68,8 @@ class Tab_editor:
         self.root = root
         self.bg_color = "#313131"
         self.fg_color = "#ffffff"
+        self.text_status_bar = "Ready      "
+        self.text_title = "New File - TextPad"
         # Caminho da pasta save_file
         self.file_dir = Path(__file__).parent.parent.joinpath("save_file")
 
@@ -148,10 +150,11 @@ class Tab_editor:
             # Atualizando Status Bars
             name = text_file
             self.status_bar.config(text=f"{name}        ")
+            self.text_status_bar = name
             name = os.path.basename(name)
             self.root.title(f"{name} - TextPad")
             self.change_text(name)
-
+            self.text_title = name
             # Abrindo o arquivo
             text_file = open(text_file, "r")
             stuff = text_file.read()
@@ -172,9 +175,11 @@ class Tab_editor:
             # Atualiza Status Bars
             name = text_file
             self.status_bar.config(text=f"Saved: {name}        ")
+            self.text_status_bar = name
             name = os.path.basename(name)
             self.root.title(f"{name} - TextPad")
             self.change_text(name)
+            self.text_title = name
 
             # Salva o arquivo
             text_file = open(text_file, "w")
@@ -290,3 +295,9 @@ class Tab_editor:
         self.linenumbers.configure(bg=bg_color)
         self.bg_color = bg_color
         self.fg_color = fg_color
+
+    def get_text_status_bar(self):
+        return self.text_status_bar
+
+    def get_text_title(self):
+        return self.text_title

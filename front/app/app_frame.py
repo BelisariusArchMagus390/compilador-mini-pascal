@@ -139,6 +139,14 @@ class App:
         self.root.bind("<Control-Key-d>", self.change_theme_dark)
         self.root.bind("<Control-Key-l>", self.change_theme_light)
 
+        # Associando a função ao evento de mudança de tab
+        self.my_notebook.bind("<<NotebookTabChanged>>", self.on_tab_text_change)
+
+    def on_tab_text_change(self, event):
+        tab = self.get_tab()
+        self.status_bar.config(text=f"{tab.get_text_status_bar()}        ")
+        self.root.title(f"{tab.get_text_title()} - TextPad")
+
     def execute(self, _=None):
         tab = self.get_tab()
         tab.execute()
@@ -156,8 +164,8 @@ class App:
         tab = Tab_editor(self.my_notebook, self.status_bar, self.root)
         self.tabs.append(tab)
 
-        self.root.title("New File - TextPad")
-        self.status_bar.config(text="New File        ")
+        # self.root.title("New File - TextPad")
+        # self.status_bar.config(text="New File        ")
 
     def open_file(self, _=None):
         tab = self.get_tab()
