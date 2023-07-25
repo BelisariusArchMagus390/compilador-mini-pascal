@@ -25,7 +25,7 @@ class TextLineNumbers(tk.Canvas):
                 break
             y = dline[1]
             linenum = str(i).split(".")[0]
-            self.create_text(2, y, anchor="nw", text=linenum)
+            self.create_text(2, y, anchor="nw", text=linenum, fill="#92a8d1")
             i = self.textwidget.index("%s+1line" % i)
 
 
@@ -66,6 +66,8 @@ class Tab_editor:
         self.my_notebook = my_notebook
         self.status_bar = status_bar
         self.root = root
+        self.bg_color = "#313131"
+        self.fg_color = "#ffffff"
         # Caminho da pasta save_file
         self.file_dir = Path(__file__).parent.parent.joinpath("save_file")
 
@@ -100,7 +102,7 @@ class Tab_editor:
         self.hor_scroll.pack(side="bottom", fill="x")
 
         self.linenumbers = TextLineNumbers(self.frame, width=20)
-        # self.linenumbers.itemconfig(self.linenumbers, fill="#F91A1A")
+        self.linenumbers.configure(highlightthickness=0)
         self.linenumbers.attach(self.my_text)
 
         self.linenumbers.pack(side="left", fill="y")
@@ -114,7 +116,8 @@ class Tab_editor:
         # Seta variável do texto selecionado
         self.selected = False
 
-        self.output_terminal = Frame()
+        self.fr_output = Frame()
+        self.txt_box_output = Text()
 
         self.my_text.bind("<<Change>>", self._on_change)
         self.my_text.bind("<Configure>", self._on_change)
@@ -251,7 +254,7 @@ class Tab_editor:
         ver_scroll_output.pack(side="right", fill="y")
 
         # Text Box
-        out_put_txt = Text(
+        output_txt = Text(
             fr,
             width=97,
             height=10,
@@ -261,22 +264,29 @@ class Tab_editor:
             undo=True,
             yscrollcommand=ver_scroll_output.set,
             wrap="none",
+            bg=self.bg_color,
+            fg=self.fg_color,
         )
-        out_put_txt.insert(INSERT, "Successful Execution!")
-        out_put_txt.config(state=DISABLED)
-        out_put_txt.pack(side="bottom")
+        output_txt.insert(INSERT, "Successful Execution!")
+        output_txt.config(state=DISABLED)
+        output_txt.pack(side="bottom")
 
         # Configuração das Scrollbars
-        ver_scroll_output.config(command=out_put_txt.yview)
+        ver_scroll_output.config(command=output_txt.yview)
 
-        self.output_terminal = fr
+        self.fr_output = fr
+        self.txt_box_output = output_txt
 
     def close_tab(self, _=None):
         self.frame.destroy()
 
     def close_output_terminal(self, _=None):
-        self.output_terminal.destroy()
+        self.fr_output.destroy()
         self.my_text.config(height=23)
 
-    def change_color_bg(self, bg_color, fg_color):
+    def change_color(self, bg_color, fg_color):
         self.my_text.config(background=bg_color, fg=fg_color)
+        self.txt_box_output.config(background=bg_color, fg=fg_color)
+        self.linenumbers.configure(bg=bg_color)
+        self.bg_color = bg_color
+        self.fg_color = fg_color

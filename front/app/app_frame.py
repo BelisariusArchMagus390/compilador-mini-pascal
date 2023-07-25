@@ -214,7 +214,7 @@ class App:
         self.root.configure(background=bg_color)
         self.status_bar.configure(background=bg_color, fg=fg_color)
         tab = self.get_tab()
-        tab.change_color_bg(bg_color, fg_color)
+        tab.change_color(bg_color, fg_color)
 
     def change_theme_dark(self):
         bg_color = "#313131"
@@ -224,7 +224,7 @@ class App:
         self.root.configure(background=bg_color)
         self.status_bar.configure(background=bg_color, fg=fg_color)
         tab = self.get_tab()
-        tab.change_color_bg(bg_color, fg_color)
+        tab.change_color(bg_color, fg_color)
 
     def startApp(self):
         self.root.mainloop()
