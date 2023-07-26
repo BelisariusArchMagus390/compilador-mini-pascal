@@ -301,7 +301,8 @@ class Tab_editor:
 
         code = self.my_text.get("1.0", "end-1c")
 
-        fr_tb = Frame_tables(self.root, code)
+        if code != "":
+            fr_tb = Frame_tables(self.root, code)
 
     def close_tab(self, _=None):
         self.frame.destroy()
