@@ -139,8 +139,18 @@ class App:
         self.root.bind("<Control-Key-d>", self.change_theme_dark)
         self.root.bind("<Control-Key-l>", self.change_theme_light)
 
+        # Atalho para mudar de Tab
+        self.root.bind("<Control-KeyPress-Tab>", self.change_tab)
+
         # Associando a função ao evento de mudança de tab
         self.my_notebook.bind("<<NotebookTabChanged>>", self.on_tab_text_change)
+
+    def change_tab(self):
+        idx = self.my_notebook.index(self.my_notebook.select())
+        qt_tabs = self.my_notebook.index("end")
+
+        if (idx + 1) < qt_tabs:
+            self.my_notebook.select(idx + 1)
 
     def on_tab_text_change(self, event):
         tab = self.get_tab()
