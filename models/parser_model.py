@@ -401,6 +401,12 @@ class Parser:
 
         self.tab_simb.table_show()
 
+    def get_matriz_tokens(self):
+        return self.matriz_tokens
+
+    def get_table_symbol_values(self):
+        return self.tab_simb.get_node_matr()
+
     def parse(self):
         self.program()
-        self.mostra_resultado()
+        # self.mostra_resultado()

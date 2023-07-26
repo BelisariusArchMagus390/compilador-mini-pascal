@@ -174,9 +174,6 @@ class App:
         tab = Tab_editor(self.my_notebook, self.status_bar, self.root)
         self.tabs.append(tab)
 
-        # self.root.title("New File - TextPad")
-        # self.status_bar.config(text="New File        ")
-
     def open_file(self, _=None):
         tab = self.get_tab()
         tab.open_file()

@@ -4,6 +4,7 @@ from tkinter import ttk
 from tkinter import filedialog
 from pathlib import Path
 import os
+from .fr_tables import Frame_tables
 
 
 class TextLineNumbers(tk.Canvas):
@@ -38,9 +39,25 @@ class CustomText(tk.Text):
         self.tk.call("rename", self._w, self._orig)
         self.tk.createcommand(self._w, self._proxy)
 
-    def _proxy(self, *args):
+    def _proxy(self, command, *args):
+        # avoid error when copying
+        if (
+            command == "get"
+            and (args[0] == "sel.first" and args[1] == "sel.last")
+            and not self.tag_ranges("sel")
+        ):
+            return
+
+        # avoid error when deleting
+        if (
+            command == "delete"
+            and (args[0] == "sel.first" and args[1] == "sel.last")
+            and not self.tag_ranges("sel")
+        ):
+            return
+
         # let the actual widget perform the requested action
-        cmd = (self._orig,) + args
+        cmd = (self._orig, command) + args
         result = self.tk.call(cmd)
 
         # generate an event if something was added or deleted,
@@ -281,6 +298,10 @@ class Tab_editor:
 
         self.fr_output = fr
         self.txt_box_output = output_txt
+
+        code = self.my_text.get("1.0", "end-1c")
+
+        fr_tb = Frame_tables(self.root, code)
 
     def close_tab(self, _=None):
         self.frame.destroy()

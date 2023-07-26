@@ -100,3 +100,7 @@ class SymbolTable:
         if id < node.id:
             return self._search(id, node.left)
         return self._search(id, node.right)
+
+    def get_node_matr(self):
+        self.inorder_traversal_tree()
+        return self.node_matr
