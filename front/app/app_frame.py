@@ -225,21 +225,26 @@ class App:
         bg_color = "#ffffff"
         fg_color = "#313131"
 
-        self.style.theme_use("forest-light")
-        self.root.configure(background=bg_color)
-        self.status_bar.configure(background=bg_color, fg=fg_color)
-        tab = self.get_tab()
-        tab.change_color(bg_color, fg_color)
+        self.change_color_general(bg_color, fg_color, "forest-light")
 
     def change_theme_dark(self):
         bg_color = "#313131"
         fg_color = "#ffffff"
+        self.change_color_general(bg_color, fg_color, "forest-dark")
 
-        self.style.theme_use("forest-dark")
+    def change_color_general(self, bg_color, fg_color, theme):
+        self.style.theme_use(theme)
         self.root.configure(background=bg_color)
         self.status_bar.configure(background=bg_color, fg=fg_color)
         tab = self.get_tab()
         tab.change_color(bg_color, fg_color)
+        self.change_color_menus(bg_color, fg_color)
+
+    def change_color_menus(self, bg_color, fg_color):
+        self.file_menu.configure(background=bg_color, foreground=fg_color)
+        self.edit_menu.configure(background=bg_color, foreground=fg_color)
+        self.run_menu.configure(background=bg_color, foreground=fg_color)
+        self.view.configure(background=bg_color, foreground=fg_color)
 
     def startApp(self):
         self.root.mainloop()
