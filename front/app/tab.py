@@ -6,6 +6,14 @@ from pathlib import Path
 import os
 from .fr_tables import Frame_tables
 
+import os
+import sys
+
+parse_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+sys.path.append(parse_folder_path)
+
+from models.parser_model import Parser
+
 
 class TextLineNumbers(tk.Canvas):
     def __init__(self, *args, **kwargs):
@@ -289,8 +297,6 @@ class Tab_editor:
             bg=self.bg_color,
             fg=self.fg_color,
         )
-        output_txt.insert(INSERT, "Successful Execution!")
-        output_txt.config(state=DISABLED)
         output_txt.pack(side="bottom")
 
         # Configuração das Scrollbars
@@ -302,7 +308,21 @@ class Tab_editor:
         code = self.my_text.get("1.0", "end-1c")
 
         if code != "":
-            fr_tb = Frame_tables(self.root, code)
+            parse = Parser(code)
+            try:
+                parse.parse()
+            except ValueError:
+                error = parse._get_mensagem_erro()
+                for line in error:
+                    output_txt.insert(tk.END, line + "\n")
+
+            if parse.get_erro_request() == False:
+                output_txt.insert(INSERT, "--- Successful Execution! ---")
+                data = parse.get_matriz_tokens()
+
+                fr_tb = Frame_tables(self.root, data)
+
+            output_txt.config(state=DISABLED)
 
     def close_tab(self, _=None):
         self.frame.destroy()

@@ -41,14 +41,23 @@ class ErrorMessage:
             "function",  # 31
         ]
 
-    def erro_mensagem_model(self):
-        if self.erro != 0:
-            print(f"\nLinha: {self.linha} | Coluna: {self.coluna}")
-            print(self.elemento)
-            print("^")
-            print(
-                f"Erro sintático {self.erro} - É esperado -> {self.lst_erro[(self.erro - 1)]}"
-            )
+        self.mensagem_erro = []
 
-            print("Cancelando...")
-            exit(0)
+    def erro_mensagem_model(self):
+        self.mensagem_erro.extend(
+            [
+                f"\nLinha: {self.linha} | Coluna: {self.coluna}",
+                self.elemento,
+                "^",
+                f"Erro sintático {self.erro} - É esperado -> {self.lst_erro[(self.erro - 1)]}",
+                "Cancelando...",
+            ]
+        )
+
+    def erro_mensagem_print(self):
+        for linha in self.mensagem_erro:
+            print(linha)
+        exit(0)
+
+    def get_mensagem_erro(self):
+        return self.mensagem_erro

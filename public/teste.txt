@@ -1,4 +1,4 @@
- Exemplo;
+program Exemplo;
 
     var
         i: integer;

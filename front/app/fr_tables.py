@@ -5,8 +5,8 @@ from .tab_symbol_table import Tab_symbol_table
 
 
 class Frame_tables:
-    def __init__(self, root, code):
-        self.code = code
+    def __init__(self, root, data):
+        self.data = data
         self.root = root
         self.fr_tb = Toplevel(root)
         self.fr_tb.title("Tables")
@@ -18,5 +18,5 @@ class Frame_tables:
         self.my_notebook = ttk.Notebook(self.fr_tb)
         self.my_notebook.pack(pady=10)
 
-        self.tab_lexic = Tab_lexic_table(self.my_notebook, self.fr_tb, self.code)
-        self.tab_symbol = Tab_symbol_table(self.my_notebook, self.fr_tb, self.code)
+        self.tab_lexic = Tab_lexic_table(self.my_notebook, self.fr_tb, self.data)
+        self.tab_symbol = Tab_symbol_table(self.my_notebook, self.fr_tb, self.data)

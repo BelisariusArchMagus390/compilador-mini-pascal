@@ -50,7 +50,7 @@ class Program:
                 should_exit = True
 
         if should_exit is False:
-            Parser(codigo).parse()
+            Parser(codigo, iu=False).parse()
         else:
             print("Interrompendo programa...")
             exit(0)

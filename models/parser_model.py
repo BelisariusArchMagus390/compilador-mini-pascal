@@ -36,7 +36,7 @@ ERRO_FALTA_FUNCTION = 31
 
 
 class Parser:
-    def __init__(self, codigo):
+    def __init__(self, codigo, iu=True):
         self.codigo = codigo
         self.tk = Tokenizador(self.codigo)
         self.matriz_tokens = self.tk.tokenizar()
@@ -49,20 +49,39 @@ class Parser:
 
         self.tab_simb = self.tk.tabela_simbolo()
 
+        self.iu = iu
+
+        self.erro_request = False
+        self.mensagem_erro = False
+
     def avanca_token(self):
         if self.index < len(self.tok):
             self.index += 1
             self.token_atual = self.tok[self.index]
 
     def erro_mensagem(self, erro):
-        token_info = self.matriz_tokens[self.index - 1]
-        e = ErrorMessage(
-            erro,
-            token_info[2],
-            token_info[3],
-            token_info[0],
-        )
-        e.erro_mensagem_model()
+        if erro != 0:
+            token_info = self.matriz_tokens[self.index - 1]
+            e = ErrorMessage(
+                erro,
+                token_info[2],
+                token_info[3],
+                token_info[0],
+            )
+            e.erro_mensagem_model()
+
+            if self.iu == True:
+                self.erro_request = True
+                self.mensagem_erro = e.get_mensagem_erro()
+                raise ValueError()
+            else:
+                e.erro_mensagem_print()
+
+    def get_erro_request(self):
+        return self.erro_request
+
+    def _get_mensagem_erro(self):
+        return self.mensagem_erro
 
     # Função que encontra o token e avança para o próximo
     def encontra_token(self, token_esperado, erro, config):
@@ -409,4 +428,5 @@ class Parser:
 
     def parse(self):
         self.program()
-        # self.mostra_resultado()
+        if self.iu == False:
+            self.mostra_resultado()

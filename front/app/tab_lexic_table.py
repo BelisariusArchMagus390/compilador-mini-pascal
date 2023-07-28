@@ -1,21 +1,12 @@
 from tkinter import *
 from tkinter import ttk
-import os
-import sys
-
-parse_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
-sys.path.append(parse_folder_path)
-
-from models.parser_model import Parser
 
 
 class Tab_lexic_table:
-    def __init__(self, my_notebook: ttk.Notebook, root, code):
+    def __init__(self, my_notebook: ttk.Notebook, root, data):
         self.my_notebook = my_notebook
         self.root = root
-        self.code = code
-        self.parse = Parser(self.code)
-        self.parse.parse()
+        self.data = data
 
         self.tree_frame = ttk.Frame(self.my_notebook)
         self.tree_frame.pack()
@@ -60,8 +51,6 @@ class Tab_lexic_table:
         self.my_tree.heading("Coluna", text="Coluna", anchor="w")
         self.my_tree.heading("Tipo Token", text="Tipo Token", anchor="w")
         self.my_tree.heading("ID", text="ID", anchor="center")
-
-        self.data = self.parse.get_matriz_tokens()
 
         # Inserindo dados na TreeView
         for token in self.data:
