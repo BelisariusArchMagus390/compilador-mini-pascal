@@ -309,7 +309,7 @@ class Tab_editor:
 
         code = self.my_text.get("1.0", "end-1c")
 
-        if (re.compile(r"[^\n\s]").search(code)) == False:
+        if (re.compile(r"[^\n\s]").search(code)) != None:
             parse = Parser(code)
             try:
                 parse.parse()
