@@ -322,7 +322,7 @@ class Tab_editor:
                 output_txt.insert(INSERT, "--- Successful Execution! ---")
                 data = parse.get_matriz_tokens()
 
-                fr_tb = Frame_tables(self.root, data)
+                Frame_tables(self.root, data)
         else:
             output_txt.insert(INSERT, "--- Successful Execution! ---")
 
