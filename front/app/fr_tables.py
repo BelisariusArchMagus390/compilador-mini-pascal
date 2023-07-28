@@ -5,10 +5,11 @@ from .tab_symbol_table import Tab_symbol_table
 
 
 class Frame_tables:
-    def __init__(self, root, data):
+    def __init__(self, root, data, bg_color):
         self.data = data
         self.root = root
-        self.fr_tb = Toplevel(root)
+        self.bg_color = bg_color
+        self.fr_tb = Toplevel(root, background=self.bg_color)
         self.fr_tb.title("Tables")
         self.fr_tb.geometry("1100x300")
         self.fr_tb.option_add("*tearOff", False)

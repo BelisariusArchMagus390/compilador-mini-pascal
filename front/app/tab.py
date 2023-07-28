@@ -325,7 +325,7 @@ class Tab_editor:
             if parse.get_erro_request() == False:
                 output_txt.insert(INSERT, "--- Successful Execution! ---")
 
-                Frame_tables(self.root, parse)
+                Frame_tables(self.root, parse, self.bg_color)
         else:
             output_txt.insert(INSERT, "--- Successful Execution! ---")
 
