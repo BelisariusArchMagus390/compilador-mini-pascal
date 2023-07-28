@@ -324,9 +324,8 @@ class Tab_editor:
 
             if parse.get_erro_request() == False:
                 output_txt.insert(INSERT, "--- Successful Execution! ---")
-                data = parse.get_matriz_tokens()
 
-                Frame_tables(self.root, data)
+                Frame_tables(self.root, parse)
         else:
             output_txt.insert(INSERT, "--- Successful Execution! ---")
 

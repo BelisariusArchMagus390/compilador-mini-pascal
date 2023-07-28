@@ -18,5 +18,9 @@ class Frame_tables:
         self.my_notebook = ttk.Notebook(self.fr_tb)
         self.my_notebook.pack(pady=10)
 
-        self.tab_lexic = Tab_lexic_table(self.my_notebook, self.fr_tb, self.data)
-        self.tab_symbol = Tab_symbol_table(self.my_notebook, self.fr_tb, self.data)
+        self.tab_lexic = Tab_lexic_table(
+            self.my_notebook, self.fr_tb, self.data.get_matriz_tokens()
+        )
+        self.tab_symbol = Tab_symbol_table(
+            self.my_notebook, self.fr_tb, self.data.get_table_symbol_values()
+        )
