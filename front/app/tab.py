@@ -14,6 +14,10 @@ sys.path.append(parse_folder_path)
 
 from models.parser_model import Parser
 
+# Créditos do código das classes TextLineNumbers e CustomText abaixo para Bryan Oakley
+# (Com certas modificações minhas):
+# https://stackoverflow.com/questions/16369470/tkinter-adding-line-number-to-text-widget
+
 
 class TextLineNumbers(tk.Canvas):
     def __init__(self, *args, **kwargs):
