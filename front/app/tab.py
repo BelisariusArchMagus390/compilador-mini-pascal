@@ -4,10 +4,10 @@ from tkinter import ttk
 from tkinter import filedialog
 from pathlib import Path
 import os
+import sys
+import re
 from .fr_tables import Frame_tables
 
-import os
-import sys
 
 parse_folder_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 sys.path.append(parse_folder_path)
@@ -277,6 +277,8 @@ class Tab_editor:
 
     def execute(self, _=None):
         self.my_text.config(height=13)
+        self.linenumbers.config(height=13)
+
         fr = ttk.Frame(self.frame)
         fr.pack(fill="both", expand=1)
         # Scrollbar vertical da Text box
@@ -307,7 +309,7 @@ class Tab_editor:
 
         code = self.my_text.get("1.0", "end-1c")
 
-        if code != "":
+        if (re.compile(r"[^\n\s]").search(code)) == False:
             parse = Parser(code)
             try:
                 parse.parse()
@@ -321,8 +323,10 @@ class Tab_editor:
                 data = parse.get_matriz_tokens()
 
                 fr_tb = Frame_tables(self.root, data)
+        else:
+            output_txt.insert(INSERT, "--- Successful Execution! ---")
 
-            output_txt.config(state=DISABLED)
+        output_txt.config(state=DISABLED)
 
     def close_tab(self, _=None):
         self.frame.destroy()
