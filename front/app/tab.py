@@ -132,11 +132,11 @@ class Tab_editor:
         self.ver_scroll.pack(side="right", fill="y")
         self.hor_scroll.pack(side="bottom", fill="x")
 
-        self.linenumbers = TextLineNumbers(self.frame, width=20)
-        self.linenumbers.configure(highlightthickness=0)
-        self.linenumbers.attach(self.my_text)
+        # self.linenumbers = TextLineNumbers(self.frame, width=20)
+        # self.linenumbers.configure(highlightthickness=0)
+        # self.linenumbers.attach(self.my_text)
 
-        self.linenumbers.pack(side="left", fill="y")
+        # self.linenumbers.pack(side="left", fill="y")
         self.my_text.pack(side="top", fill="both", expand=True)
 
         self.my_notebook.add(self.frame, text="New File")
@@ -150,11 +150,11 @@ class Tab_editor:
         self.fr_output = Frame()
         self.txt_box_output = Text()
 
-        self.my_text.bind("<<Change>>", self._on_change)
-        self.my_text.bind("<Configure>", self._on_change)
+        # self.my_text.bind("<<Change>>", self._on_change)
+        # self.my_text.bind("<Configure>", self._on_change)
 
-    def _on_change(self, event):
-        self.linenumbers.redraw()
+    # def _on_change(self, event):
+    #    self.linenumbers.redraw()
 
     def change_text(self, tittle):
         self.my_notebook.tab(self.frame, text=tittle)
