@@ -16,6 +16,11 @@ class App:
 
         self.style = ttk.Style(self.root)
 
+        """
+        All credits from the themes for rdbende
+        Source: https://github.com/rdbende/Forest-ttk-theme
+        """
+
         self.dir_path = Path(__file__).parent.joinpath("themes")
         self.root.tk.call("source", os.path.join(self.dir_path, "forest-light.tcl"))
         self.root.tk.call("source", os.path.join(self.dir_path, "forest-dark.tcl"))
