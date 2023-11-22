@@ -5,7 +5,7 @@ var
   z, d: char;
   k: array[1..5] of integer;
 
-procedure SomaArray(k: array of integer; i: integer): integer;
+procedure SomaArray(k: array[1..5] of integer; i: integer);
 begin
   numero1 := 10;
   numero2 := 10;
@@ -13,6 +13,7 @@ begin
   z:= 'Manchester city';
   d:= z;
 end;
+
 begin
   if i >= 0
     read('Internazionale')

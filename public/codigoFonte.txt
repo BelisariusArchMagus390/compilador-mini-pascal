@@ -15,7 +15,7 @@ var
     resultado: integer;
 begin
     resultado := a + b;
-    return resultado;
+    somar := resultado;
 end;
 begin
     numero := -10 + 5;
@@ -25,7 +25,7 @@ begin
     condicao := (numero > 0) and (numero2 <= 10);
     
     if condicao then
-        write('A soma é: ' + somar(numero, 20));
+        write('A soma é: ', somar(numero, 20));
     else
         write('Nao satisfaz a condicao.');
 end.

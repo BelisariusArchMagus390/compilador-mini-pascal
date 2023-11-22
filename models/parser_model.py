@@ -31,10 +31,12 @@ ERRO_FALTA_WHILE = 25
 ERRO_FALTA_DO = 26
 ERRO_FALTA_PONTO_FINAL = 27
 ERRO_FALTA_UMA_EXPRESSAO = 29
+ERRO_FALTA_PROCEDURE = 30
+ERRO_FALTA_FUNCTION = 31
 
 
 class Parser:
-    def __init__(self, codigo):
+    def __init__(self, codigo, iu=True):
         self.codigo = codigo
         self.tk = Tokenizador(self.codigo)
         self.matriz_tokens = self.tk.tokenizar()
@@ -42,79 +44,15 @@ class Parser:
         self.tok = [l[1] for l in self.matriz_tokens]
         self.tok.append("$")
 
-        self.lst_index_tipo = []
-        self.dic_carac = {}
-
         self.token_atual = self.tok[0]
         self.index = 0
 
-    # Função que faz o complemento das informações dos tokens na tabela de
-    # símbolos
-    def complementa(self):
-        for i in self.matriz_tokens:
-            lexema = i[0]
-            if lexema in self.dic_carac:
-                valor = self.dic_carac[lexema]
-                tipo = valor[0]
-                tam_array = valor[1]
+        self.tab_simb = self.tk.tabela_simbolo()
 
-                if len(i) > 5 and i[5] != None:
-                    carac = [tipo, i[5], tam_array]
-                    i.pop()
-                else:
-                    carac = [tipo, None, tam_array]
-                i.extend(carac)
-            elif len(i) > 5 and i[5] != None:
-                carac = [None, i[5], None]
-                i.pop()
-                i.extend(carac)
-            elif len(i) == 5:
-                i.extend([None, None, None])
+        self.iu = iu
 
-    def atribui_tipo(self, c):
-        if c == "simple":
-            tipo = self.matriz_tokens[self.index - 1][0]
-            for i in self.lst_index_tipo:
-                self.dic_carac[self.matriz_tokens[i][0]] = [tipo, None]
-
-        elif c == "array":
-            tipo = "Array " + self.matriz_tokens[self.index - 1][0]
-            for i in self.lst_index_tipo:
-                lexema = self.matriz_tokens[i][0]
-                if lexema in self.dic_carac:
-                    self.dic_carac[lexema][0] = tipo
-                else:
-                    self.dic_carac[lexema] = [tipo, None]
-
-        self.lst_index_tipo.clear()
-
-    def atribui_tam_array(self):
-        tamanho_matriz = (
-            self.matriz_tokens[self.index][0]
-            + self.matriz_tokens[self.index + 1][0]
-            + self.matriz_tokens[self.index + 2][0]
-        )
-
-        self.dic_carac[self.matriz_tokens[self.index - 4][0]] = [None, tamanho_matriz]
-
-    def atribui_valor(self):
-        c = True
-        count = self.index
-        valor = ""
-        while c is True:
-            linha_matriz = self.matriz_tokens[count]
-
-            if linha_matriz[1] == ";":
-                c = False
-            else:
-                valor += linha_matriz[0]
-                count += 1
-        count_regulado = self.index - 2
-        lexema = self.matriz_tokens[count_regulado]
-        if not lexema[1] == "IDENT":
-            count_regulado = self.index - 5
-
-        lexema.append(valor)
+        self.erro_request = False
+        self.mensagem_erro = False
 
     def avanca_token(self):
         if self.index < len(self.tok):
@@ -122,14 +60,28 @@ class Parser:
             self.token_atual = self.tok[self.index]
 
     def erro_mensagem(self, erro):
-        token_info = self.matriz_tokens[self.index - 1]
-        e = ErrorMessage(
-            erro,
-            token_info[2],
-            token_info[3],
-            token_info[0],
-        )
-        e.erro_mensagem_model()
+        if erro != 0:
+            token_info = self.matriz_tokens[self.index - 1]
+            e = ErrorMessage(
+                erro,
+                token_info[2],
+                token_info[3],
+                token_info[0],
+            )
+            e.erro_mensagem_model()
+
+            if self.iu == True:
+                self.erro_request = True
+                self.mensagem_erro = e.get_mensagem_erro()
+                raise ValueError()
+            else:
+                e.erro_mensagem_print()
+
+    def get_erro_request(self):
+        return self.erro_request
+
+    def _get_mensagem_erro(self):
+        return self.mensagem_erro
 
     # Função que encontra o token e avança para o próximo
     def encontra_token(self, token_esperado, erro, config):
@@ -152,13 +104,17 @@ class Parser:
 
         self.encontra_token([";"], ERRO_PONTO_E_VIRGULA, "d")
 
-        self.variable_declaration_part()
-        self.compound_statement()
+        self.block()
 
         self.encontra_token(["."], ERRO_FALTA_PONTO_FINAL, "d")
 
         if self.token_atual == "$":
             return
+
+    def block(self):
+        self.variable_declaration_part()
+        self.subroutine_declaration_part()
+        self.compound_statement()
 
     def relational_operator(self):
         operadores = ["=", "<>", "<", "<=", ">=", ">", "and", "or"]
@@ -191,7 +147,9 @@ class Parser:
             return True
 
     def factor(self):
-        if self.token_atual == "IDENT":
+        if self.token_atual == "IDENT" and self.tok[self.index + 1] == "(":
+            self.function_procedure_statement()
+        elif self.token_atual == "IDENT":
             self.variable()
         else:
             if not self.encontra_token(
@@ -237,7 +195,7 @@ class Parser:
     def variable_declaration_part(self):
         if self.encontra_token(["var"], 0, "b"):
             if not self.aux_var_declr_part():
-                self.erro_mensagem(2)
+                self.erro_mensagem(ERRO_FALTA_IDENTIFICADOR)
 
             c = True
             while c is True:
@@ -247,7 +205,6 @@ class Parser:
     def variable_declaration(self):
         c = True
         while c is True:
-            self.lst_index_tipo.append(self.index)
             self.encontra_token(["IDENT"], 0, "d")
 
             if not self.encontra_token([","], 0, "b"):
@@ -258,11 +215,7 @@ class Parser:
         self.type_()
 
     def type_(self):
-        if self.simple_type():
-            self.atribui_tipo("simple")
-        elif self.array_type():
-            self.atribui_tipo("array")
-        else:
+        if not (self.simple_type() or self.array_type()):
             self.erro_mensagem(ERRO_NAO_E_SIMPLE_TYPE_OU_ARRAY_TYPE)
 
     def simple_type(self):
@@ -284,8 +237,6 @@ class Parser:
         return True
 
     def index_range(self):
-        self.atribui_tam_array()
-
         self.encontra_token(["LITERAL_INT"], ERRO_FALTA_LITERAL_INT, "d")
         self.encontra_token([".."], ERRO_FALTA_DOIS_PONTOS, "d")
         self.encontra_token(["LITERAL_INT"], ERRO_FALTA_LITERAL_INT, "d")
@@ -299,7 +250,71 @@ class Parser:
                     self.statement()
                 else:
                     c = False
+
             self.encontra_token(["end"], ERRO_FALTA_END, "d")
+
+            self.encontra_token([";"], 0, "d")
+
+    def subroutine_declaration_part(self):
+        if self.token_atual == "procedure":
+            self.procedure_declaration()
+        elif self.token_atual == "function":
+            self.function_declaration()
+
+    def procedure_declaration(self):
+        self.encontra_token(["procedure"], ERRO_FALTA_PROCEDURE, "d")
+        self.encontra_token(["IDENT"], ERRO_FALTA_IDENTIFICADOR, "d")
+        self.formal_parameters()
+        self.encontra_token([";"], ERRO_PONTO_E_VIRGULA, "d")
+        self.block()
+
+    def function_declaration(self):
+        self.encontra_token(["function"], ERRO_FALTA_FUNCTION, "d")
+        self.encontra_token(["IDENT"], ERRO_FALTA_IDENTIFICADOR, "d")
+        self.formal_parameters()
+        self.encontra_token([":"], ERRO_FALTA_DOIS_PONTOS, "d")
+        self.type_()
+        self.encontra_token([";"], ERRO_PONTO_E_VIRGULA, "d")
+        self.block()
+
+    def aux_var_declr_par_sec(self):
+        if self.token_atual == "IDENT":
+            self.variable_declaration()
+            return True
+
+    def formal_parameters(self):
+        if self.encontra_token(["("], ERRO_FALTA_COMECO_PARENTESE, "b"):
+            if not self.aux_var_declr_par_sec():
+                self.erro_mensagem(ERRO_FALTA_IDENTIFICADOR)
+
+            if self.encontra_token([";"], 0, "b"):
+                c = True
+                while c is True:
+                    if not self.aux_var_declr_part():
+                        c = False
+
+            self.encontra_token([")"], ERRO_FIM_PARENTESE, "d")
+
+    def parameters(self):
+        c = True
+        while c is True:
+            self.encontra_token(
+                ["LITERAL_STRING", "LITERAL_INT", "BOOLEAN", "IDENT"], 0, "d"
+            )
+
+            if not self.encontra_token([","], 0, "b"):
+                c = False
+
+    # Regras sintáticas alteradas
+    # <function_procedure statement> ::= <function_procedure identifier> ( <paramaters> )
+    # <parameters> ::= <empty> | <identifier> | <constant> {, <identifier> | <constant> ,}
+    # <factor> ::= <function_procedure statement> | <variable> | <constant> | ( <expression> ) | not <factor>
+
+    def function_procedure_statement(self):
+        self.encontra_token(["IDENT"], ERRO_FALTA_IDENTIFICADOR, "d")
+        self.encontra_token(["("], ERRO_FALTA_COMECO_PARENTESE, "d")
+        self.parameters()
+        self.encontra_token([")"], ERRO_FIM_PARENTESE, "d")
 
     def if_statement(self):
         if self.encontra_token(["if"], ERRO_FALTA_IF, "b"):
@@ -339,6 +354,9 @@ class Parser:
             c = True
         elif self.token_atual == "write":
             self.write_statement()
+            c = True
+        elif self.token_atual == "IDENT" and self.tok[self.index + 1] == "(":
+            self.function_procedure_statement()
             c = True
         elif self.token_atual == "IDENT":
             self.assignment_statement()
@@ -383,28 +401,32 @@ class Parser:
         ):
             self.erro_mensagem(ERRO_FALTA_VAR)
 
-        self.atribui_valor()
-
         self.expression()
 
     def mostra_resultado(self):
         print("\nCÓDIGO ANALISADO COM SUCESSO!")
 
-        print("\nTABELA DE SÍMBOLOS: \n")
+        print("\nTABELA LÉXICA: \n")
 
         colunas = [
             "Lexema",
             "Token",
             "Linha",
             "Coluna",
+            "Tipo Token",
             "ID",
-            "Tipo",
-            "Valor",
-            "Tamanho do Array",
         ]
         print(tb(self.matriz_tokens, headers=colunas, tablefmt="fancy_grid"))
 
+        self.tab_simb.table_show()
+
+    def get_matriz_tokens(self):
+        return self.matriz_tokens
+
+    def get_table_symbol_values(self):
+        return self.tab_simb.get_node_matr()
+
     def parse(self):
         self.program()
-        self.complementa()
-        self.mostra_resultado()
+        if self.iu == False:
+            self.mostra_resultado()

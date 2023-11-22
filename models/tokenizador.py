@@ -2,6 +2,7 @@ import random as rm
 import re
 
 from .error_message_model import ErrorMessage
+from .tree import SymbolTable
 
 
 class Tokenizador:
@@ -9,8 +10,7 @@ class Tokenizador:
         self.codigo = codigo.replace("\n", " \n ")
         self.id = r"^[a-zA-Z]([a-zA-Z]|[0-9])*$"
         self.digito_inteiro = r"^[0-9]+$"
-        self.string_constante_aspas_duplas = r'^"+[a-zA-Z]([a-zA-Z]|[0-9])*"+$'
-        self.string_constante_aspas_simples = r"^'+([a-zA-Z]|[0-9])'+$"
+        self.string_constante = r"('\S+')"
 
         self.palavras_reservadas = [
             "while",
@@ -36,6 +36,8 @@ class Tokenizador:
             "boolean",
             "and",
             "or",
+            "procedure",
+            "function",
         ]
 
         self.operadores_aritmeticos = ["+", "-", "*"]
@@ -74,7 +76,7 @@ class Tokenizador:
         ids_values = self.ids.values()
 
         while new_id is None or new_id in ids_values:
-            new_id = str(rm.randint(100, 400))
+            new_id = rm.randint(100, 400)
 
         return new_id
 
@@ -82,13 +84,24 @@ class Tokenizador:
         # For que analisará cada char da string codigo
         linha = 1
         coluna = 0
+        tipo_token = ""
 
         erro = False
 
         # Váriavel que guarda o lexema para a análise
         lexema = ""
 
+        count_aspas = 0
         for i, char in enumerate(self.codigo):
+            if char == "'":
+                count_aspas += 1
+
+            if count_aspas == 1:
+                lexema += char
+                continue
+            elif count_aspas == 2:
+                count_aspas = 0
+
             if char != " ":
                 lexema += char
 
@@ -116,27 +129,33 @@ class Tokenizador:
                         linha += 1
                     else:
                         if (
-                            re.match(self.string_constante_aspas_duplas, lexema) != None
-                            or re.match(self.string_constante_aspas_simples, lexema)
+                            re.match(self.string_constante, lexema.replace(" ", ""))
                             != None
                         ):
                             second_item = "LITERAL_STRING"
+                            tipo_token = "Literal String"
 
                         elif lexema in self.palavras_reservadas:
-                            second_item = (
-                                "BOOLEAN" if lexema in ["true", "false"] else lexema
-                            )
+                            if lexema in ["true", "false"]:
+                                second_item = "BOOLEAN"
+                                tipo_token = "Literal Booleano"
+                            else:
+                                second_item = lexema
+                                tipo_token = "Palavra reservada"
 
                         elif re.match(self.id, lexema) != None:
                             self.ids[lexema] = self.defini_id(lexema)
                             second_item = "IDENT"
+                            tipo_token = "Identificador"
 
                         elif re.match(self.digito_inteiro, lexema) != None:
                             second_item = "LITERAL_INT"
+                            tipo_token = "Literal inteiro"
 
                         elif curr_lex in self.esp_simbolos:
                             second_item = curr_lex.strip(" ")
                             lexema = curr_lex.strip(" ")
+                            tipo_token = "Símbolo especial"
                         elif (
                             curr_lex in self.esp_simbolos
                             or lexema in self.operadores_aritmeticos
@@ -144,12 +163,13 @@ class Tokenizador:
                             or lexema in self.simbolos_especiais
                         ):
                             second_item = lexema
+                            tipo_token = "Símbolo especial"
                         else:
                             erro = True
                             self.erro_elemento.extend([lexema, linha, coluna])
                             break
 
-                        appendable = [lexema, second_item, linha, coluna]
+                        appendable = [lexema, second_item, linha, coluna, tipo_token]
                         self.matriz_tokens.append(appendable)
 
                     lexema = ""
@@ -173,3 +193,10 @@ class Tokenizador:
         ]
 
         return self.matriz_tokens
+
+    def tabela_simbolo(self):
+        st = SymbolTable()
+        for lexema, id in self.ids.items():
+            st.insert(id, lexema)
+
+        return st
