@@ -112,7 +112,7 @@ class Tab_editor:
         self.hor_scroll = ttk.Scrollbar(self.frame, orient="horizontal")
 
         # Text Box
-        self.my_text = CustomText(
+        self.my_text = tk.Text(
             self.frame,
             width=97,
             height=23,
@@ -281,7 +281,7 @@ class Tab_editor:
 
     def execute(self, _=None):
         self.my_text.config(height=13)
-        self.linenumbers.config(height=13)
+        # self.linenumbers.config(height=13)
 
         fr = ttk.Frame(self.frame)
         fr.pack(fill="both", expand=1)
@@ -341,7 +341,7 @@ class Tab_editor:
     def change_color(self, bg_color, fg_color):
         self.my_text.config(background=bg_color, fg=fg_color)
         self.txt_box_output.config(background=bg_color, fg=fg_color)
-        self.linenumbers.configure(bg=bg_color)
+        # self.linenumbers.configure(bg=bg_color)
         self.bg_color = bg_color
         self.fg_color = fg_color
 
