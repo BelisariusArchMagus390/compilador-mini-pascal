@@ -247,7 +247,7 @@ class StatementsAsmh:
         if self.memory_position <= 20:
             self.memory_position += 1
         else:
-            e = ErrorMessage(ERRO_FALTA_MEMORIA)
+            e = ErrorMessage(ERRO_FALTA_MEMORIA, None, None, None)
 
             if self.par.get_iu() == True:
                 self.par.set_erro_request(True)
