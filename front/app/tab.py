@@ -14,6 +14,79 @@ sys.path.append(parse_folder_path)
 
 from models.parser_model import Parser
 
+# Créditos do código das classes TextLineNumbers e CustomText abaixo para Bryan Oakley
+# (Com certas modificações minhas):
+# https://stackoverflow.com/questions/16369470/tkinter-adding-line-number-to-text-widget
+
+
+class TextLineNumbers(tk.Canvas):
+    def __init__(self, *args, **kwargs):
+        tk.Canvas.__init__(self, *args, **kwargs)
+        self.textwidget = None
+
+    def attach(self, text_widget):
+        self.textwidget = text_widget
+
+    def redraw(self, *args):
+        """redraw line numbers"""
+        self.delete("all")
+
+        i = self.textwidget.index("@0,0")
+        while True:
+            dline = self.textwidget.dlineinfo(i)
+            if dline is None:
+                break
+            y = dline[1]
+            linenum = str(i).split(".")[0]
+            self.create_text(2, y, anchor="nw", text=linenum, fill="#92a8d1")
+            i = self.textwidget.index("%s+1line" % i)
+
+
+class CustomText(tk.Text):
+    def __init__(self, *args, **kwargs):
+        tk.Text.__init__(self, *args, **kwargs)
+
+        # create a proxy for the underlying widget
+        self._orig = self._w + "_orig"
+        self.tk.call("rename", self._w, self._orig)
+        self.tk.createcommand(self._w, self._proxy)
+
+    def _proxy(self, command, *args):
+        # avoid error when copying
+        if (
+            command == "get"
+            and (args[0] == "sel.first" and args[1] == "sel.last")
+            and not self.tag_ranges("sel")
+        ):
+            return
+
+        # avoid error when deleting
+        if (
+            command == "delete"
+            and (args[0] == "sel.first" and args[1] == "sel.last")
+            and not self.tag_ranges("sel")
+        ):
+            return
+
+        # let the actual widget perform the requested action
+        cmd = (self._orig, command) + args
+        result = self.tk.call(cmd)
+
+        # generate an event if something was added or deleted,
+        # or the cursor position changed
+        if (
+            args[0] in ("insert", "replace", "delete")
+            or args[0:3] == ("mark", "set", "insert")
+            or args[0:2] == ("xview", "moveto")
+            or args[0:2] == ("xview", "scroll")
+            or args[0:2] == ("yview", "moveto")
+            or args[0:2] == ("yview", "scroll")
+        ):
+            self.event_generate("<<Change>>", when="tail")
+
+        # return what the actual widget returned
+        return result
+
 
 class Tab_editor:
     def __init__(
@@ -59,6 +132,11 @@ class Tab_editor:
         self.ver_scroll.pack(side="right", fill="y")
         self.hor_scroll.pack(side="bottom", fill="x")
 
+        # self.linenumbers = TextLineNumbers(self.frame, width=20)
+        # self.linenumbers.configure(highlightthickness=0)
+        # self.linenumbers.attach(self.my_text)
+
+        # self.linenumbers.pack(side="left", fill="y")
         self.my_text.pack(side="top", fill="both", expand=True)
 
         self.my_notebook.add(self.frame, text="New File")
@@ -71,6 +149,12 @@ class Tab_editor:
 
         self.fr_output = Frame()
         self.txt_box_output = Text()
+
+        # self.my_text.bind("<<Change>>", self._on_change)
+        # self.my_text.bind("<Configure>", self._on_change)
+
+    # def _on_change(self, event):
+    #    self.linenumbers.redraw()
 
     def change_text(self, tittle):
         self.my_notebook.tab(self.frame, text=tittle)
@@ -197,6 +281,8 @@ class Tab_editor:
 
     def execute(self, _=None):
         self.my_text.config(height=13)
+        # self.linenumbers.config(height=13)
+
         fr = ttk.Frame(self.frame)
         fr.pack(fill="both", expand=1)
         # Scrollbar vertical da Text box
@@ -255,6 +341,7 @@ class Tab_editor:
     def change_color(self, bg_color, fg_color):
         self.my_text.config(background=bg_color, fg=fg_color)
         self.txt_box_output.config(background=bg_color, fg=fg_color)
+        # self.linenumbers.configure(bg=bg_color)
         self.bg_color = bg_color
         self.fg_color = fg_color
 
