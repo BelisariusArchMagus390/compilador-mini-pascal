@@ -246,6 +246,15 @@ class StatementsAsmh:
 
         if self.memory_position <= 20:
             self.memory_position += 1
+        else:
+            e = ErrorMessage(ERRO_FALTA_MEMORIA, None, None, None)
+
+            if self.par.get_iu() == True:
+                self.par.set_erro_request(True)
+                self.par.set_mensagem_erro(e.get_mensagem_erro())
+                raise ValueError()
+            else:
+                e.erro_mensagem_print()
 
     def write_array_declaration(self):
         pass

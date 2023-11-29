@@ -2,7 +2,7 @@ from sys import exit
 
 
 class ErrorMessage:
-    def __init__(self, erro, linha=None, coluna=None, elemento=None):
+    def __init__(self, erro, linha, coluna, elemento):
         self.erro = erro
         self.linha = linha
         self.coluna = coluna
@@ -56,7 +56,7 @@ class ErrorMessage:
                 ]
             )
         else:
-            self.mensagem_erro[0] = self.lst_erro[31]
+            self.mensagem_erro[0] = self.lst_erro[(self.erro - 1)]
 
     def erro_mensagem_print(self):
         for linha in self.mensagem_erro:
