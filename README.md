@@ -105,6 +105,7 @@ Abaixo está listado todos os erros sintáticos implementados:
 |29             |Falta ser feito uma expressão                              |
 |30             |Falta a palavra reservada procedure                        |
 |31             |Falta a palavra reservada function                         |
+|32             |Falta de armazenamento de memória                          |
 
 ### 2.5 - Ressalvas
 Por ser um analisador léxico, certos elementos não serão garantidos, como atribuições, tipos e etc, como é melhor detalhado abaixo: 

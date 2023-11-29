@@ -111,6 +111,13 @@ class SymbolTable:
             return self._search(id, node.left)
         return self._search(id, node.right)
 
+    # ID - 0 | Lexema - 1 | Tipo - 2 | Valor - 3 | Tamanho array - 4 |
+    # Parâmetros - 5 | Chamada function/procedure - 6 | Posição na memória - 7
+
+    def edit(self, id, collumn, value):
+        node = self.search(id)
+        node.data[collumn] = value
+
     def get_node_matr(self):
         self.inorder_traversal_tree()
         return self.node_matr

@@ -39,6 +39,7 @@ class ErrorMessage:
             "uma expressão",  # 29
             "procedure",  # 30
             "function",  # 31
+            "Falta de memória",  # 32
         ]
 
         self.mensagem_erro = []

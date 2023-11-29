@@ -2,6 +2,8 @@ from .write_statements_asmh import WriteStatementsAsmh
 from .tree import SymbolTable
 from .parser_model import Parser
 
+ERRO_FALTA_MEMORIA = 32
+
 
 class StatementsAsmh:
     def __init__(self):
@@ -238,8 +240,11 @@ class StatementsAsmh:
 
         id = self.find_node_id(var)
 
-        # self.tr.insert(id)
-        self.memory_position += 1
+        self.tr.edit(id, 7, self.memory_position)
+        self.tr.edit(id, 3, value)
+
+        if self.memory_position <= 20:
+            self.memory_position += 1
 
     def write_array_declaration(self):
         pass
@@ -251,4 +256,4 @@ class StatementsAsmh:
         pass
 
     def write_end_program_asmh(self):
-        pass
+        self.was.write_end_program_asmh()
