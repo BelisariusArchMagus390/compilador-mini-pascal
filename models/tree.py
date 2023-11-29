@@ -2,7 +2,9 @@ from tabulate import tabulate as tb
 
 
 class Data:
-    def __init__(self, id, lexema, tipo, valor, tam_array, param, chamada):
+    def __init__(
+        self, id, lexema, tipo, valor, tam_array, param, chamada, memory_position
+    ):
         self.id = id
         self.lexema = lexema
         self.tipo = tipo
@@ -10,6 +12,7 @@ class Data:
         self.tam_array = tam_array
         self.param = param
         self.chamada = chamada
+        self.memory_position = memory_position
         self.data = [
             self.id,
             self.lexema,
@@ -18,6 +21,7 @@ class Data:
             self.tam_array,
             self.param,
             self.chamada,
+            self.memory_position,
         ]
 
     def __str__(self):
@@ -34,8 +38,11 @@ class Node(Data):
         tam_array=None,
         param=None,
         chamada=None,
+        memory_position=None,
     ):
-        super().__init__(id, lexema, tipo, valor, tam_array, param, chamada)
+        super().__init__(
+            id, lexema, tipo, valor, tam_array, param, chamada, memory_position
+        )
         self.left = None
         self.right = None
 
@@ -70,6 +77,7 @@ class SymbolTable:
             "Tamanho array",
             "Parâmetros",
             "Chamada function/procedure",
+            "Posição na memória",
         ]
         print(tb(self.node_matr, headers=columns, tablefmt="fancy_grid"))
 

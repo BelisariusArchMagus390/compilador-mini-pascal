@@ -33,6 +33,7 @@ class Tab_symbol_table:
             "Tamanho array",
             "Parâmetros",
             "Chamada function/procedure",
+            "Posição na memória",
         )
 
         # Formatando as colunas
@@ -44,6 +45,7 @@ class Tab_symbol_table:
         self.my_tree.column("Tamanho array", anchor="w", width=140)
         self.my_tree.column("Parâmetros", anchor="w", width=140)
         self.my_tree.column("Chamada function/procedure", anchor="w", width=170)
+        self.my_tree.column("Posição na memória", anchor="w", width=140)
 
         # Criando Headings
         self.my_tree.heading("#0", text="", anchor="w")
@@ -55,6 +57,9 @@ class Tab_symbol_table:
         self.my_tree.heading("Parâmetros", text="Parâmetros", anchor="w")
         self.my_tree.heading(
             "Chamada function/procedure", text="Chamada function/procedure", anchor="w"
+        )
+        self.my_tree.heading(
+            "Posição na memória", text="Posição na memória", anchor="center"
         )
 
         # Inserindo dados na TreeView
