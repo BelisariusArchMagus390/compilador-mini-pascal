@@ -1,6 +1,7 @@
 from .write_statements_asmh import WriteStatementsAsmh
 from .tree import SymbolTable
 from .parser_model import Parser
+from .error_message_model import ErrorMessage
 
 ERRO_FALTA_MEMORIA = 32
 

@@ -2,7 +2,7 @@ from sys import exit
 
 
 class ErrorMessage:
-    def __init__(self, erro, linha, coluna, elemento):
+    def __init__(self, erro, linha=None, coluna=None, elemento=None):
         self.erro = erro
         self.linha = linha
         self.coluna = coluna
@@ -45,15 +45,18 @@ class ErrorMessage:
         self.mensagem_erro = []
 
     def erro_mensagem_model(self):
-        self.mensagem_erro.extend(
-            [
-                f"\nLinha: {self.linha} | Coluna: {self.coluna}",
-                self.elemento,
-                "^",
-                f"Erro sintático {self.erro} - É esperado -> {self.lst_erro[(self.erro - 1)]}",
-                "Cancelando...",
-            ]
-        )
+        if self.elemento != None:
+            self.mensagem_erro.extend(
+                [
+                    f"\nLinha: {self.linha} | Coluna: {self.coluna}",
+                    self.elemento,
+                    "^",
+                    f"Erro sintático {self.erro} - É esperado -> {self.lst_erro[(self.erro - 1)]}",
+                    "Cancelando...",
+                ]
+            )
+        else:
+            self.mensagem_erro[0] = self.lst_erro[31]
 
     def erro_mensagem_print(self):
         for linha in self.mensagem_erro:
