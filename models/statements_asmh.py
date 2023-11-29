@@ -66,6 +66,7 @@ class StatementsAsmh:
         ifstored2,
         memory_position1,
         memory_position2,
+        memory_position_final,
         element1_value,
         element2_value,
     ):
@@ -78,7 +79,7 @@ class StatementsAsmh:
             element2_value,
         )
 
-        command_lines = complement + " LETH\n"
+        command_lines = complement + f" LETH\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     def logic_op_less_or_equal_than_asmh(
@@ -87,6 +88,7 @@ class StatementsAsmh:
         ifstored2,
         memory_position1,
         memory_position2,
+        memory_position_final,
         element1_value,
         element2_value,
     ):
@@ -99,7 +101,7 @@ class StatementsAsmh:
             element2_value,
         )
 
-        command_lines = complement + " LEEQ\n"
+        command_lines = complement + f" LEEQ\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     def logic_op_greater_than_asmh(
@@ -108,6 +110,7 @@ class StatementsAsmh:
         ifstored2,
         memory_position1,
         memory_position2,
+        memory_position_final,
         element1_value,
         element2_value,
     ):
@@ -120,7 +123,7 @@ class StatementsAsmh:
             element2_value,
         )
 
-        command_lines = complement + " GRTH\n"
+        command_lines = complement + f" GRTH\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     def logic_op_greater_or_equal_than_asmh(
@@ -129,6 +132,7 @@ class StatementsAsmh:
         ifstored2,
         memory_position1,
         memory_position2,
+        memory_position_final,
         element1_value,
         element2_value,
     ):
@@ -141,7 +145,7 @@ class StatementsAsmh:
             element2_value,
         )
 
-        command_lines = complement + " GREQ\n"
+        command_lines = complement + f" GREQ\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     def logic_op_equal_asmh(
@@ -150,6 +154,7 @@ class StatementsAsmh:
         ifstored2,
         memory_position1,
         memory_position2,
+        memory_position_final,
         element1_value,
         element2_value,
     ):
@@ -162,7 +167,7 @@ class StatementsAsmh:
             element2_value,
         )
 
-        command_lines = complement + " EQUA\n"
+        command_lines = complement + f" EQUA\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     def logic_op_different_asmh(
@@ -171,6 +176,7 @@ class StatementsAsmh:
         ifstored2,
         memory_position1,
         memory_position2,
+        memory_position_final,
         element1_value,
         element2_value,
     ):
@@ -183,11 +189,73 @@ class StatementsAsmh:
             element2_value,
         )
 
-        command_lines = complement + " DIFF\n"
+        command_lines = complement + f" DIFF\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
-    def assignment_asmh(self, value, memory_position):
-        command_lines = f" LDCT\n STOR {memory_position}\n"
+    def logic_op_or_asmh(
+        self,
+        ifstored1,
+        ifstored2,
+        memory_position1,
+        memory_position2,
+        memory_position_final,
+        element1_value,
+        element2_value,
+    ):
+        complement = self.value_in_memory(
+            ifstored1,
+            ifstored2,
+            memory_position1,
+            memory_position2,
+            element1_value,
+            element2_value,
+        )
+
+        command_lines = complement + f" _OR_\n STOR {memory_position_final}\n"
+        self.lines_to_write.append(command_lines)
+
+    def logic_op_and_asmh(
+        self,
+        ifstored1,
+        ifstored2,
+        memory_position1,
+        memory_position2,
+        memory_position_final,
+        element1_value,
+        element2_value,
+    ):
+        complement = self.value_in_memory(
+            ifstored1,
+            ifstored2,
+            memory_position1,
+            memory_position2,
+            element1_value,
+            element2_value,
+        )
+
+        command_lines = complement + f" AND_\n STOR {memory_position_final}\n"
+        self.lines_to_write.append(command_lines)
+
+    def logic_op_not_asmh(
+        self,
+        ifstored1,
+        ifstored2,
+        memory_position1,
+        memory_position2,
+        memory_position_final,
+        element1_value,
+        element2_value,
+    ):
+        complement = self.value_in_memory(
+            ifstored1,
+            ifstored2,
+            memory_position1,
+            memory_position2,
+            element1_value,
+            element2_value,
+        )
+
+        command_lines = complement + f" INVI\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     # Expressões aritméticas
@@ -197,6 +265,7 @@ class StatementsAsmh:
         ifstored2,
         memory_position1,
         memory_position2,
+        memory_position_final,
         element1_value,
         element2_value,
     ):
@@ -209,7 +278,7 @@ class StatementsAsmh:
             element2_value,
         )
 
-        command_lines = complement + " ADD_\n"
+        command_lines = complement + f" ADD_\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     def arithmetic_op_sub_asmh(
@@ -218,6 +287,7 @@ class StatementsAsmh:
         ifstored2,
         memory_position1,
         memory_position2,
+        memory_position_final,
         element1_value,
         element2_value,
     ):
@@ -230,7 +300,7 @@ class StatementsAsmh:
             element2_value,
         )
 
-        command_lines = complement + " SUBT\n"
+        command_lines = complement + f" SUBT\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     def arithmetic_op_div_asmh(
@@ -239,6 +309,7 @@ class StatementsAsmh:
         ifstored2,
         memory_position1,
         memory_position2,
+        memory_position_final,
         element1_value,
         element2_value,
     ):
@@ -251,7 +322,7 @@ class StatementsAsmh:
             element2_value,
         )
 
-        command_lines = complement + " DIVI\n"
+        command_lines = complement + f" DIVI\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     def arithmetic_op_mul_asmh(
@@ -260,6 +331,7 @@ class StatementsAsmh:
         ifstored2,
         memory_position1,
         memory_position2,
+        memory_position_final,
         element1_value,
         element2_value,
     ):
@@ -272,8 +344,21 @@ class StatementsAsmh:
             element2_value,
         )
 
-        command_lines = complement + " MULT\n"
+        command_lines = complement + f" MULT\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
+
+    def assignment_asmh(self, value, memory_position, neg_symbol):
+        command_lines = f" LDCT {value}\n"
+
+        if neg_symbol == True:
+            command_lines = command_lines + " NEGA\n"
+
+        command_lines = command_lines + f" STOR {memory_position}\n"
+
+        self.lines_to_write.append(command_lines)
+
+    def array_declaration(self):
+        pass
 
     def if_asmh(self):
         pass
