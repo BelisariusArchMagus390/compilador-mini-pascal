@@ -347,13 +347,8 @@ class WriteStatementsAsmh:
         command_lines = complement + f" MULT\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
-    def write_assignment_asmh(self, value, memory_position, neg_symbol):
-        command_lines = f" LDCT {value}\n"
-
-        if neg_symbol == True:
-            command_lines = command_lines + " NEGA\n"
-
-        command_lines = command_lines + f" STOR {memory_position}\n"
+    def write_assignment_asmh(self, value, memory_position):
+        command_lines = f" LDCT {value}\n STOR {memory_position}\n"
 
         self.lines_to_write.append(command_lines)
 

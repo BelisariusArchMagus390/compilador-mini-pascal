@@ -81,7 +81,7 @@ class SymbolTable:
         ]
         print(tb(self.node_matr, headers=columns, tablefmt="fancy_grid"))
 
-    def insert(self, _id, _lexema):
+    def insert(self, _id, _lexema, _memory_position=None):
         symbol = None
         x = self.root
         while x:
@@ -91,11 +91,13 @@ class SymbolTable:
             else:
                 x = x.right
         if symbol is None:
-            self.root = Node(id=_id, lexema=_lexema)
+            self.root = Node(id=_id, lexema=_lexema, memory_position=_memory_position)
         elif _id < symbol.id:
-            symbol.left = Node(id=_id, lexema=_lexema)
+            symbol.left = Node(id=_id, lexema=_lexema, memory_position=_memory_position)
         else:
-            symbol.right = Node(id=_id, lexema=_lexema)
+            symbol.right = Node(
+                id=_id, lexema=_lexema, memory_position=_memory_position
+            )
 
     def search(self, id):
         return self._search(id, self.root)
