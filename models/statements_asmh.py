@@ -275,6 +275,12 @@ class StatementsAsmh:
         command_lines = complement + " MULT\n"
         self.lines_to_write.append(command_lines)
 
+    def if_asmh(self):
+        pass
+
+    def while_asmh(self):
+        pass
+
 
 test = StatementsAsmh()
 test.logic_op_less_than_asmh(False, True, 1, 2, 20, 20)
