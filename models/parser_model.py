@@ -3,6 +3,8 @@ from tabulate import tabulate as tb
 from .tokenizador import Tokenizador
 from .error_message_model import ErrorMessage
 
+from .statements_asmh import StatementsAsmh
+
 ERRO_FALTA_PROGRAM = 1
 ERRO_FALTA_IDENTIFICADOR = 2
 ERRO_PONTO_E_VIRGULA = 3
@@ -33,13 +35,19 @@ ERRO_FALTA_PONTO_FINAL = 27
 ERRO_FALTA_UMA_EXPRESSAO = 29
 ERRO_FALTA_PROCEDURE = 30
 ERRO_FALTA_FUNCTION = 31
+ERRO_FALTA_MEMORIA = 32
 
 
 class Parser:
     def __init__(self, codigo, iu=True):
         self.codigo = codigo
-        self.tk = Tokenizador(self.codigo)
+        self.tk = Tokenizador()
+        self.tk.set_codigo(self.codigo)
         self.matriz_tokens = self.tk.tokenizar()
+
+        self.write_asmh = StatementsAsmh()
+        self.write_asmh.set_tr(self.tk.get_st())
+        self.write_asmh.set_tk(self.tk)
 
         self.tok = [l[1] for l in self.matriz_tokens]
         self.tok.append("$")
@@ -110,11 +118,14 @@ class Parser:
 
         self.encontra_token([";"], ERRO_PONTO_E_VIRGULA, "d")
 
+        self.write_asmh.program_asmh()
+
         self.block()
 
         self.encontra_token(["."], ERRO_FALTA_PONTO_FINAL, "d")
 
         if self.token_atual == "$":
+            self.write_asmh.end_program_asmh()
             return
 
     def block(self):
@@ -358,15 +369,21 @@ class Parser:
         if self.token_atual == "read":
             self.read_statement()
             c = True
+            self.write_asmh.read_asmh()
         elif self.token_atual == "write":
             self.write_statement()
             c = True
+
+            text = self.matriz_tokens[self.index - 2][0]
+            self.write_asmh.write_asmh(text)
         elif self.token_atual == "IDENT" and self.tok[self.index + 1] == "(":
             self.function_procedure_statement()
             c = True
         elif self.token_atual == "IDENT":
             self.assignment_statement()
             c = True
+            print("LOL1", c)
+        print("LOL2", c)
         return c
 
     def write_statement(self):
@@ -398,6 +415,11 @@ class Parser:
                 self.encontra_token([")"], ERRO_FIM_PARENTESE, "d")
 
     def assignment_statement(self):
+        var = self.matriz_tokens[self.index][0]
+        value = self.matriz_tokens[self.index + 2][0]
+        if self.write_asmh.assignment_asmh(var, value):
+            self.erro_mensagem(ERRO_FALTA_MEMORIA)
+
         self.variable()
 
         if (
@@ -406,6 +428,8 @@ class Parser:
             or self.token_atual == ","
         ):
             self.erro_mensagem(ERRO_FALTA_VAR)
+
+        # value = self.matriz_tokens[self.index][0]
 
         self.expression()
 
@@ -426,14 +450,8 @@ class Parser:
 
         self.tab_simb.table_show()
 
-    def get_matriz_tokens(self):
-        return self.matriz_tokens
-
     def get_table_symbol_values(self):
         return self.tab_simb.get_node_matr()
-
-    def get_iu(self):
-        return self.iu
 
     def parse(self):
         self.program()

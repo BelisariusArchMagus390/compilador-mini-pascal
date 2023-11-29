@@ -6,8 +6,10 @@ from .tree import SymbolTable
 
 
 class Tokenizador:
-    def __init__(self, codigo):
-        self.codigo = codigo.replace("\n", " \n ")
+    def __init__(self):
+        self.st = SymbolTable()
+
+        self.codigo = ""
         self.id = r"^[a-zA-Z]([a-zA-Z]|[0-9])*$"
         self.digito_inteiro = r"^[0-9]+$"
         self.string_constante = r"('\S+')"
@@ -194,9 +196,18 @@ class Tokenizador:
 
         return self.matriz_tokens
 
-    def tabela_simbolo(self):
-        st = SymbolTable()
-        for lexema, id in self.ids.items():
-            st.insert(id, lexema)
+    def set_codigo(self, codigo):
+        self.codigo = codigo
+        self.codigo = codigo.replace("\n", " \n ")
 
-        return st
+    def tabela_simbolo(self):
+        for lexema, id in self.ids.items():
+            self.st.insert(id, lexema)
+
+        return self.st
+
+    def get_st(self):
+        return self.st
+
+    def get_matriz_tokens(self):
+        return self.matriz_tokens

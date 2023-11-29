@@ -1,41 +1,45 @@
 from .write_statements_asmh import WriteStatementsAsmh
 from .tree import SymbolTable
-from .parser_model import Parser
-from .error_message_model import ErrorMessage
-
-ERRO_FALTA_MEMORIA = 32
+from .tokenizador import Tokenizador
 
 
 class StatementsAsmh:
-    def __init__(self):
+    def __init__(self, ui=False):
         self.was = WriteStatementsAsmh()
         self.tr = SymbolTable()
-        self.par = Parser()
+        self.tk = Tokenizador()
         self.memory_position = 0
+        self.ui = ui
+
+    def set_tr(self, tr):
+        self.tr = tr
+
+    def set_tk(self, tk):
+        self.tk = tk
 
     def program_asmh(self):
         self.was.write_program_asmh()
 
-    def read_asmh(self, memory_position):
-        self.was.write_read_asmh(self, memory_position)
+    def read_asmh(self):
+        self.was.write_read_asmh(self.memory_position)
 
     def write_asmh(self, text):
-        self.was.write_asmh(self, text)
+        self.was.write_asmh(text)
 
     def find_node_id(self, element):
-        lexem_matr = self.par.get_matriz_tokens()
+        lexem_matr = self.tk.get_matriz_tokens()
 
         id = None
 
-        for lexem in lexem_matr:
-            if element == lexem[0]:
-                id = lexem[5]
+        for line in range(len(lexem_matr)):
+            if element == lexem_matr[line][0]:
+                id = lexem_matr[line][5]
                 break
 
         return id
 
     def exist_variable(self, element):
-        lexem_matr = self.par.get_matriz_tokens()
+        lexem_matr = self.tk.get_matriz_tokens()
 
         id = None
         memory_position = None
@@ -85,15 +89,9 @@ class StatementsAsmh:
 
         if self.memory_position <= 20:
             self.memory_position += 1
+            return False
         else:
-            e = ErrorMessage(ERRO_FALTA_MEMORIA, None, None, None)
-
-            if self.par.get_iu() == True:
-                self.par.set_erro_request(True)
-                self.par.set_mensagem_erro(e.get_mensagem_erro())
-                raise ValueError()
-            else:
-                e.erro_mensagem_print()
+            return True
 
     def value_in_memory(
         self,
@@ -103,12 +101,16 @@ class StatementsAsmh:
         ifstored1, ifstored2 = self.aux_op_ifstored(element1_value, element2_value)
 
         if ifstored1 == False:
-            self.aux_assingment_literal(self, element1_value)
+            if self.aux_assingment_literal(self, element1_value):
+                return True
         elif ifstored2 == False:
-            self.aux_assingment_literal(self, element2_value)
+            if self.aux_assingment_literal(self, element2_value):
+                return True
         elif ifstored1 == False and ifstored2 == False:
-            self.aux_assingment_literal(self, element1_value)
-            self.aux_assingment_literal(self, element2_value)
+            if self.aux_assingment_literal(self, element1_value):
+                return True
+            if self.aux_assingment_literal(self, element2_value):
+                return True
 
     def logic_ops_asmh(
         self,
@@ -116,7 +118,8 @@ class StatementsAsmh:
         element1_value,
         element2_value,
     ):
-        self.value_in_memory(element1_value, element2_value)
+        if self.value_in_memory(element1_value, element2_value):
+            return True
 
         memory_position1, memory_position2 = self.aux_op_memory_position(
             element1_value, element2_value
@@ -185,13 +188,16 @@ class StatementsAsmh:
                 self.memory_position,
             )
 
+        return False
+
     def arithmetic_ops_asmh(
         self,
         op,
         element1_value,
         element2_value,
     ):
-        self.value_in_memory(element1_value, element2_value)
+        if self.value_in_memory(element1_value, element2_value):
+            return True
 
         memory_position1, memory_position2 = self.aux_op_memory_position(
             element1_value, element2_value
@@ -225,7 +231,9 @@ class StatementsAsmh:
                 self.memory_position,
             )
 
-    def write_assignment_asmh(self, var, value):
+        return False
+
+    def assignment_asmh(self, var, value=None):
         self.was.write_assignment_asmh(value, self.memory_position)
 
         id = self.find_node_id(var)
@@ -235,24 +243,19 @@ class StatementsAsmh:
 
         if self.memory_position <= 20:
             self.memory_position += 1
+            return False
         else:
-            e = ErrorMessage(ERRO_FALTA_MEMORIA, None, None, None)
+            return True
 
-            if self.par.get_iu() == True:
-                self.par.set_erro_request(True)
-                self.par.set_mensagem_erro(e.get_mensagem_erro())
-                raise ValueError()
-            else:
-                e.erro_mensagem_print()
-
-    def write_array_declaration(self):
+    def array_declaration(self):
         pass
 
-    def write_if_asmh(self):
+    def if_asmh(self):
         pass
 
-    def write_while_asmh(self):
+    def while_asmh(self):
         pass
 
-    def write_end_program_asmh(self):
+    def end_program_asmh(self):
         self.was.write_end_program_asmh()
+        self.was.write_in_file()
