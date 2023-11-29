@@ -169,8 +169,3 @@ class WriteStatementsAsmh:
     def write_end_program_asmh(self):
         command_lines = " ENDP"
         self.lines_to_write.append(command_lines)
-
-
-test = WriteStatementsAsmh()
-test.write_logic_op_less_than_asmh(False, True, 1, 2, 20, 20)
-test.write_in_file()
