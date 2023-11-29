@@ -53,10 +53,7 @@ class StatementsAsmh:
 
         return [condition, memory_position]
 
-    def aux_op(self, element1_value, element2_value):
-        memory_position1 = None
-        memory_position2 = None
-
+    def aux_op_ifstored(self, element1_value, element2_value):
         ifstored1 = False
         ifstored2 = False
 
@@ -65,13 +62,53 @@ class StatementsAsmh:
 
         if element1[0]:
             ifstored1 = True
-            memory_position1 = element1[1]
 
         if element2[0]:
             ifstored2 = True
-            memory_position1 = element2[1]
 
-        return [memory_position1, memory_position2, ifstored1, ifstored2]
+        return [ifstored1, ifstored2]
+
+    def aux_op_memory_position(self, element1_value, element2_value):
+        memory_position1 = None
+        memory_position2 = None
+
+        element1 = self.exist_variable(element1_value)
+        element2 = self.exist_variable(element2_value)
+
+        memory_position1 = element1[1]
+        memory_position2 = element2[1]
+
+        return [memory_position1, memory_position2]
+
+    def aux_assingment_literal(self, value):
+        self.was.write_assignment_asmh(value, self.memory_position)
+
+        if self.memory_position <= 20:
+            self.memory_position += 1
+        else:
+            e = ErrorMessage(ERRO_FALTA_MEMORIA, None, None, None)
+
+            if self.par.get_iu() == True:
+                self.par.set_erro_request(True)
+                self.par.set_mensagem_erro(e.get_mensagem_erro())
+                raise ValueError()
+            else:
+                e.erro_mensagem_print()
+
+    def value_in_memory(
+        self,
+        element1_value,
+        element2_value,
+    ):
+        ifstored1, ifstored2 = self.aux_op_ifstored(element1_value, element2_value)
+
+        if ifstored1 == False:
+            self.aux_assingment_literal(self, element1_value)
+        elif ifstored2 == False:
+            self.aux_assingment_literal(self, element2_value)
+        elif ifstored1 == False and ifstored2 == False:
+            self.aux_assingment_literal(self, element1_value)
+            self.aux_assingment_literal(self, element2_value)
 
     def logic_ops_asmh(
         self,
@@ -79,107 +116,73 @@ class StatementsAsmh:
         element1_value,
         element2_value,
     ):
-        memory_position1, memory_position2, ifstored1, ifstored2 = self.aux_op(
+        self.value_in_memory(element1_value, element2_value)
+
+        memory_position1, memory_position2 = self.aux_op_memory_position(
             element1_value, element2_value
         )
 
         if op == "<":
             self.was.write_logic_op_less_than_asmh(
-                ifstored1,
-                ifstored2,
                 memory_position1,
                 memory_position2,
                 self.memory_position,
-                element1_value,
-                element2_value,
             )
 
         elif op == "<=":
             self.was.write_logic_op_less_or_equal_than_asmh(
-                ifstored1,
-                ifstored2,
                 memory_position1,
                 memory_position2,
                 self.memory_position,
-                element1_value,
-                element2_value,
             )
 
         elif op == ">":
             self.was.write_logic_op_greater_than_asmh(
-                ifstored1,
-                ifstored2,
                 memory_position1,
                 memory_position2,
                 self.memory_position,
-                element1_value,
-                element2_value,
             )
 
         elif op == ">=":
             self.was.write_logic_op_greater_or_equal_than_asmh(
-                ifstored1,
-                ifstored2,
                 memory_position1,
                 memory_position2,
                 self.memory_position,
-                element1_value,
-                element2_value,
             )
 
         elif op == "=":
             self.was.write_logic_op_equal_asmh(
-                ifstored1,
-                ifstored2,
                 memory_position1,
                 memory_position2,
                 self.memory_position,
-                element1_value,
-                element2_value,
             )
 
         elif op == "<>":
             self.was.write_logic_op_different_asmh(
-                ifstored1,
-                ifstored2,
                 memory_position1,
                 memory_position2,
                 self.memory_position,
-                element1_value,
-                element2_value,
             )
 
         elif op == "or":
             self.was.write_logic_op_or_asmh(
-                ifstored1,
-                ifstored2,
                 memory_position1,
                 memory_position2,
                 self.memory_position,
-                element1_value,
-                element2_value,
             )
 
         elif op == "and":
             self.was.write_logic_op_and_asmh(
-                ifstored1,
-                ifstored2,
                 memory_position1,
                 memory_position2,
                 self.memory_position,
-                element1_value,
-                element2_value,
             )
 
         elif op == "not":
             self.was.write_logic_op_not_asmh(
-                ifstored1,
-                ifstored2,
                 memory_position1,
                 memory_position2,
                 self.memory_position,
-                element1_value,
-                element2_value,
             )
 
     def arithmetic_ops_asmh(
@@ -188,52 +191,38 @@ class StatementsAsmh:
         element1_value,
         element2_value,
     ):
-        memory_position1, memory_position2, ifstored1, ifstored2 = self.aux_op(
+        self.value_in_memory(element1_value, element2_value)
+
+        memory_position1, memory_position2 = self.aux_op_memory_position(
             element1_value, element2_value
         )
 
         if op == "+":
             self.was.write_arithmetic_op_add_asmh(
-                ifstored1,
-                ifstored2,
                 memory_position1,
                 memory_position2,
                 self.memory_position,
-                element1_value,
-                element2_value,
             )
 
         elif op == "-":
             self.was.write_arithmetic_op_sub_asmh(
-                ifstored1,
-                ifstored2,
                 memory_position1,
                 memory_position2,
                 self.memory_position,
-                element1_value,
-                element2_value,
             )
 
         elif op == "div":
             self.was.write_arithmetic_op_div_asmh(
-                ifstored1,
-                ifstored2,
                 memory_position1,
                 memory_position2,
                 self.memory_position,
-                element1_value,
-                element2_value,
             )
 
         elif op == "*":
             self.was.write_arithmetic_op_mul_asmh(
-                ifstored1,
-                ifstored2,
                 memory_position1,
                 memory_position2,
                 self.memory_position,
-                element1_value,
-                element2_value,
             )
 
     def write_assignment_asmh(self, var, value):

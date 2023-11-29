@@ -33,318 +33,123 @@ class WriteStatementsAsmh:
         command_lines = f" LDCT {text}\n SHOW\n"
         self.lines_to_write.append(command_lines)
 
-    # Faz o resgate ou se necessário o armazenamento dos valores para a operação desejada
-    def value_in_memory(
-        self,
-        ifstored1,
-        ifstored2,
-        memory_position1,
-        memory_position2,
-        element1_value,
-        element2_value,
-    ):
-        complement = ""
-
-        if ifstored1 == True and ifstored2 == True:
-            complement = f" LDVL {memory_position2}\n LDVL {memory_position1}\n"
-
-        elif ifstored1 == True and ifstored2 == False:
-            complement = f" LDCL {element2_value}\n STOR {memory_position2}\n LDVL {memory_position2}\n LDVL {memory_position1}\n"
-
-        elif ifstored1 == False and ifstored2 == True:
-            complement = f" LDVL {memory_position2}\n LDCL {element1_value}\n STOR {memory_position1}\n LDVL {memory_position1}\n"
-
-        else:
-            complement = f" LDCL {element1_value}\n STOR {memory_position1}\n LDCL {element2_value}\n STOR {memory_position2}\n LDVL {memory_position2}\n LDVL {memory_position1}\n"
-
-        return complement
-
     # Expressões lógicas
     def write_logic_op_less_than_asmh(
         self,
-        ifstored1,
-        ifstored2,
         memory_position1,
         memory_position2,
         memory_position_final,
-        element1_value,
-        element2_value,
     ):
-        complement = self.value_in_memory(
-            ifstored1,
-            ifstored2,
-            memory_position1,
-            memory_position2,
-            element1_value,
-            element2_value,
-        )
-
-        command_lines = complement + f" LETH\n STOR {memory_position_final}\n"
+        command_lines = f" LDVL {memory_position2}\n LDVL {memory_position1}\n LETH\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     def write_logic_op_less_or_equal_than_asmh(
         self,
-        ifstored1,
-        ifstored2,
         memory_position1,
         memory_position2,
         memory_position_final,
-        element1_value,
-        element2_value,
     ):
-        complement = self.value_in_memory(
-            ifstored1,
-            ifstored2,
-            memory_position1,
-            memory_position2,
-            element1_value,
-            element2_value,
-        )
-
-        command_lines = complement + f" LEEQ\n STOR {memory_position_final}\n"
+        command_lines = f" LDVL {memory_position2}\n LDVL {memory_position1}\n LEEQ\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     def write_logic_op_greater_than_asmh(
         self,
-        ifstored1,
-        ifstored2,
         memory_position1,
         memory_position2,
         memory_position_final,
-        element1_value,
-        element2_value,
     ):
-        complement = self.value_in_memory(
-            ifstored1,
-            ifstored2,
-            memory_position1,
-            memory_position2,
-            element1_value,
-            element2_value,
-        )
-
-        command_lines = complement + f" GRTH\n STOR {memory_position_final}\n"
+        command_lines = f" LDVL {memory_position2}\n LDVL {memory_position1}\n GRTH\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     def write_logic_op_greater_or_equal_than_asmh(
         self,
-        ifstored1,
-        ifstored2,
         memory_position1,
         memory_position2,
         memory_position_final,
-        element1_value,
-        element2_value,
     ):
-        complement = self.value_in_memory(
-            ifstored1,
-            ifstored2,
-            memory_position1,
-            memory_position2,
-            element1_value,
-            element2_value,
-        )
-
-        command_lines = complement + f" GREQ\n STOR {memory_position_final}\n"
+        command_lines = f" LDVL {memory_position2}\n LDVL {memory_position1}\n GREQ\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     def write_logic_op_equal_asmh(
         self,
-        ifstored1,
-        ifstored2,
         memory_position1,
         memory_position2,
         memory_position_final,
-        element1_value,
-        element2_value,
     ):
-        complement = self.value_in_memory(
-            ifstored1,
-            ifstored2,
-            memory_position1,
-            memory_position2,
-            element1_value,
-            element2_value,
-        )
-
-        command_lines = complement + f" EQUA\n STOR {memory_position_final}\n"
+        command_lines = f" LDVL {memory_position2}\n LDVL {memory_position1}\n EQUA\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     def write_logic_op_different_asmh(
         self,
-        ifstored1,
-        ifstored2,
         memory_position1,
         memory_position2,
         memory_position_final,
-        element1_value,
-        element2_value,
     ):
-        complement = self.value_in_memory(
-            ifstored1,
-            ifstored2,
-            memory_position1,
-            memory_position2,
-            element1_value,
-            element2_value,
-        )
-
-        command_lines = complement + f" DIFF\n STOR {memory_position_final}\n"
+        command_lines = f" LDVL {memory_position2}\n LDVL {memory_position1}\n DIFF\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     def write_logic_op_or_asmh(
         self,
-        ifstored1,
-        ifstored2,
         memory_position1,
         memory_position2,
         memory_position_final,
-        element1_value,
-        element2_value,
     ):
-        complement = self.value_in_memory(
-            ifstored1,
-            ifstored2,
-            memory_position1,
-            memory_position2,
-            element1_value,
-            element2_value,
-        )
-
-        command_lines = complement + f" _OR_\n STOR {memory_position_final}\n"
+        command_lines = f" LDVL {memory_position2}\n LDVL {memory_position1}\n _OR_\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     def write_logic_op_and_asmh(
         self,
-        ifstored1,
-        ifstored2,
         memory_position1,
         memory_position2,
         memory_position_final,
-        element1_value,
-        element2_value,
     ):
-        complement = self.value_in_memory(
-            ifstored1,
-            ifstored2,
-            memory_position1,
-            memory_position2,
-            element1_value,
-            element2_value,
-        )
-
-        command_lines = complement + f" AND_\n STOR {memory_position_final}\n"
+        command_lines = f" LDVL {memory_position2}\n LDVL {memory_position1}\n AND_\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     def write_logic_op_not_asmh(
         self,
-        ifstored1,
-        ifstored2,
         memory_position1,
         memory_position2,
         memory_position_final,
-        element1_value,
-        element2_value,
     ):
-        complement = self.value_in_memory(
-            ifstored1,
-            ifstored2,
-            memory_position1,
-            memory_position2,
-            element1_value,
-            element2_value,
-        )
-
-        command_lines = complement + f" INVI\n STOR {memory_position_final}\n"
+        command_lines = f" LDVL {memory_position2}\n LDVL {memory_position1}\n INVI\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     # Expressões aritméticas
     def write_arithmetic_op_add_asmh(
         self,
-        ifstored1,
-        ifstored2,
         memory_position1,
         memory_position2,
         memory_position_final,
-        element1_value,
-        element2_value,
     ):
-        complement = self.value_in_memory(
-            ifstored1,
-            ifstored2,
-            memory_position1,
-            memory_position2,
-            element1_value,
-            element2_value,
-        )
-
-        command_lines = complement + f" ADD_\n STOR {memory_position_final}\n"
+        command_lines = f" LDVL {memory_position2}\n LDVL {memory_position1}\n ADD_\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     def write_arithmetic_op_sub_asmh(
         self,
-        ifstored1,
-        ifstored2,
         memory_position1,
         memory_position2,
         memory_position_final,
-        element1_value,
-        element2_value,
     ):
-        complement = self.value_in_memory(
-            ifstored1,
-            ifstored2,
-            memory_position1,
-            memory_position2,
-            element1_value,
-            element2_value,
-        )
-
-        command_lines = complement + f" SUBT\n STOR {memory_position_final}\n"
+        command_lines = f" LDVL {memory_position2}\n LDVL {memory_position1}\n SUBT\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     def write_arithmetic_op_div_asmh(
         self,
-        ifstored1,
-        ifstored2,
         memory_position1,
         memory_position2,
         memory_position_final,
-        element1_value,
-        element2_value,
     ):
-        complement = self.value_in_memory(
-            ifstored1,
-            ifstored2,
-            memory_position1,
-            memory_position2,
-            element1_value,
-            element2_value,
-        )
-
-        command_lines = complement + f" DIVI\n STOR {memory_position_final}\n"
+        command_lines = f" LDVL {memory_position2}\n LDVL {memory_position1}\n DIVI\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     def write_arithmetic_op_mul_asmh(
         self,
-        ifstored1,
-        ifstored2,
         memory_position1,
         memory_position2,
         memory_position_final,
-        element1_value,
-        element2_value,
     ):
-        complement = self.value_in_memory(
-            ifstored1,
-            ifstored2,
-            memory_position1,
-            memory_position2,
-            element1_value,
-            element2_value,
-        )
-
-        command_lines = complement + f" MULT\n STOR {memory_position_final}\n"
+        command_lines = f" LDVL {memory_position2}\n LDVL {memory_position1}\n MULT\n STOR {memory_position_final}\n"
         self.lines_to_write.append(command_lines)
 
     def write_assignment_asmh(self, value, memory_position):
@@ -367,5 +172,5 @@ class WriteStatementsAsmh:
 
 
 test = WriteStatementsAsmh()
-test.logic_op_less_than_asmh(False, True, 1, 2, 20, 20)
+test.write_logic_op_less_than_asmh(False, True, 1, 2, 20, 20)
 test.write_in_file()
