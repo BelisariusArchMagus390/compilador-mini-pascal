@@ -83,6 +83,12 @@ class Parser:
     def _get_mensagem_erro(self):
         return self.mensagem_erro
 
+    def set_erro_request(self, erro_request):
+        self.erro_request = erro_request
+
+    def set_mensagem_erro(self, mensagem_erro):
+        self.mensagem_erro = mensagem_erro
+
     # Função que encontra o token e avança para o próximo
     def encontra_token(self, token_esperado, erro, config):
         # Através do parâmetro config faz com que configure a função para
@@ -425,6 +431,9 @@ class Parser:
 
     def get_table_symbol_values(self):
         return self.tab_simb.get_node_matr()
+
+    def get_iu(self):
+        return self.iu
 
     def parse(self):
         self.program()

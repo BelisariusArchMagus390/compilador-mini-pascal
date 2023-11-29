@@ -56,7 +56,7 @@ class ErrorMessage:
                 ]
             )
         else:
-            self.mensagem_erro[0] = self.lst_erro[31]
+            self.mensagem_erro[0] = self.lst_erro[(self.erro - 1)]
 
     def erro_mensagem_print(self):
         for linha in self.mensagem_erro:
