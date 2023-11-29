@@ -62,6 +62,17 @@ class Parser:
         self.erro_request = False
         self.mensagem_erro = False
 
+        self.index_initial = None
+        self.index_final = None
+        self.expression_vect = []
+
+    def construct_expression_vect(self):
+        lexm = self.index_initial
+        lexm_final = self.index_final
+
+        for lexm in range(lexm, lexm_final):
+            self.expression_vect.append(self.matriz_tokens[lexm][0])
+
     def avanca_token(self):
         if self.index < len(self.tok):
             self.index += 1
@@ -134,7 +145,7 @@ class Parser:
         self.compound_statement()
 
     def relational_operator(self):
-        operadores = ["=", "<>", "<", "<=", ">=", ">", "and", "or"]
+        operadores = ["=", "<>", "<", "<=", ">=", ">", "and", "or", "not"]
         return self.encontra_token(operadores, 0, "b")
 
     def adding_operator_or_sign(self):
@@ -382,8 +393,6 @@ class Parser:
         elif self.token_atual == "IDENT":
             self.assignment_statement()
             c = True
-            print("LOL1", c)
-        print("LOL2", c)
         return c
 
     def write_statement(self):
@@ -416,9 +425,6 @@ class Parser:
 
     def assignment_statement(self):
         var = self.matriz_tokens[self.index][0]
-        value = self.matriz_tokens[self.index + 2][0]
-        if self.write_asmh.assignment_asmh(var, value):
-            self.erro_mensagem(ERRO_FALTA_MEMORIA)
 
         self.variable()
 
@@ -429,9 +435,20 @@ class Parser:
         ):
             self.erro_mensagem(ERRO_FALTA_VAR)
 
-        # value = self.matriz_tokens[self.index][0]
-
+        self.index_initial = self.index
         self.expression()
+        self.index_final = self.index
+
+        self.construct_expression_vect()
+
+        print(self.index_initial)
+        print(self.index_final)
+        print(self.expression_vect)
+
+        value = self.expression_vect
+        # print(value)
+        if self.write_asmh.assignment_asmh(var, value):
+            self.erro_mensagem(ERRO_FALTA_MEMORIA)
 
     def mostra_resultado(self):
         print("\nCÓDIGO ANALISADO COM SUCESSO!")

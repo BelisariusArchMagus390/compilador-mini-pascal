@@ -46,14 +46,14 @@ class StatementsAsmh:
         condition = False
 
         for lexem in lexem_matr:
-            if element == lexem[0]:
+            if element == lexem[0] and lexem[1] == "IDENT":
                 id = lexem[5]
                 condition = True
                 break
 
-        node = self.tr.search(id)
-
-        memory_position = node.memory_position
+        if condition == True:
+            node = self.tr.search(id)
+            memory_position = node.memory_position
 
         return [condition, memory_position]
 
@@ -101,15 +101,15 @@ class StatementsAsmh:
         ifstored1, ifstored2 = self.aux_op_ifstored(element1_value, element2_value)
 
         if ifstored1 == False:
-            if self.aux_assingment_literal(self, element1_value):
+            if self.aux_assingment_literal(element1_value):
                 return True
         elif ifstored2 == False:
-            if self.aux_assingment_literal(self, element2_value):
+            if self.aux_assingment_literal(element2_value):
                 return True
         elif ifstored1 == False and ifstored2 == False:
-            if self.aux_assingment_literal(self, element1_value):
+            if self.aux_assingment_literal(element1_value):
                 return True
-            if self.aux_assingment_literal(self, element2_value):
+            if self.aux_assingment_literal(element2_value):
                 return True
 
     def logic_ops_asmh(
@@ -233,13 +233,48 @@ class StatementsAsmh:
 
         return False
 
-    def assignment_asmh(self, var, value=None):
-        self.was.write_assignment_asmh(value, self.memory_position)
+    def expression_value(self, expression):
+        arithmetic_op = ["+", "-", "div", "*"]
+        logical_op = ["=", "<>", "<", "<=", ">=", ">", "and", "or", "not"]
+
+        exit = False
+
+        while exit is False:
+            val1 = expression[0]
+            op = expression[1]
+            val2 = expression[2]
+
+            if op in arithmetic_op:
+                self.arithmetic_ops_asmh(op, val1, val2)
+            elif op in logical_op:
+                self.logic_ops_asmh(op, val1, val2)
+
+            expression.remove(val1)
+            expression.remove(op)
+            expression.remove(val2)
+
+            if len(expression) < 3:
+                exit = True
+
+    def assignment_asmh(self, var, value):
+        vl = None
+
+        # print(value)
+
+        if len(value) > 1:
+            self.expression_value(value)
+            vl = "expression"
+        else:
+            vl = value[0]
+
+        # print(vl)
 
         id = self.find_node_id(var)
 
         self.tr.edit(id, 7, self.memory_position)
-        self.tr.edit(id, 3, value)
+        self.tr.edit(id, 3, vl)
+
+        self.was.write_assignment_asmh(vl, self.memory_position)
 
         if self.memory_position <= 20:
             self.memory_position += 1

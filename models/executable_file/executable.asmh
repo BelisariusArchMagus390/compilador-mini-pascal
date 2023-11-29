@@ -1,4 +1,10 @@
  INIP
  LDCT 10
  STOR 0
+ LDVL None
+ LDVL None
+ ADD_
+ STOR 1
+ LDCT expression
+ STOR 1
  ENDP
