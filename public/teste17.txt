@@ -1,0 +1,15 @@
+program Exemplo;
+
+    var
+        i: integer;
+        a: integer;
+
+    begin
+        a := 5;
+        i := 6;
+
+        if (a < i) then
+            write('LOL1')
+        else
+            write('LOL2')
+    end.

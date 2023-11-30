@@ -18,7 +18,7 @@ class WriteStatementsAsmh:
             file_asmh.write(line)
 
     def write_test_line(self):
-        command_lines = "DUMP\n"
+        command_lines = " DUMP\n"
         self.lines_to_write.append(command_lines)
 
     def write_program_asmh(self):

@@ -136,6 +136,7 @@ class Parser:
         self.encontra_token(["."], ERRO_FALTA_PONTO_FINAL, "d")
 
         if self.token_atual == "$":
+            self.write_asmh.test_line()
             self.write_asmh.end_program_asmh()
             return
 

@@ -18,6 +18,9 @@ class StatementsAsmh:
     def set_tk(self, tk):
         self.tk = tk
 
+    def test_line(self):
+        self.was.write_test_line()
+
     def program_asmh(self):
         self.was.write_program_asmh()
 
