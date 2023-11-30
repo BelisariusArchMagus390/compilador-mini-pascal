@@ -5,6 +5,5 @@ program Exemplo;
         a: integer;
 
     begin
-        a := 2;
-        i := 12 + 10
+        write('1')
     end.

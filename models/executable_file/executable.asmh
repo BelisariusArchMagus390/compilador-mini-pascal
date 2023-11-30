@@ -1,12 +1,4 @@
  INIP
- LDCT 2
- STOR 0
- LDCT true
- STOR 1
- LDCT false
- STOR 2
- LDVL 2
- LDVL 1
- INVI
- STOR 3
+ LDCT '1'
+ SHOW
  ENDP
