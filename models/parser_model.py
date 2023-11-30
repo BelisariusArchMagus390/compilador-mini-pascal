@@ -347,11 +347,32 @@ class Parser:
 
     def if_statement(self):
         if self.encontra_token(["if"], ERRO_FALTA_IF, "b"):
+            self.index_initial = self.index
             self.expression()
+            self.index_final = self.index
+
+            self.construct_expression_vect()
+
+            conditional_expression = self.expression_vect
+            self.write_asmh.if_conditional_asmh(conditional_expression)
+
+            self.expression_vect.clear()
+
             if self.encontra_token(["then"], ERRO_FALTA_THEN, "b"):
+                self.write_asmh.label_if_asmh()
+
+                self.write_asmh.set_flag_if(True)
                 self.statement()
+                self.write_asmh.set_flag_if(False)
+
                 if self.encontra_token(["else"], 0, "b"):
+                    self.write_asmh.set_flag_else(True)
                     self.statement()
+                    self.write_asmh.set_flag_else(False)
+
+                    self.write_asmh.code_block_else_asmh()
+
+                    self.write_asmh.code_block_if_asmh()
 
     def while_statement(self):
         if self.encontra_token(["while"], ERRO_FALTA_WHILE, "b"):
@@ -441,10 +462,6 @@ class Parser:
         self.index_final = self.index
 
         self.construct_expression_vect()
-
-        # print(self.index_initial)
-        # print(self.index_final)
-        # print(self.expression_vect)
 
         value = self.expression_vect
         if self.write_asmh.assignment_asmh(var, value):

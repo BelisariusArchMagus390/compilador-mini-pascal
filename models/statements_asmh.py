@@ -12,9 +12,6 @@ class StatementsAsmh:
         self.ui = ui
         self.memory_vector_temp = []
 
-        self.line_count = 0
-        self.line_count_final = 0
-
         self.flag_if = False
         self.flag_else = False
 
@@ -26,19 +23,15 @@ class StatementsAsmh:
 
     def test_line(self):
         self.was.write_test_line()
-        self.line_count += 1
 
     def program_asmh(self):
         self.was.write_program_asmh()
-        self.line_count += 1
 
     def read_asmh(self):
-        self.was.write_read_asmh(self.memory_position)
-        self.line_count += 1
+        self.was.write_read_asmh(self.memory_position, self.flag_if, self.flag_else)
 
     def write_asmh(self, text):
-        self.was.write_asmh(text)
-        self.line_count += 1
+        self.was.write_asmh(text, self.flag_if, self.flag_else)
 
     def find_node_id(self, element):
         lexem_matr = self.tk.get_matriz_tokens()
@@ -117,8 +110,9 @@ class StatementsAsmh:
         return [memory_position1, memory_position2]
 
     def aux_assingment_literal(self, value):
-        self.was.write_assignment_asmh(value, self.memory_position)
-        self.line_count += 1
+        self.was.write_assignment_asmh(
+            value, self.memory_position, self.flag_if, self.flag_else
+        )
 
         self.memory_vector_temp.append(self.memory_position)
 
@@ -165,72 +159,81 @@ class StatementsAsmh:
                 memory_position1,
                 memory_position2,
                 self.memory_position,
+                self.flag_if,
+                self.flag_else,
             )
-            self.line_count += 1
 
         elif op == "<=":
             self.was.write_logic_op_less_or_equal_than_asmh(
                 memory_position1,
                 memory_position2,
                 self.memory_position,
+                self.flag_if,
+                self.flag_else,
             )
-            self.line_count += 1
 
         elif op == ">":
             self.was.write_logic_op_greater_than_asmh(
                 memory_position1,
                 memory_position2,
                 self.memory_position,
+                self.flag_if,
+                self.flag_else,
             )
-            self.line_count += 1
 
         elif op == ">=":
             self.was.write_logic_op_greater_or_equal_than_asmh(
                 memory_position1,
                 memory_position2,
                 self.memory_position,
+                self.flag_if,
+                self.flag_else,
             )
-            self.line_count += 1
 
         elif op == "=":
             self.was.write_logic_op_equal_asmh(
                 memory_position1,
                 memory_position2,
                 self.memory_position,
+                self.flag_if,
+                self.flag_else,
             )
-            self.line_count += 1
 
         elif op == "<>":
             self.was.write_logic_op_different_asmh(
                 memory_position1,
                 memory_position2,
                 self.memory_position,
+                self.flag_if,
+                self.flag_else,
             )
-            self.line_count += 1
 
         elif op == "or":
             self.was.write_logic_op_or_asmh(
                 memory_position1,
                 memory_position2,
                 self.memory_position,
+                self.flag_if,
+                self.flag_else,
             )
-            self.line_count += 1
 
         elif op == "and":
             self.was.write_logic_op_and_asmh(
                 memory_position1,
                 memory_position2,
                 self.memory_position,
+                self.flag_if,
+                self.flag_else,
             )
-            self.line_count += 1
 
         elif op == "not":
             self.was.write_logic_op_not_asmh(
                 memory_position1,
                 memory_position2,
                 self.memory_position,
+                self.flag_if,
+                self.flag_else,
             )
-            self.line_count += 1
 
         return False
 
@@ -254,32 +257,36 @@ class StatementsAsmh:
                 memory_position1,
                 memory_position2,
                 self.memory_position,
+                self.flag_if,
+                self.flag_else,
             )
-            self.line_count += 1
 
         elif op == "-":
             self.was.write_arithmetic_op_sub_asmh(
                 memory_position1,
                 memory_position2,
                 self.memory_position,
+                self.flag_if,
+                self.flag_else,
             )
-            self.line_count += 1
 
         elif op == "div":
             self.was.write_arithmetic_op_div_asmh(
                 memory_position1,
                 memory_position2,
                 self.memory_position,
+                self.flag_if,
+                self.flag_else,
             )
-            self.line_count += 1
 
         elif op == "*":
             self.was.write_arithmetic_op_mul_asmh(
                 memory_position1,
                 memory_position2,
                 self.memory_position,
+                self.flag_if,
+                self.flag_else,
             )
-            self.line_count += 1
 
         return False
 
@@ -318,12 +325,11 @@ class StatementsAsmh:
             vl = "expression"
         else:
             vl = value[0]
-            self.was.write_assignment_asmh(vl, self.memory_position)
-            self.line_count += 1
+            self.was.write_assignment_asmh(
+                vl, self.memory_position, self.flag_if, self.flag_else
+            )
 
         self.tr.edit(id, 3, vl)
-
-        print(self.memory_vector_temp)
 
         self.memory_vector_temp.clear()
 
@@ -339,16 +345,23 @@ class StatementsAsmh:
 
         self.expression_value(conditional_expression)
 
+        # self.flag_else = True
         self.was.write_if_conditional_asmh(self.flag_if, self.flag_else)
 
     def label_if_asmh(self):
-        self.was.write_label_if_asmh(self.flag_if, self.line_count, self.flag_else)
-        self.line_count_final = self.line_count
+        self.was.write_label_if_asmh(self.flag_if, self.flag_else)
 
-    def label_else_asmh(self):
-        self.was.write_label_else_asmh(
-            self.flag_if, self.line_count_final, self.flag_else
-        )
+    def set_flag_if(self, condition):
+        self.flag_if = condition
+
+    def set_flag_else(self, condition):
+        self.flag_else = condition
+
+    def code_block_else_asmh(self):
+        self.was.write_code_block_else_asmh(self.flag_if, self.flag_else)
+
+    def code_block_if_asmh(self):
+        self.was.write_code_block_if_asmh(self.flag_if, self.flag_else)
 
     def while_asmh(self):
         pass
@@ -358,5 +371,5 @@ class StatementsAsmh:
 
     def end_program_asmh(self):
         self.was.write_end_program_asmh()
-        self.line_count += 1
+
         self.was.write_in_file()
