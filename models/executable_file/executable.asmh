@@ -1,10 +1,12 @@
  INIP
- LDCT 10
+ LDCT 2
  STOR 0
- LDVL None
- LDVL None
- ADD_
+ LDCT true
  STOR 1
- LDCT expression
- STOR 1
+ LDCT false
+ STOR 2
+ LDVL 2
+ LDVL 1
+ INVI
+ STOR 3
  ENDP

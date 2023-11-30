@@ -441,14 +441,15 @@ class Parser:
 
         self.construct_expression_vect()
 
-        print(self.index_initial)
-        print(self.index_final)
-        print(self.expression_vect)
+        # print(self.index_initial)
+        # print(self.index_final)
+        # print(self.expression_vect)
 
         value = self.expression_vect
-        # print(value)
         if self.write_asmh.assignment_asmh(var, value):
             self.erro_mensagem(ERRO_FALTA_MEMORIA)
+
+        self.expression_vect.clear()
 
     def mostra_resultado(self):
         print("\nCÓDIGO ANALISADO COM SUCESSO!")

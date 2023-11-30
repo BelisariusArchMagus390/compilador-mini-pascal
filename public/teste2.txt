@@ -2,7 +2,9 @@ program Exemplo;
 
     var
         i: integer;
+        a: integer;
 
     begin
-        i := 10 + 10
+        a := 2;
+        i := 12 + 10
     end.
