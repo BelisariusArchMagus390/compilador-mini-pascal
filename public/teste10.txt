@@ -1,0 +1,10 @@
+program Exemplo;
+
+    var
+        i: integer;
+        a: integer;
+
+    begin
+        a := 2;
+        i := true or false
+    end.
