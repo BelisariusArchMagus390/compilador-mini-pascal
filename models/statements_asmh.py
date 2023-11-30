@@ -14,12 +14,22 @@ class StatementsAsmh:
 
         self.flag_if = False
         self.flag_else = False
+        self.flag_while = False
 
     def set_tr(self, tr):
         self.tr = tr
 
     def set_tk(self, tk):
         self.tk = tk
+
+    def set_flag_if(self, condition):
+        self.flag_if = condition
+
+    def set_flag_else(self, condition):
+        self.flag_else = condition
+
+    def set_flag_while(self, condition):
+        self.flag_while = condition
 
     def test_line(self):
         self.was.write_test_line()
@@ -28,10 +38,12 @@ class StatementsAsmh:
         self.was.write_program_asmh()
 
     def read_asmh(self):
-        self.was.write_read_asmh(self.memory_position, self.flag_if, self.flag_else)
+        self.was.write_read_asmh(
+            self.memory_position, self.flag_if, self.flag_else, self.flag_while
+        )
 
     def write_asmh(self, text):
-        self.was.write_asmh(text, self.flag_if, self.flag_else)
+        self.was.write_asmh(text, self.flag_if, self.flag_else, self.flag_while)
 
     def find_node_id(self, element):
         lexem_matr = self.tk.get_matriz_tokens()
@@ -54,19 +66,13 @@ class StatementsAsmh:
 
         for lexem in lexem_matr:
             if element == lexem[0] and lexem[1] == "IDENT":
-                # print("LOL")
                 id = lexem[5]
                 condition = True
                 break
 
         if condition == True:
-            # print("LOL")
             node = self.tr.search(id)
             memory_position = node.data[7]
-
-            # print(memory_position)
-
-        # print(id)
 
         return [condition, memory_position]
 
@@ -92,18 +98,13 @@ class StatementsAsmh:
         element1 = self.exist_variable(element1_value)
         element2 = self.exist_variable(element2_value)
 
-        # print(element1)
-        # print(element2)
-
         if element1[1] == None:
             memory_position1 = self.memory_vector_temp[0]
-            # self.memory_vector_temp.remove(memory_position1)
         else:
             memory_position1 = element1[1]
 
         if element2[1] == None:
-            memory_position2 = self.memory_vector_temp[1]
-            # self.memory_vector_temp.remove(memory_position2)
+            memory_position2 = self.memory_vector_temp[len(self.memory_vector_temp) - 1]
         else:
             memory_position2 = element2[1]
 
@@ -111,7 +112,7 @@ class StatementsAsmh:
 
     def aux_assingment_literal(self, value):
         self.was.write_assignment_asmh(
-            value, self.memory_position, self.flag_if, self.flag_else
+            value, self.memory_position, self.flag_if, self.flag_else, self.flag_while
         )
 
         self.memory_vector_temp.append(self.memory_position)
@@ -161,6 +162,7 @@ class StatementsAsmh:
                 self.memory_position,
                 self.flag_if,
                 self.flag_else,
+                self.flag_while,
             )
 
         elif op == "<=":
@@ -170,6 +172,7 @@ class StatementsAsmh:
                 self.memory_position,
                 self.flag_if,
                 self.flag_else,
+                self.flag_while,
             )
 
         elif op == ">":
@@ -179,6 +182,7 @@ class StatementsAsmh:
                 self.memory_position,
                 self.flag_if,
                 self.flag_else,
+                self.flag_while,
             )
 
         elif op == ">=":
@@ -188,6 +192,7 @@ class StatementsAsmh:
                 self.memory_position,
                 self.flag_if,
                 self.flag_else,
+                self.flag_while,
             )
 
         elif op == "=":
@@ -197,6 +202,7 @@ class StatementsAsmh:
                 self.memory_position,
                 self.flag_if,
                 self.flag_else,
+                self.flag_while,
             )
 
         elif op == "<>":
@@ -206,6 +212,7 @@ class StatementsAsmh:
                 self.memory_position,
                 self.flag_if,
                 self.flag_else,
+                self.flag_while,
             )
 
         elif op == "or":
@@ -215,6 +222,7 @@ class StatementsAsmh:
                 self.memory_position,
                 self.flag_if,
                 self.flag_else,
+                self.flag_while,
             )
 
         elif op == "and":
@@ -224,6 +232,7 @@ class StatementsAsmh:
                 self.memory_position,
                 self.flag_if,
                 self.flag_else,
+                self.flag_while,
             )
 
         elif op == "not":
@@ -233,6 +242,7 @@ class StatementsAsmh:
                 self.memory_position,
                 self.flag_if,
                 self.flag_else,
+                self.flag_while,
             )
 
         return False
@@ -243,8 +253,6 @@ class StatementsAsmh:
         element1_value,
         element2_value,
     ):
-        # print(element1_value)
-        # print(element2_value)
         if self.value_in_memory(element1_value, element2_value):
             return True
 
@@ -259,6 +267,7 @@ class StatementsAsmh:
                 self.memory_position,
                 self.flag_if,
                 self.flag_else,
+                self.flag_while,
             )
 
         elif op == "-":
@@ -268,6 +277,7 @@ class StatementsAsmh:
                 self.memory_position,
                 self.flag_if,
                 self.flag_else,
+                self.flag_while,
             )
 
         elif op == "div":
@@ -277,6 +287,7 @@ class StatementsAsmh:
                 self.memory_position,
                 self.flag_if,
                 self.flag_else,
+                self.flag_while,
             )
 
         elif op == "*":
@@ -286,6 +297,7 @@ class StatementsAsmh:
                 self.memory_position,
                 self.flag_if,
                 self.flag_else,
+                self.flag_while,
             )
 
         return False
@@ -293,6 +305,10 @@ class StatementsAsmh:
     def expression_value(self, expression):
         arithmetic_op = ["+", "-", "div", "*"]
         logical_op = ["=", "<>", "<", "<=", ">=", ">", "and", "or", "not"]
+
+        if "(" in expression and ")" in expression:
+            expression.remove("(")
+            expression.remove(")")
 
         exit = False
 
@@ -326,7 +342,11 @@ class StatementsAsmh:
         else:
             vl = value[0]
             self.was.write_assignment_asmh(
-                vl, self.memory_position, self.flag_if, self.flag_else
+                vl,
+                self.memory_position,
+                self.flag_if,
+                self.flag_else,
+                self.flag_while,
             )
 
         self.tr.edit(id, 3, vl)
@@ -340,31 +360,58 @@ class StatementsAsmh:
             return True
 
     def if_conditional_asmh(self, conditional_expression):
-        conditional_expression.remove("(")
-        conditional_expression.remove(")")
-
         self.expression_value(conditional_expression)
 
-        # self.flag_else = True
-        self.was.write_if_conditional_asmh(self.flag_if, self.flag_else)
+        self.was.write_if_conditional_asmh(
+            self.flag_if,
+            self.flag_else,
+            self.flag_while,
+        )
 
     def label_if_asmh(self):
-        self.was.write_label_if_asmh(self.flag_if, self.flag_else)
-
-    def set_flag_if(self, condition):
-        self.flag_if = condition
-
-    def set_flag_else(self, condition):
-        self.flag_else = condition
+        self.was.write_label_if_asmh(
+            self.flag_if,
+            self.flag_else,
+            self.flag_while,
+        )
 
     def code_block_else_asmh(self):
-        self.was.write_code_block_else_asmh(self.flag_if, self.flag_else)
+        self.was.write_code_block_else_asmh(
+            self.flag_if,
+            self.flag_else,
+            self.flag_while,
+        )
 
     def code_block_if_asmh(self):
-        self.was.write_code_block_if_asmh(self.flag_if, self.flag_else)
+        self.was.write_code_block_if_asmh(
+            self.flag_if,
+            self.flag_else,
+            self.flag_while,
+        )
 
-    def while_asmh(self):
-        pass
+    def initial_label_while_asmh(self):
+        self.was.write_intial_label_while_asmh(
+            self.flag_if, self.flag_else, self.flag_while
+        )
+
+    def code_block_while_asmh(self):
+        self.was.write_code_block_while_asmh(
+            self.flag_if,
+            self.flag_else,
+            self.flag_while,
+        )
+
+    def while_conditional_asmh(self, conditional_expression):
+        self.expression_value(conditional_expression)
+        self.was.write_while_conditional_asmh(
+            self.flag_if, self.flag_else, self.flag_while
+        )
+        print(self.flag_while)
+
+    def final_label_while_asmh(self):
+        self.was.write_final_label_while_asmh(
+            self.flag_if, self.flag_else, self.flag_while
+        )
 
     def array_declaration(self):
         pass

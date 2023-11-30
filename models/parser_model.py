@@ -376,9 +376,25 @@ class Parser:
 
     def while_statement(self):
         if self.encontra_token(["while"], ERRO_FALTA_WHILE, "b"):
+            self.write_asmh.initial_label_while_asmh()
+
+            self.index_initial = self.index
             self.expression()
+            self.index_final = self.index
+
+            self.construct_expression_vect()
+            conditional_expression = self.expression_vect
+
             if self.encontra_token(["do"], ERRO_FALTA_DO, "b"):
+                self.write_asmh.set_flag_while(True)
                 self.statement()
+
+                self.write_asmh.while_conditional_asmh(conditional_expression)
+                self.write_asmh.set_flag_while(False)
+
+                self.write_asmh.code_block_while_asmh()
+
+                self.write_asmh.final_label_while_asmh()
 
     def statement(self):
         if not (self.simple_statement() or self.structured_statement()):
