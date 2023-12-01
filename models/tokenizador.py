@@ -211,3 +211,6 @@ class Tokenizador:
 
     def get_matriz_tokens(self):
         return self.matriz_tokens
+
+    def get_table_symbol_values(self):
+        return self.st.get_node_matr()

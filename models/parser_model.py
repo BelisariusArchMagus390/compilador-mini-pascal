@@ -66,6 +66,12 @@ class Parser:
         self.index_final = None
         self.expression_vect = []
 
+    def get_matriz_tokens(self):
+        return self.tk.get_matriz_tokens()
+
+    def get_table_symbol_values(self):
+        return self.tk.get_table_symbol_values()
+
     def construct_expression_vect(self):
         lexm = self.index_initial
         lexm_final = self.index_final
