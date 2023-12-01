@@ -19,6 +19,10 @@ class WriteStatementsAsmh:
         self.line_count = 0
         self.line_count_final = 0
 
+        self.line_count_else = 0
+        self.line_count_if = 0
+        self.line_count_final_if = 0
+
     def write_in_file(self):
         file_asmh = open(self.path_file, "w")
 
@@ -40,8 +44,10 @@ class WriteStatementsAsmh:
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 2
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 2
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
@@ -55,8 +61,10 @@ class WriteStatementsAsmh:
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 2
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 2
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
@@ -79,8 +87,10 @@ class WriteStatementsAsmh:
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 4
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 4
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
@@ -102,8 +112,10 @@ class WriteStatementsAsmh:
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 4
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 4
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
@@ -125,8 +137,10 @@ class WriteStatementsAsmh:
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 4
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 4
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
@@ -148,8 +162,10 @@ class WriteStatementsAsmh:
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 4
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 4
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
@@ -171,8 +187,10 @@ class WriteStatementsAsmh:
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 4
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 4
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
@@ -194,8 +212,10 @@ class WriteStatementsAsmh:
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 4
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 4
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
@@ -217,8 +237,10 @@ class WriteStatementsAsmh:
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 4
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 4
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
@@ -240,8 +262,10 @@ class WriteStatementsAsmh:
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 4
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 4
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
@@ -263,8 +287,10 @@ class WriteStatementsAsmh:
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 4
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 4
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
@@ -287,8 +313,10 @@ class WriteStatementsAsmh:
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 4
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 4
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
@@ -310,8 +338,10 @@ class WriteStatementsAsmh:
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 4
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 4
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
@@ -333,8 +363,10 @@ class WriteStatementsAsmh:
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 4
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 4
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
@@ -356,8 +388,10 @@ class WriteStatementsAsmh:
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 4
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 4
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
@@ -373,8 +407,10 @@ class WriteStatementsAsmh:
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 2
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 2
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
@@ -397,46 +433,50 @@ class WriteStatementsAsmh:
         else:
             self.lines_to_write.append(command_lines)
 
-        self.line_count += 1
-        self.line_count_final = self.line_count
-
     def write_label_if_asmh(self, flag_if, flag_else, flag_while):
-        command_lines = f"L{self.line_count}\n"
+        self.line_count += 1
+        self.line_count_final_if = self.line_count - self.line_count_if + 2
+        print(self.line_count)
+        # print(self.line_count_else)
+        # print(self.temp_line_else)
+
+        command_lines = f"L{self.line_count_final_if}\n"
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 1
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 1
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
         else:
             self.lines_to_write.append(command_lines)
-
-        self.line_count += 1
 
     def write_code_block_else_asmh(self, flag_if, flag_else, flag_while):
         else_code_block = "".join(self.temp_line_else)
         self.temp_line_else.clear()
 
+        self.line_count += 1
+        self.line_count_final = self.line_count
+
         command_lines = else_code_block + f" GOTO L{self.line_count_final+1}\n"
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 1
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 1
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
         else:
             self.lines_to_write.append(command_lines)
 
-        self.line_count += 1
-
     def write_code_block_if_asmh(self, flag_if, flag_else, flag_while):
-        command_lines = f"L{self.line_count_final}:"
-
-        self.line_count += 1
+        command_lines = f"L{self.line_count_final_if}:"
 
         if_code_block = "".join(self.temp_line_if)
         self.temp_line_if.clear()
@@ -453,8 +493,6 @@ class WriteStatementsAsmh:
         else:
             self.lines_to_write.append(command_lines)
 
-        self.line_count += 1
-
     # Funções para criação do while
     def write_intial_label_while_asmh(self, flag_if, flag_else, flag_while):
         self.line_count += 1
@@ -463,8 +501,10 @@ class WriteStatementsAsmh:
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 1
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 1
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
@@ -490,8 +530,10 @@ class WriteStatementsAsmh:
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 2
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 2
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
@@ -506,8 +548,10 @@ class WriteStatementsAsmh:
 
         if flag_if == True and flag_else == False and flag_while == False:
             self.temp_line_if.append(command_lines)
+            self.line_count_if += 1
         elif flag_if == False and flag_else == True and flag_while == False:
             self.temp_line_else.append(command_lines)
+            self.line_count_else += 1
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
@@ -538,3 +582,4 @@ class WriteStatementsAsmh:
     def write_end_program_asmh(self):
         command_lines = " ENDP"
         self.lines_to_write.append(command_lines)
+        self.line_count += 1

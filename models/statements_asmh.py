@@ -361,6 +361,7 @@ class StatementsAsmh:
         else:
             return True
 
+    # Funções para o If Else
     def if_conditional_asmh(self, conditional_expression):
         self.expression_value(conditional_expression)
 
@@ -391,6 +392,7 @@ class StatementsAsmh:
             self.flag_while,
         )
 
+    # Funções para o While
     def initial_label_while_asmh(self):
         self.was.write_intial_label_while_asmh(
             self.flag_if, self.flag_else, self.flag_while

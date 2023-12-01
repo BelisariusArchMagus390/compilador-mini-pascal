@@ -353,14 +353,11 @@ class Parser:
 
             self.construct_expression_vect()
 
-            conditional_expression = self.expression_vect
+            conditional_expression = self.expression_vect.copy()
+            self.expression_vect.clear()
             self.write_asmh.if_conditional_asmh(conditional_expression)
 
-            self.expression_vect.clear()
-
             if self.encontra_token(["then"], ERRO_FALTA_THEN, "b"):
-                self.write_asmh.label_if_asmh()
-
                 self.write_asmh.set_flag_if(True)
                 self.statement()
                 self.write_asmh.set_flag_if(False)
@@ -369,6 +366,8 @@ class Parser:
                     self.write_asmh.set_flag_else(True)
                     self.statement()
                     self.write_asmh.set_flag_else(False)
+
+                    self.write_asmh.label_if_asmh()
 
                     self.write_asmh.code_block_else_asmh()
 
