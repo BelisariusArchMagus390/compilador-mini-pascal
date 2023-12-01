@@ -117,6 +117,11 @@ class StatementsAsmh:
         return [memory_position1, memory_position2]
 
     def aux_assingment_literal(self, value):
+        if value == "true":
+            value = 1
+        elif value == "false":
+            value = 0
+
         self.was.write_assignment_asmh(
             value, self.memory_position, self.flag_if, self.flag_else, self.flag_while
         )
@@ -319,6 +324,16 @@ class StatementsAsmh:
         exit = False
 
         while exit is False:
+            if expression[0] == "true":
+                expression[0] = 1
+            elif expression[0] == "false":
+                expression[0] = 0
+
+            if expression[2] == "true":
+                expression[2] = 1
+            elif expression[2] == "false":
+                expression[2] = 0
+
             val1 = expression[0]
             op = expression[1]
             val2 = expression[2]
@@ -346,6 +361,12 @@ class StatementsAsmh:
             vl = "expression"
         else:
             vl = value[0]
+
+            if vl == "true":
+                vl = 1
+            elif vl == "false":
+                vl = 0
+
             self.was.write_assignment_asmh(
                 vl,
                 self.memory_position,
