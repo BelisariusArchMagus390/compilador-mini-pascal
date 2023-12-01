@@ -60,6 +60,7 @@ class StatementsAsmh:
 
         return id
 
+    # Verifica se é uma variável ou um literal e caso seja retornará a sua posição de memória
     def exist_variable(self, element):
         lexem_matr = self.tk.get_matriz_tokens()
 
@@ -79,6 +80,7 @@ class StatementsAsmh:
 
         return [condition, memory_position]
 
+    # Verifica se os valores já foram armazenados na memória
     def aux_op_ifstored(self, element1_value, element2_value):
         ifstored1 = False
         ifstored2 = False
@@ -94,6 +96,7 @@ class StatementsAsmh:
 
         return [ifstored1, ifstored2]
 
+    # Retorna a opsição de memória
     def aux_op_memory_position(self, element1_value, element2_value):
         memory_position1 = None
         memory_position2 = None

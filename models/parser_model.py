@@ -371,7 +371,7 @@ class Parser:
 
                     self.write_asmh.code_block_else_asmh()
 
-                    self.write_asmh.code_block_if_asmh()
+                self.write_asmh.code_block_if_asmh()
 
     def while_statement(self):
         if self.encontra_token(["while"], ERRO_FALTA_WHILE, "b"):
