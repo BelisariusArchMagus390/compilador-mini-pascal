@@ -226,7 +226,7 @@ class WriteStatementsAsmh:
         flag_else,
         flag_while,
     ):
-        command_lines = f" LDVL {memory_position2}\n LDVL {memory_position1}\n ADD_ \n STOR {memory_position_final}\n"
+        command_lines = f" LDVL {memory_position1}\n LDVL {memory_position2}\n ADD_ \n STOR {memory_position_final}\n"
         n = 4
 
         self.aux_write_decision(flag_if, flag_else, flag_while, command_lines, n)
@@ -242,7 +242,7 @@ class WriteStatementsAsmh:
         flag_else,
         flag_while,
     ):
-        command_lines = f" LDVL {memory_position2}\n LDVL {memory_position1}\n SUBT \n STOR {memory_position_final}\n"
+        command_lines = f" LDVL {memory_position1}\n LDVL {memory_position2}\n SUBT \n STOR {memory_position_final}\n"
         n = 4
 
         self.aux_write_decision(flag_if, flag_else, flag_while, command_lines, n)
@@ -258,7 +258,7 @@ class WriteStatementsAsmh:
         flag_else,
         flag_while,
     ):
-        command_lines = f" LDVL {memory_position2}\n LDVL {memory_position1}\n DIVI \n STOR {memory_position_final}\n"
+        command_lines = f" LDVL {memory_position1}\n LDVL {memory_position2}\n DIVI \n STOR {memory_position_final}\n"
         n = 4
 
         self.aux_write_decision(flag_if, flag_else, flag_while, command_lines, n)
@@ -274,7 +274,7 @@ class WriteStatementsAsmh:
         flag_else,
         flag_while,
     ):
-        command_lines = f" LDVL {memory_position2}\n LDVL {memory_position1}\n MULT \n STOR {memory_position_final}\n"
+        command_lines = f" LDVL {memory_position1}\n LDVL {memory_position2}\n MULT \n STOR {memory_position_final}\n"
         n = 4
 
         self.aux_write_decision(flag_if, flag_else, flag_while, command_lines, n)
