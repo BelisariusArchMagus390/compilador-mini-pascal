@@ -112,6 +112,7 @@ Por ser um analisador léxico, certos elementos não serão garantidos, como atr
 - É possível fazer atribuições à variáveis no meio do código sem ter que declará-la antes, tornando-a uma variável não tipada.
 - Caso o valor de uma variável seja uma expressão, a informação que aparecerá na tabela é a própria expressão e não o seu resultado. No exemplo `y := x + 2` o valor do identificador `y` será igual a expressão `x + 2` e não ao resultado da operação mesmo que já tenha sido declarado um valor inteiro para `x`.
 - Caso uma mesma variável seja declarada múltiplas vezes com diferentes tipos apenas o último tipo que foi declarado será válido para ser exibido na tabela de símbolos. O mesmo vale para o tamanho de `array`. Neste caso não é possível garantir o tipo de valor que será atríbuido à variável.
+- As expressões tanto aritméticas como lógicas só podem ser feitas por dois elementos.
 
 ## 3 - Conclusão
 Pode-se concluir que a tokenização é fundamental no desenvolvimento de um Parser. A escolha do Parser Descendente Recursivo se mostrou satisfatória para resolver o problema de se compilar um código escrito em mini-pascal dado que esta linguaguem não é ambígua.
