@@ -303,9 +303,13 @@ class WriteStatementsAsmh:
     def write_label_if_asmh(self, flag_if, flag_else, flag_while):
         n = 1
         self.line_count += n
+
         self.line_count_final_if = self.line_count - self.line_count_if + 2
 
         command_lines = f"L{self.line_count_final_if}\n"
+
+        if self.line_count_else == 0:
+            command_lines = command_lines + f" GOTO L{self.line_count + 2}\n"
 
         self.aux_write_decision(flag_if, flag_else, flag_while, command_lines, n)
 
@@ -329,7 +333,12 @@ class WriteStatementsAsmh:
         if_code_block = "".join(self.temp_line_if)
         self.temp_line_if.clear()
 
-        command_lines = command_lines + if_code_block + f"L{self.line_count_final+1}:"
+        if self.line_count_else == 0:
+            line = self.line_count + 2
+        else:
+            line = self.line_count_final + 1
+
+        command_lines = command_lines + if_code_block + f"L{line}:"
 
         self.aux_write_decision(flag_if, flag_else, flag_while, command_lines)
 

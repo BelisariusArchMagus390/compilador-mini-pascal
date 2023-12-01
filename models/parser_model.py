@@ -376,6 +376,8 @@ class Parser:
                     self.write_asmh.label_if_asmh()
 
                     self.write_asmh.code_block_else_asmh()
+                else:
+                    self.write_asmh.label_if_asmh()
 
                 self.write_asmh.code_block_if_asmh()
 
