@@ -9,7 +9,7 @@ program Exemplo;
         i := 6;
 
         if (a < i) then
-            write('LOL1')
+            write(10)
         else
-            write('LOL2')
+            write(12)
     end.

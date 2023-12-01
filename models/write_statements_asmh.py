@@ -294,8 +294,8 @@ class WriteStatementsAsmh:
     # Funções para criação do If Else
 
     # Escreve a condicional do If
-    def write_if_conditional_asmh(self, flag_if, flag_else, flag_while):
-        command_lines = f" GOIF "
+    def write_if_conditional_asmh(self, flag_if, flag_else, flag_while, memory_position_final):
+        command_lines = f" LDVL {memory_position_final}\n GOIF "
 
         self.aux_write_decision(flag_if, flag_else, flag_while, command_lines)
 
@@ -361,8 +361,9 @@ class WriteStatementsAsmh:
         self.aux_write_decision(flag_if, flag_else, flag_while, command_lines)
 
     # Escreve a condicional do while
-    def write_while_conditional_asmh(self, flag_if, flag_else, flag_while):
-        command_lines = f" GOIF L{self.line_count_final}\n GOTO L{self.line_count+2}\n"
+    def write_while_conditional_asmh(self, flag_if, flag_else, flag_while, memory_position_final):
+        command_lines = f" LDVL {memory_position_final}\n"
+        command_lines = command_lines + f" GOIF L{self.line_count_final}\n GOTO L{self.line_count+2}\n"
         n = 2
 
         self.aux_write_decision(flag_if, flag_else, flag_while, command_lines, n)

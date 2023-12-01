@@ -8,7 +8,7 @@ program Exemplo;
 
         while i >= 0 do
             begin
-                write('LOL');
+                write(123);
                 i := i - 1
             end
     end.

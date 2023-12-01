@@ -8,7 +8,7 @@ class StatementsAsmh:
         self.was = WriteStatementsAsmh()
         self.tr = SymbolTable()
         self.tk = Tokenizador()
-        self.memory_position = 0
+        self.memory_position = 19
         self.ui = ui
         self.memory_vector_temp = []
 
@@ -128,8 +128,8 @@ class StatementsAsmh:
 
         self.memory_vector_temp.append(self.memory_position)
 
-        if self.memory_position <= 20:
-            self.memory_position += 1
+        if self.memory_position >= 0:
+            self.memory_position -= 1
             return False
         else:
             return True
@@ -379,8 +379,8 @@ class StatementsAsmh:
 
         self.memory_vector_temp.clear()
 
-        if self.memory_position <= 20:
-            self.memory_position += 1
+        if self.memory_position >= 0:
+            self.memory_position -= 1
             return False
         else:
             return True
@@ -393,6 +393,7 @@ class StatementsAsmh:
             self.flag_if,
             self.flag_else,
             self.flag_while,
+            self.memory_position,
         )
 
     def label_if_asmh(self):
@@ -432,7 +433,7 @@ class StatementsAsmh:
     def while_conditional_asmh(self, conditional_expression):
         self.expression_value(conditional_expression)
         self.was.write_while_conditional_asmh(
-            self.flag_if, self.flag_else, self.flag_while
+            self.flag_if, self.flag_else, self.flag_while, self.memory_position,
         )
 
     def final_label_while_asmh(self):
