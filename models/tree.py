@@ -1,4 +1,4 @@
-from tabulate import tabulate as tb
+# from tabulate import tabulate as tb
 
 
 class Data:
@@ -79,7 +79,7 @@ class SymbolTable:
             "Chamada function/procedure",
             "Posição na memória",
         ]
-        print(tb(self.node_matr, headers=columns, tablefmt="fancy_grid"))
+        # print(tb(self.node_matr, headers=columns, tablefmt="fancy_grid"))
 
     def insert(self, _id, _lexema, _memory_position=None):
         symbol = None

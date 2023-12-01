@@ -281,10 +281,8 @@ class StatementsAsmh:
         )
 
         if var == None:
-            print(f"LOL2 {element1_value} - {element2_value}")
             memory_position_final = self.memory_position
         else:
-            print(f"LOL1 {element1_value} - {element2_value}")
             id = self.find_node_id(var)
             node = self.tr.search(id)
             memory_position_final = node.data[7]

@@ -1,4 +1,4 @@
-from tabulate import tabulate as tb
+# from tabulate import tabulate as tb
 
 from .tokenizador import Tokenizador
 from .error_message_model import ErrorMessage
@@ -506,7 +506,7 @@ class Parser:
             "Tipo Token",
             "ID",
         ]
-        print(tb(self.matriz_tokens, headers=colunas, tablefmt="fancy_grid"))
+        # print(tb(self.matriz_tokens, headers=colunas, tablefmt="fancy_grid"))
 
         self.tab_simb.table_show()
 
