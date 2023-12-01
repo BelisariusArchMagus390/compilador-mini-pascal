@@ -7,6 +7,8 @@ program Exemplo;
         i := 5;
 
         while i >= 0 do
-            write('LOL');
-            i := i - 1
+            begin
+                write('LOL');
+                i := i - 1
+            end
     end.

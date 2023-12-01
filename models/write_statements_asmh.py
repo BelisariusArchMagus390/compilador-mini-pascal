@@ -153,8 +153,6 @@ class WriteStatementsAsmh:
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
-                # print(self.temp_line_while)
-                # print("LOL3")
         else:
             self.lines_to_write.append(command_lines)
 
@@ -317,7 +315,6 @@ class WriteStatementsAsmh:
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
-                # print("LOL2")
         else:
             self.lines_to_write.append(command_lines)
 
@@ -458,25 +455,6 @@ class WriteStatementsAsmh:
 
         self.line_count += 1
 
-    # -----------------------------------------------------------------------------------------------------------------
-
-    # Funções ainda a serem feitas
-
-    def write_array_declaration(self, flag_if, flag_else, flag_while):
-        command_lines = ""
-
-        if flag_if == True and flag_else == False and flag_while == False:
-            self.temp_line_if.append(command_lines)
-        elif flag_if == False and flag_else == True and flag_while == False:
-            self.temp_line_else.append(command_lines)
-        elif flag_if == False and flag_else == False and flag_while == True:
-            if (command_lines in self.temp_line_while) == False:
-                self.temp_line_while.append(command_lines)
-        else:
-            self.lines_to_write.append(command_lines)
-
-    # -----------------------------------------------------------------------------------------------------------------
-
     # Funções para criação do while
     def write_intial_label_while_asmh(self, flag_if, flag_else, flag_while):
         self.line_count += 1
@@ -494,8 +472,6 @@ class WriteStatementsAsmh:
             self.lines_to_write.append(command_lines)
 
     def write_code_block_while_asmh(self, flag_if, flag_else, flag_while):
-        # print(self.temp_line_while)
-        # print("LOL4")
         command_lines = "".join(self.temp_line_while)
         self.temp_line_while.clear()
 
@@ -519,8 +495,6 @@ class WriteStatementsAsmh:
         elif flag_if == False and flag_else == False and flag_while == True:
             if (command_lines in self.temp_line_while) == False:
                 self.temp_line_while.append(command_lines)
-                # print(self.temp_line_while)
-                # print("LOL1")
         else:
             self.lines_to_write.append(command_lines)
 
@@ -541,6 +515,25 @@ class WriteStatementsAsmh:
             self.lines_to_write.append(command_lines)
 
         self.line_count += 1
+
+    # -----------------------------------------------------------------------------------------------------------------
+
+    # Funções ainda a serem feitas
+
+    def write_array_declaration(self, flag_if, flag_else, flag_while):
+        command_lines = ""
+
+        if flag_if == True and flag_else == False and flag_while == False:
+            self.temp_line_if.append(command_lines)
+        elif flag_if == False and flag_else == True and flag_while == False:
+            self.temp_line_else.append(command_lines)
+        elif flag_if == False and flag_else == False and flag_while == True:
+            if (command_lines in self.temp_line_while) == False:
+                self.temp_line_while.append(command_lines)
+        else:
+            self.lines_to_write.append(command_lines)
+
+    # -----------------------------------------------------------------------------------------------------------------
 
     def write_end_program_asmh(self):
         command_lines = " ENDP"

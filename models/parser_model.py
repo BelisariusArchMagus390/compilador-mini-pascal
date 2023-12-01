@@ -383,7 +383,8 @@ class Parser:
             self.index_final = self.index
 
             self.construct_expression_vect()
-            conditional_expression = self.expression_vect
+            conditional_expression = self.expression_vect.copy()
+            self.expression_vect.clear()
 
             if self.encontra_token(["do"], ERRO_FALTA_DO, "b"):
                 self.write_asmh.set_flag_while(True)

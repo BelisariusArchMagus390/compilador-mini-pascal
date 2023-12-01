@@ -31,6 +31,9 @@ class StatementsAsmh:
     def set_flag_while(self, condition):
         self.flag_while = condition
 
+    def get_flag_while(self):
+        return self.flag_while
+
     def test_line(self):
         self.was.write_test_line()
 
@@ -331,7 +334,6 @@ class StatementsAsmh:
 
     def assignment_asmh(self, var, value):
         vl = None
-
         id = self.find_node_id(var)
 
         self.tr.edit(id, 7, self.memory_position)
@@ -406,7 +408,6 @@ class StatementsAsmh:
         self.was.write_while_conditional_asmh(
             self.flag_if, self.flag_else, self.flag_while
         )
-        print(self.flag_while)
 
     def final_label_while_asmh(self):
         self.was.write_final_label_while_asmh(
