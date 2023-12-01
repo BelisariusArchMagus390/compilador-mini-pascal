@@ -436,9 +436,6 @@ class WriteStatementsAsmh:
     def write_label_if_asmh(self, flag_if, flag_else, flag_while):
         self.line_count += 1
         self.line_count_final_if = self.line_count - self.line_count_if + 2
-        print(self.line_count)
-        # print(self.line_count_else)
-        # print(self.temp_line_else)
 
         command_lines = f"L{self.line_count_final_if}\n"
 

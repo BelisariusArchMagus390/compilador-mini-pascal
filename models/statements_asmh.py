@@ -126,7 +126,7 @@ class StatementsAsmh:
         else:
             return True
 
-    def value_in_memory(
+    def ifstored(
         self,
         element1_value,
         element2_value,
@@ -151,7 +151,7 @@ class StatementsAsmh:
         element1_value,
         element2_value,
     ):
-        if self.value_in_memory(element1_value, element2_value):
+        if self.ifstored(element1_value, element2_value):
             return True
 
         memory_position1, memory_position2 = self.aux_op_memory_position(
@@ -256,7 +256,7 @@ class StatementsAsmh:
         element1_value,
         element2_value,
     ):
-        if self.value_in_memory(element1_value, element2_value):
+        if self.ifstored(element1_value, element2_value):
             return True
 
         memory_position1, memory_position2 = self.aux_op_memory_position(
