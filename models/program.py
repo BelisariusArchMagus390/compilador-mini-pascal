@@ -25,7 +25,7 @@ class Program:
         should_exit = False
 
         print("1 - Compilar arquivo TXT contendo um código em mini-pascal")
-        print("2 - Compilar o arquivo de exemplo (teste.txt)")
+        print("2 - Compilar o arquivo de exemplo (teste4.txt)")
         print("0 - Sair do programa")
         opcao = input("\nSelecione uma opção: ")
 
@@ -42,7 +42,7 @@ class Program:
                     print(err_msg)
                     should_exit = True
             case "2":
-                codigo = Program.read_file("teste18.txt")
+                codigo = Program.read_file("teste4.txt")
             case "0":
                 should_exit = True
             case _:
