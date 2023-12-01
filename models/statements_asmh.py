@@ -158,6 +158,7 @@ class StatementsAsmh:
         op,
         element1_value,
         element2_value,
+        var,
     ):
         if self.ifstored(element1_value, element2_value):
             return True
@@ -166,11 +167,18 @@ class StatementsAsmh:
             element1_value, element2_value
         )
 
+        if var == None:
+            memory_position_final = self.memory_position
+        else:
+            id = self.find_node_id(var)
+            node = self.tr.search(id)
+            memory_position_final = node.data[7]
+
         if op == "<":
             self.was.write_logic_op_less_than_asmh(
                 memory_position1,
                 memory_position2,
-                self.memory_position,
+                memory_position_final,
                 self.flag_if,
                 self.flag_else,
                 self.flag_while,
@@ -180,7 +188,7 @@ class StatementsAsmh:
             self.was.write_logic_op_less_or_equal_than_asmh(
                 memory_position1,
                 memory_position2,
-                self.memory_position,
+                memory_position_final,
                 self.flag_if,
                 self.flag_else,
                 self.flag_while,
@@ -190,7 +198,7 @@ class StatementsAsmh:
             self.was.write_logic_op_greater_than_asmh(
                 memory_position1,
                 memory_position2,
-                self.memory_position,
+                memory_position_final,
                 self.flag_if,
                 self.flag_else,
                 self.flag_while,
@@ -200,7 +208,7 @@ class StatementsAsmh:
             self.was.write_logic_op_greater_or_equal_than_asmh(
                 memory_position1,
                 memory_position2,
-                self.memory_position,
+                memory_position_final,
                 self.flag_if,
                 self.flag_else,
                 self.flag_while,
@@ -210,7 +218,7 @@ class StatementsAsmh:
             self.was.write_logic_op_equal_asmh(
                 memory_position1,
                 memory_position2,
-                self.memory_position,
+                memory_position_final,
                 self.flag_if,
                 self.flag_else,
                 self.flag_while,
@@ -220,7 +228,7 @@ class StatementsAsmh:
             self.was.write_logic_op_different_asmh(
                 memory_position1,
                 memory_position2,
-                self.memory_position,
+                memory_position_final,
                 self.flag_if,
                 self.flag_else,
                 self.flag_while,
@@ -230,7 +238,7 @@ class StatementsAsmh:
             self.was.write_logic_op_or_asmh(
                 memory_position1,
                 memory_position2,
-                self.memory_position,
+                memory_position_final,
                 self.flag_if,
                 self.flag_else,
                 self.flag_while,
@@ -240,7 +248,7 @@ class StatementsAsmh:
             self.was.write_logic_op_and_asmh(
                 memory_position1,
                 memory_position2,
-                self.memory_position,
+                memory_position_final,
                 self.flag_if,
                 self.flag_else,
                 self.flag_while,
@@ -250,7 +258,7 @@ class StatementsAsmh:
             self.was.write_logic_op_not_asmh(
                 memory_position1,
                 memory_position2,
-                self.memory_position,
+                memory_position_final,
                 self.flag_if,
                 self.flag_else,
                 self.flag_while,
@@ -263,6 +271,7 @@ class StatementsAsmh:
         op,
         element1_value,
         element2_value,
+        var,
     ):
         if self.ifstored(element1_value, element2_value):
             return True
@@ -271,11 +280,20 @@ class StatementsAsmh:
             element1_value, element2_value
         )
 
+        if var == None:
+            print(f"LOL2 {element1_value} - {element2_value}")
+            memory_position_final = self.memory_position
+        else:
+            print(f"LOL1 {element1_value} - {element2_value}")
+            id = self.find_node_id(var)
+            node = self.tr.search(id)
+            memory_position_final = node.data[7]
+
         if op == "+":
             self.was.write_arithmetic_op_add_asmh(
                 memory_position1,
                 memory_position2,
-                self.memory_position,
+                memory_position_final,
                 self.flag_if,
                 self.flag_else,
                 self.flag_while,
@@ -285,7 +303,7 @@ class StatementsAsmh:
             self.was.write_arithmetic_op_sub_asmh(
                 memory_position1,
                 memory_position2,
-                self.memory_position,
+                memory_position_final,
                 self.flag_if,
                 self.flag_else,
                 self.flag_while,
@@ -295,7 +313,7 @@ class StatementsAsmh:
             self.was.write_arithmetic_op_div_asmh(
                 memory_position1,
                 memory_position2,
-                self.memory_position,
+                memory_position_final,
                 self.flag_if,
                 self.flag_else,
                 self.flag_while,
@@ -305,7 +323,7 @@ class StatementsAsmh:
             self.was.write_arithmetic_op_mul_asmh(
                 memory_position1,
                 memory_position2,
-                self.memory_position,
+                memory_position_final,
                 self.flag_if,
                 self.flag_else,
                 self.flag_while,
@@ -313,7 +331,7 @@ class StatementsAsmh:
 
         return False
 
-    def expression_value(self, expression):
+    def expression_value(self, expression, var=None):
         arithmetic_op = ["+", "-", "div", "*"]
         logical_op = ["=", "<>", "<", "<=", ">=", ">", "and", "or", "not"]
 
@@ -339,9 +357,9 @@ class StatementsAsmh:
             val2 = expression[2]
 
             if op in arithmetic_op:
-                self.arithmetic_ops_asmh(op, val1, val2)
+                self.arithmetic_ops_asmh(op, val1, val2, var)
             elif op in logical_op:
-                self.logic_ops_asmh(op, val1, val2)
+                self.logic_ops_asmh(op, val1, val2, var)
 
             expression.remove(val1)
             expression.remove(op)
@@ -352,12 +370,13 @@ class StatementsAsmh:
 
     def assignment_asmh(self, var, value):
         vl = None
+        
         id = self.find_node_id(var)
 
-        self.tr.edit(id, 7, self.memory_position)
+        self.tr.edit(id, 7, self.memory_position+1)
 
         if len(value) > 1:
-            self.expression_value(value)
+            self.expression_value(value, var)
             vl = "expression"
         else:
             vl = value[0]

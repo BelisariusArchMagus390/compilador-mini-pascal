@@ -6,7 +6,7 @@ program Exemplo;
     begin
         i := 5;
 
-        while i >= 0 do
+        while i > 1 do
             begin
                 write(123);
                 i := i - 1
