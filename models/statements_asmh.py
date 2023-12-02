@@ -370,7 +370,6 @@ class StatementsAsmh:
         vl = None
 
         id = self.find_node_id(variable)
-        print(self.memory_position)
         self.tr.edit(id, 7, self.memory_position)
 
         if len(value) > 1:
