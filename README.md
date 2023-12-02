@@ -113,10 +113,26 @@ Por ser um analisador léxico, certos elementos não serão garantidos, como atr
 - Caso o valor de uma variável seja uma expressão, a informação que aparecerá na tabela é a própria expressão e não o seu resultado. No exemplo `y := x + 2` o valor do identificador `y` será igual a expressão `x + 2` e não ao resultado da operação mesmo que já tenha sido declarado um valor inteiro para `x`.
 - Caso uma mesma variável seja declarada múltiplas vezes com diferentes tipos apenas o último tipo que foi declarado será válido para ser exibido na tabela de símbolos. O mesmo vale para o tamanho de `array`. Neste caso não é possível garantir o tipo de valor que será atríbuido à variável.
 - As expressões tanto aritméticas como lógicas só podem ser feitas por dois elementos.
-- Não há declaração de variáveis do tipo array.
-- O arquivo executável precisa ser executado manualmente com os comandos (ele estará localizado dentro da pasta executable_file): 
-    python3 -m asmh executable.asmh
-    ./executable.out
+- Não há declaração ou uso de variáveis do tipo array, mesmo que faça a análise sintática do mesmo.
+- Não uso de functions e procedures, mesmo que mesmo que faça a análise sintática do mesmo.
+
+### 2.6 Modo de uso
+- 1 - É necessário ter python entre as versões 3.10 e 3.9.
+
+- 2 - Para que o projeto possa ser executado é necessário instalar todos pacotes utilizados que não sejam nativos do python. Para isso basta apenas executar o comando:
+
+```sh
+pip install -r requirements.txt
+```
+- 3 - Para executar o código propriamente dito apenas execute o arquivo main.py
+
+- 4 - Ao executar o código do mini-pascal modificado será gerado um arquivo executável com o nome ```executable.asmh``` dentro do diretório ```executable_file```, para que possa executá-lo apenas execute os comando: 
+```sh
+python3 -m asmh executable.asmh
+./executable.out
+```
+
+# Observação: O projeto precisa ser usado em uma distribuição linux para que o arquivo executável possa ser executado.
 
 ## 3 - Conclusão
 Pode-se concluir que a tokenização é fundamental no desenvolvimento de um Parser. A escolha do Parser Descendente Recursivo se mostrou satisfatória para resolver o problema de se compilar um código escrito em mini-pascal dado que esta linguaguem não é ambígua.

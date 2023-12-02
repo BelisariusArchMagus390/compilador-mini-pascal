@@ -16,9 +16,6 @@ class StatementsAsmh:
         self.flag_else = False
         self.flag_while = False
 
-        self.dic_arrays_memory_position = {}
-        self.dic_arrays_ifusing_memory = {}
-
     def set_tr(self, tr):
         self.tr = tr
 
@@ -119,7 +116,7 @@ class StatementsAsmh:
 
         return [memory_position1, memory_position2]
 
-    def aux_assingment_literal(self, value):
+    def aux_assignment_literal(self, value):
         if value == "true":
             value = 1
         elif value == "false":
@@ -145,15 +142,15 @@ class StatementsAsmh:
         ifstored1, ifstored2 = self.aux_op_ifstored(element1_value, element2_value)
 
         if ifstored1 == False and ifstored2 == True:
-            if self.aux_assingment_literal(element1_value):
+            if self.aux_assignment_literal(element1_value):
                 return True
         elif ifstored1 == True and ifstored2 == False:
-            if self.aux_assingment_literal(element2_value):
+            if self.aux_assignment_literal(element2_value):
                 return True
         elif ifstored1 == False and ifstored2 == False:
-            if self.aux_assingment_literal(element1_value):
+            if self.aux_assignment_literal(element1_value):
                 return True
-            if self.aux_assingment_literal(element2_value):
+            if self.aux_assignment_literal(element2_value):
                 return True
 
     def logic_ops_asmh(
@@ -371,11 +368,11 @@ class StatementsAsmh:
 
     def assignment_asmh(self, variable, value):
         vl = None
-        
+
         id = self.find_node_id(variable)
 
         if self.dic_arrays_memory_position.get(variable) == None:
-            self.tr.edit(id, 7, self.memory_position+1)
+            self.tr.edit(id, 7, self.memory_position + 1)
 
         if len(value) > 1:
             self.expression_value(value, variable)
@@ -454,31 +451,16 @@ class StatementsAsmh:
     def while_conditional_asmh(self, conditional_expression):
         self.expression_value(conditional_expression)
         self.was.write_while_conditional_asmh(
-            self.flag_if, self.flag_else, self.flag_while, self.memory_position,
+            self.flag_if,
+            self.flag_else,
+            self.flag_while,
+            self.memory_position,
         )
 
     def final_label_while_asmh(self):
         self.was.write_final_label_while_asmh(
             self.flag_if, self.flag_else, self.flag_while
         )
-
-    def array_declaration(self, initial_index, final_index, variable):
-        array_size = (final_index - initial_index) + 1
-
-        temp_vec_memory_position = []
-        temp_vec_memory_ifusing = []
-
-        for _ in range(0, array_size):
-            temp_vec_memory_position.append(self.memory_position)
-            temp_vec_memory_ifusing.append(False)
-            self.memory_position += 1
-
-        self.dic_arrays_memory_position[variable] = temp_vec_memory_position
-        self.dic_arrays_ifusing_memory[variable] = temp_vec_memory_ifusing
-
-        id = self.find_node_id(variable)
-        self.tr.edit(id, 4, array_size)
-        self.tr.edit(id, 7, temp_vec_memory_position)
 
     def end_program_asmh(self):
         self.was.write_end_program_asmh()
