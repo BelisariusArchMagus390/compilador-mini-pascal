@@ -42,7 +42,7 @@ class Program:
                     print(err_msg)
                     should_exit = True
             case "2":
-                codigo = Program.read_file("teste19.txt")
+                codigo = Program.read_file("teste2.txt")
             case "0":
                 should_exit = True
             case _:

@@ -1,9 +1,0 @@
-program Exemplo;
-
-    var
-        arrA: array[1..3] of integer;
-
-    begin
-        arrA[1] := arrA[2] + arrA[3];
-        write(arrA[1])
-    end.
