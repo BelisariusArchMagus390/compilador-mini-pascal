@@ -12,16 +12,35 @@
 
 ## Sumário
 
-1. Tokenizador
-2. Parse
-    * 2.1. Analisador sintático descendente recursivo
-    * 2.2. Tabela de símbolos
-    * 2.3. Modificações gramáticais
-    * 2.4. Erros sintáticos
-    * 2.5. Ressalvas
-3. Conclusão
+1. Modo de uso
+2. Tokenizador
+3. Parse
+    * 3.1. Analisador sintático descendente recursivo
+    * 3.2. Tabela de símbolos
+    * 3.3. Modificações gramáticais
+    * 3.4. Erros sintáticos
+    * 3.5. Ressalvas
+4. Conclusão
 
-## 1 - Tokenizador
+## 1 - Modo de uso
+- 1 - É necessário ter python entre as versões 3.10 e 3.9.
+
+- 2 - Para que o projeto possa ser executado é necessário instalar todos pacotes utilizados que não sejam nativos do python. Para isso basta apenas executar o comando:
+
+```sh
+pip install -r requirements.txt
+```
+- 3 - Para executar o projeto apenas execute o arquivo main.py
+
+- 4 - Ao executar o código do mini-pascal modificado será gerado um arquivo executável com o nome ```executable.asmh``` dentro do diretório ```executable_file```, para que possa executá-lo apenas execute os comando: 
+```sh
+python3 -m asmh executable.asmh
+./executable.out
+```
+
+> Observação: O projeto precisa ser usado em uma distribuição linux para que o arquivo executável possa ser executado.
+
+## 2 - Tokenizador
 No processo de tokenização é onde ocorre a conversão dos lexemas (símbolos) para tokens. Para que possa ser feito a classificação correta dos tokens, os lexemas são formados a partir do agrupamento de cadeias de caracteres não espaçados e conjuntos específicos contidos na lista de símbolos especiais e palavras reservadas da gramática léxica do Mini-Pascal. Após identificados os lexemas, estes serão classificados pelos os seus respectivos tipos, sendo eles:
 
 - **LITERAL_STRING:** Constante de caracteres;
@@ -35,13 +54,13 @@ No processo de tokenização é onde ocorre a conversão dos lexemas (símbolos)
 
 > Todo e qualquer lexema que não for identificado pela a gramática léxica do Mini-Pascal será considerado um erro de símbolo desconhecido.
 
-## 2 - Parser
+## 3 - Parser
 Para que possa ser feito a análise da estrutura da sentença foi usado um parser top-down que usa o esquema de derivação do não-terminal mais à esquerda, de modo que a derivação inicia a partir do símbolo inicial e segue de cima para baixo.
 
-### 2.1 - Analisador sintático descendente recursivo
+### 3.1 - Analisador sintático descendente recursivo
 Foi utilizado o **"Parser Descendente Recursivo"** (parser sem backtracking e puramente determinístico) que utiliza de funções recursivas onde cada uma implementa uma regra da grámatica. A escolha deste parser foi dada sua fácil implementação, entendimento e melhor desempenho do que uma alternativa que use backtracking.
 
-### 2.2 - Tabela de símbolos
+### 3.2 - Tabela de símbolos
 A tabela de símbolos conta com as seguintes colunas:
 - **Linha:** A linha em que se encontra;
 - **Coluna:** A coluna em que se encontra;
@@ -58,7 +77,7 @@ A tabela de símbolos conta com as seguintes colunas:
 - **Valor:** O valor que foi associado ao identificador;
 - **Tamanho do array:** O tamanho do array;
 
-### 2.3 - Modificações gramáticais
+### 3.3 - Modificações gramáticais
 Tomamos a liberdade de adicionar pequenas mudanças nas regras gramáticais do mini-pascal para um melhor aproveitamento. São elas:
 - A regra `< write statement >` na grámatica original aceita apenas identificadores o que impossibilita a inserção direta de uma constante de caracteres ou uma constante inteira (como uma mensagem ou um código numérico). Para melhorar a flexibilidade desta regra, estas constantes poderão ser utilizadas no lugar do identificador.
 - As regras `< block >` e `< statement part >` foram removidas e passaram a ser produções da regra `< program >` pois se comportavam como "produções unitárias" e foram simplificadas.
@@ -69,7 +88,7 @@ Tomamos a liberdade de adicionar pequenas mudanças nas regras gramáticais do m
 - Foi alterada a regra < factor > para que pudesse aceitar chamadas de functions e procedures como expressions em assign statements.
 - A declaração de uma constante de char é feita somente entre aspas simples, não diferenciando entre um char e uma string.
 
-### 2.4 - Erros sintáticos
+### 3.4 - Erros sintáticos
 Abaixo está listado todos os erros sintáticos implementados:
 |Número do erro |Descrição do erro                                          |
 |---------------|-----------------------------------------------------------|
@@ -107,7 +126,7 @@ Abaixo está listado todos os erros sintáticos implementados:
 |31             |Falta a palavra reservada function                         |
 |32             |Falta de armazenamento de memória                          |
 
-### 2.5 - Ressalvas
+### 3.5 - Ressalvas
 Por ser um analisador léxico, certos elementos não serão garantidos, como atribuições, tipos e etc, como é melhor detalhado abaixo: 
 - É possível fazer atribuições à variáveis no meio do código sem ter que declará-la antes, tornando-a uma variável não tipada.
 - Caso o valor de uma variável seja uma expressão, a informação que aparecerá na tabela é a própria expressão e não o seu resultado. No exemplo `y := x + 2` o valor do identificador `y` será igual a expressão `x + 2` e não ao resultado da operação mesmo que já tenha sido declarado um valor inteiro para `x`.
@@ -117,23 +136,5 @@ Por ser um analisador léxico, certos elementos não serão garantidos, como atr
 - Não há execução de functions e procedures, mesmo que faça a análise sintática do mesmo.
 - Não pode ser usado juntos as estruturas While e If (por exemplo um If dentro de um While e vice-versa), pois elas não executam juntas, mesmo que faça a análise sintática do mesmo. 
 
-### 2.6 Modo de uso
-- 1 - É necessário ter python entre as versões 3.10 e 3.9.
-
-- 2 - Para que o projeto possa ser executado é necessário instalar todos pacotes utilizados que não sejam nativos do python. Para isso basta apenas executar o comando:
-
-```sh
-pip install -r requirements.txt
-```
-- 3 - Para executar o projeto apenas execute o arquivo main.py
-
-- 4 - Ao executar o código do mini-pascal modificado será gerado um arquivo executável com o nome ```executable.asmh``` dentro do diretório ```executable_file```, para que possa executá-lo apenas execute os comando: 
-```sh
-python3 -m asmh executable.asmh
-./executable.out
-```
-
-# Observação: O projeto precisa ser usado em uma distribuição linux para que o arquivo executável possa ser executado.
-
-## 3 - Conclusão
+## 4 - Conclusão
 Pode-se concluir que a tokenização é fundamental no desenvolvimento de um Parser. A escolha do Parser Descendente Recursivo se mostrou satisfatória para resolver o problema de se compilar um código escrito em mini-pascal dado que esta linguaguem não é ambígua.
