@@ -79,6 +79,9 @@ class SymbolTable:
             "Chamada function/procedure",
             "Posição na memória",
         ]
+
+        print(self.node_matr)
+
         # print(tb(self.node_matr, headers=columns, tablefmt="fancy_grid"))
 
     def insert(self, _id, _lexema, _memory_position=None):

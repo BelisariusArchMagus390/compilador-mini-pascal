@@ -16,6 +16,9 @@ class StatementsAsmh:
         self.flag_else = False
         self.flag_while = False
 
+        self.dic_arrays_memory_position = {}
+        self.dic_arrays_ifusing_memory = {}
+
     def set_tr(self, tr):
         self.tr = tr
 
@@ -158,7 +161,7 @@ class StatementsAsmh:
         op,
         element1_value,
         element2_value,
-        var,
+        variable,
     ):
         if self.ifstored(element1_value, element2_value):
             return True
@@ -167,10 +170,10 @@ class StatementsAsmh:
             element1_value, element2_value
         )
 
-        if var == None:
+        if variable == None:
             memory_position_final = self.memory_position
         else:
-            id = self.find_node_id(var)
+            id = self.find_node_id(variable)
             node = self.tr.search(id)
             memory_position_final = node.data[7]
 
@@ -271,7 +274,7 @@ class StatementsAsmh:
         op,
         element1_value,
         element2_value,
-        var,
+        variable,
     ):
         if self.ifstored(element1_value, element2_value):
             return True
@@ -280,10 +283,10 @@ class StatementsAsmh:
             element1_value, element2_value
         )
 
-        if var == None:
+        if variable == None:
             memory_position_final = self.memory_position
         else:
-            id = self.find_node_id(var)
+            id = self.find_node_id(variable)
             node = self.tr.search(id)
             memory_position_final = node.data[7]
 
@@ -329,7 +332,7 @@ class StatementsAsmh:
 
         return False
 
-    def expression_value(self, expression, var=None):
+    def expression_value(self, expression, variable=None):
         arithmetic_op = ["+", "-", "div", "*"]
         logical_op = ["=", "<>", "<", "<=", ">=", ">", "and", "or", "not"]
 
@@ -355,9 +358,9 @@ class StatementsAsmh:
             val2 = expression[2]
 
             if op in arithmetic_op:
-                self.arithmetic_ops_asmh(op, val1, val2, var)
+                self.arithmetic_ops_asmh(op, val1, val2, variable)
             elif op in logical_op:
-                self.logic_ops_asmh(op, val1, val2, var)
+                self.logic_ops_asmh(op, val1, val2, variable)
 
             expression.remove(val1)
             expression.remove(op)
@@ -366,15 +369,16 @@ class StatementsAsmh:
             if len(expression) < 3:
                 exit = True
 
-    def assignment_asmh(self, var, value):
+    def assignment_asmh(self, variable, value):
         vl = None
         
-        id = self.find_node_id(var)
+        id = self.find_node_id(variable)
 
-        self.tr.edit(id, 7, self.memory_position+1)
+        if self.dic_arrays_memory_position.get(variable) == None:
+            self.tr.edit(id, 7, self.memory_position+1)
 
         if len(value) > 1:
-            self.expression_value(value, var)
+            self.expression_value(value, variable)
             vl = "expression"
         else:
             vl = value[0]
@@ -458,8 +462,23 @@ class StatementsAsmh:
             self.flag_if, self.flag_else, self.flag_while
         )
 
-    def array_declaration(self):
-        pass
+    def array_declaration(self, initial_index, final_index, variable):
+        array_size = (final_index - initial_index) + 1
+
+        temp_vec_memory_position = []
+        temp_vec_memory_ifusing = []
+
+        for _ in range(0, array_size):
+            temp_vec_memory_position.append(self.memory_position)
+            temp_vec_memory_ifusing.append(False)
+            self.memory_position += 1
+
+        self.dic_arrays_memory_position[variable] = temp_vec_memory_position
+        self.dic_arrays_ifusing_memory[variable] = temp_vec_memory_ifusing
+
+        id = self.find_node_id(variable)
+        self.tr.edit(id, 4, array_size)
+        self.tr.edit(id, 7, temp_vec_memory_position)
 
     def end_program_asmh(self):
         self.was.write_end_program_asmh()
