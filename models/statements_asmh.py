@@ -116,7 +116,7 @@ class StatementsAsmh:
 
         return [memory_position1, memory_position2]
 
-    def aux_assingment_literal(self, value):
+    def aux_assignment_literal(self, value):
         if value == "true":
             value = 1
         elif value == "false":
@@ -142,15 +142,15 @@ class StatementsAsmh:
         ifstored1, ifstored2 = self.aux_op_ifstored(element1_value, element2_value)
 
         if ifstored1 == False and ifstored2 == True:
-            if self.aux_assingment_literal(element1_value):
+            if self.aux_assignment_literal(element1_value):
                 return True
         elif ifstored1 == True and ifstored2 == False:
-            if self.aux_assingment_literal(element2_value):
+            if self.aux_assignment_literal(element2_value):
                 return True
         elif ifstored1 == False and ifstored2 == False:
-            if self.aux_assingment_literal(element1_value):
+            if self.aux_assignment_literal(element1_value):
                 return True
-            if self.aux_assingment_literal(element2_value):
+            if self.aux_assignment_literal(element2_value):
                 return True
 
     def logic_ops_asmh(
@@ -158,7 +158,7 @@ class StatementsAsmh:
         op,
         element1_value,
         element2_value,
-        var,
+        variable,
     ):
         if self.ifstored(element1_value, element2_value):
             return True
@@ -167,10 +167,10 @@ class StatementsAsmh:
             element1_value, element2_value
         )
 
-        if var == None:
+        if variable == None:
             memory_position_final = self.memory_position
         else:
-            id = self.find_node_id(var)
+            id = self.find_node_id(variable)
             node = self.tr.search(id)
             memory_position_final = node.data[7]
 
@@ -271,7 +271,7 @@ class StatementsAsmh:
         op,
         element1_value,
         element2_value,
-        var,
+        variable,
     ):
         if self.ifstored(element1_value, element2_value):
             return True
@@ -280,12 +280,10 @@ class StatementsAsmh:
             element1_value, element2_value
         )
 
-        if var == None:
-            print(f"LOL2 {element1_value} - {element2_value}")
+        if variable == None:
             memory_position_final = self.memory_position
         else:
-            print(f"LOL1 {element1_value} - {element2_value}")
-            id = self.find_node_id(var)
+            id = self.find_node_id(variable)
             node = self.tr.search(id)
             memory_position_final = node.data[7]
 
@@ -331,7 +329,7 @@ class StatementsAsmh:
 
         return False
 
-    def expression_value(self, expression, var=None):
+    def expression_value(self, expression, variable=None):
         arithmetic_op = ["+", "-", "div", "*"]
         logical_op = ["=", "<>", "<", "<=", ">=", ">", "and", "or", "not"]
 
@@ -357,9 +355,9 @@ class StatementsAsmh:
             val2 = expression[2]
 
             if op in arithmetic_op:
-                self.arithmetic_ops_asmh(op, val1, val2, var)
+                self.arithmetic_ops_asmh(op, val1, val2, variable)
             elif op in logical_op:
-                self.logic_ops_asmh(op, val1, val2, var)
+                self.logic_ops_asmh(op, val1, val2, variable)
 
             expression.remove(val1)
             expression.remove(op)
@@ -368,15 +366,16 @@ class StatementsAsmh:
             if len(expression) < 3:
                 exit = True
 
-    def assignment_asmh(self, var, value):
+    def assignment_asmh(self, variable, value):
         vl = None
-        
-        id = self.find_node_id(var)
 
-        self.tr.edit(id, 7, self.memory_position+1)
+        id = self.find_node_id(variable)
+
+        if self.dic_arrays_memory_position.get(variable) == None:
+            self.tr.edit(id, 7, self.memory_position + 1)
 
         if len(value) > 1:
-            self.expression_value(value, var)
+            self.expression_value(value, variable)
             vl = "expression"
         else:
             vl = value[0]
@@ -452,16 +451,16 @@ class StatementsAsmh:
     def while_conditional_asmh(self, conditional_expression):
         self.expression_value(conditional_expression)
         self.was.write_while_conditional_asmh(
-            self.flag_if, self.flag_else, self.flag_while, self.memory_position,
+            self.flag_if,
+            self.flag_else,
+            self.flag_while,
+            self.memory_position,
         )
 
     def final_label_while_asmh(self):
         self.was.write_final_label_while_asmh(
             self.flag_if, self.flag_else, self.flag_while
         )
-
-    def array_declaration(self):
-        pass
 
     def end_program_asmh(self):
         self.was.write_end_program_asmh()

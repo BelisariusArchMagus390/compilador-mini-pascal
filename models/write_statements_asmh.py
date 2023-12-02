@@ -380,17 +380,6 @@ class WriteStatementsAsmh:
 
         self.line_count += n
 
-    # -----------------------------------------------------------------------------------------------------------------
-
-    # Funções ainda a serem feitas
-
-    def write_array_declaration(self, flag_if, flag_else, flag_while):
-        command_lines = ""
-
-        self.aux_write_decision(flag_if, flag_else, flag_while, command_lines)
-
-    # -----------------------------------------------------------------------------------------------------------------
-
     def write_end_program_asmh(self):
         command_lines = " ENDP \n"
         self.lines_to_write.append(command_lines)
