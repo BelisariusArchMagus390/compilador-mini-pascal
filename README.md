@@ -124,7 +124,7 @@ Por ser um analisador léxico, certos elementos não serão garantidos, como atr
 ```sh
 pip install -r requirements.txt
 ```
-- 3 - Para executar o código propriamente dito apenas execute o arquivo main.py
+- 3 - Para executar o projeto apenas execute o arquivo main.py
 
 - 4 - Ao executar o código do mini-pascal modificado será gerado um arquivo executável com o nome ```executable.asmh``` dentro do diretório ```executable_file```, para que possa executá-lo apenas execute os comando: 
 ```sh
