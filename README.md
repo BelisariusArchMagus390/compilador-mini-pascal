@@ -113,8 +113,9 @@ Por ser um analisador léxico, certos elementos não serão garantidos, como atr
 - Caso o valor de uma variável seja uma expressão, a informação que aparecerá na tabela é a própria expressão e não o seu resultado. No exemplo `y := x + 2` o valor do identificador `y` será igual a expressão `x + 2` e não ao resultado da operação mesmo que já tenha sido declarado um valor inteiro para `x`.
 - Caso uma mesma variável seja declarada múltiplas vezes com diferentes tipos apenas o último tipo que foi declarado será válido para ser exibido na tabela de símbolos. O mesmo vale para o tamanho de `array`. Neste caso não é possível garantir o tipo de valor que será atríbuido à variável.
 - As expressões tanto aritméticas como lógicas só podem ser feitas por dois elementos.
-- Não há declaração ou uso de variáveis do tipo array, mesmo que faça a análise sintática do mesmo.
-- Não uso de functions e procedures, mesmo que mesmo que faça a análise sintática do mesmo.
+- Não há execução da declaração ou uso de variáveis do tipo array, mesmo que faça a análise sintática do mesmo.
+- Não há execução de functions e procedures, mesmo que faça a análise sintática do mesmo.
+- Não pode ser usado juntos as estruturas While e If (por exemplo um If dentro de um While e vice-versa), pois elas não executam juntas, mesmo que faça a análise sintática do mesmo. 
 
 ### 2.6 Modo de uso
 - 1 - É necessário ter python entre as versões 3.10 e 3.9.

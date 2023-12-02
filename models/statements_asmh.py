@@ -370,9 +370,8 @@ class StatementsAsmh:
         vl = None
 
         id = self.find_node_id(variable)
-
-        if self.dic_arrays_memory_position.get(variable) == None:
-            self.tr.edit(id, 7, self.memory_position + 1)
+        print(self.memory_position)
+        self.tr.edit(id, 7, self.memory_position)
 
         if len(value) > 1:
             self.expression_value(value, variable)

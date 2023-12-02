@@ -6,5 +6,5 @@ program Exemplo;
 
     begin
         a := 2;
-        i := 12 < 10
+        i := a < 10
     end.

@@ -5,6 +5,6 @@ program Exemplo;
         a: integer;
 
     begin
-        a := 2;
-        i := a - 12
+        a := 3;
+        i := a - 2
     end.
