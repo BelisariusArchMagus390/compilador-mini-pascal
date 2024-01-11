@@ -1,4 +1,4 @@
-# Análise léxica do Mini-Pascal
+# Compilador do Mini-Pascal
 
 ## Integrantes do grupo:
 
