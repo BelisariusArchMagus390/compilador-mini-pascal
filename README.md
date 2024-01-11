@@ -1,4 +1,4 @@
-# Compilador do Mini-Pascal
+# Compilador de Mini-Pascal
 
 ## Integrantes do grupo:
 
